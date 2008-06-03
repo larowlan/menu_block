@@ -1,0 +1,45 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  menu_block.module,v 1.1 2008/06/03 05:07:56 johnalbin
+#  menu_block.info,v 1.1 2008/06/03 05:07:56 johnalbin
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Menu Block 5.x-1.x\n"
+"POT-Creation-Date: 2008-06-02 23:17-0600\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: menu_block.module:20
+msgid "@menu (2nd level)"
+msgstr ""
+
+#: menu_block.module:21
+msgid "@menu (3rd level)"
+msgstr ""
+
+#: menu_block.module:22
+msgid "@menu (4th level)"
+msgstr ""
+
+#: menu_block.module:0
+msgid "menu_block"
+msgstr ""
+
+#: menu_block.info:0
+msgid "Menu Block"
+msgstr ""
+
+#: menu_block.info:0
+msgid "Provides blocks for the 2nd, 3rd and 4th levels of every menu."
+msgstr ""
+
