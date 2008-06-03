@@ -1,0 +1,4 @@
+; $Id$
+
+name = "Menu Block"
+description = "Creates secondary and tertiary blocks for the Primary links menu"

@@ -1,0 +1,56 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_block().
+ */
+function menu_block_block($op = 'list', $delta = 'secondary') {
+  $function = 'menu_block_block_' . $op;
+  if (function_exists($function)) {
+    return $function($delta);
+  }
+}
+
+/**
+ * Returns the 'list' $op info for hook_block().
+ */
+function menu_block_block_list() {
+  $menus = menu_get_root_menus();
+  foreach ($menus AS $mid => $title) {
+    $blocks["$mid-2"]['info'] = t('@menu (2nd level)', array('@menu' => $title));
+    $blocks["$mid-3"]['info'] = t('@menu (3rd level)', array('@menu' => $title));
+    $blocks["$mid-4"]['info'] = t('@menu (4th level)', array('@menu' => $title));
+  }
+  return $blocks;
+}
+
+/**
+ * Returns the 'view' $op info for hook_block().
+ *
+ * @param $delta
+ *   string The block to render.
+ */
+function menu_block_block_view($delta) {
+  $data = array();
+
+  // Determine which menu and what level of the menu has been requested.
+  list($menu, $level) = explode('-', $delta);
+
+  // Render the block if the active menu item is in the menu.
+  if (menu_in_active_trail($menu)) {
+
+    // Get the menu items that lead to the current menu item.
+    $active_trail =_menu_get_active_trail();
+
+    // Get the menu id of the n-level link in the active trail.
+    $mid = $active_trail[$level-1];
+
+    // Use the n-level to build menu tree and block title.
+    $menu_item = menu_get_item($mid);
+
+    $data['subject'] = $menu_item['title'];
+    $data['content'] = theme('menu_tree', $mid);
+  }
+
+  return $data;
+}
