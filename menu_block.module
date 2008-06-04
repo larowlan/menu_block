@@ -36,7 +36,7 @@ function menu_block_menu($may_cache) {
  */
 function menu_block_settings() {
   // The settings form is seldom used, so we store it in a separate file.
-  include_once './'. drupal_get_path('module', 'menu_block') .'/menu_block.admin.inc';
+  include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
   return _menu_block_settings();
 }
 
@@ -51,7 +51,7 @@ function menu_block_block($op = 'list', $delta = 'secondary', $edit = null) {
   }
   else {
     // "op"s besides "view" are seldom used, so we store them in a separate file.
-    include_once './'. drupal_get_path('module', 'menu_block') .'/menu_block.admin.inc';
+    include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
     if (function_exists($function)) {
       return $function($delta, $edit);
     }
