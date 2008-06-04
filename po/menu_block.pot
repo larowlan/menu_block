@@ -3,14 +3,15 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  menu_block.module,v 1.1 2008/06/03 05:07:56 johnalbin
-#  menu_block.info,v 1.1 2008/06/03 05:07:56 johnalbin
+#  menu_block.admin.inc,v 1.1 2008/06/04 06:49:32 johnalbin
+#  menu_block.module,v 1.2 2008/06/04 06:49:32 johnalbin
+#  menu_block.info,v 1.3 2008/06/04 06:49:32 johnalbin
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Menu Block 5.x-1.x\n"
-"POT-Creation-Date: 2008-06-02 23:17-0600\n"
+"POT-Creation-Date: 2008-06-04 00:49-0600\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -19,16 +20,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: menu_block.module:20
+#: menu_block.admin.inc:14
+msgid "Enable the following blocks of menu trees"
+msgstr ""
+
+#: menu_block.admin.inc:17
+msgid "Only enabled blocks will appear on the <a href=\"!url\">administer blocks page</a>."
+msgstr ""
+
+#: menu_block.admin.inc:21;37
 msgid "@menu (2nd level)"
 msgstr ""
 
-#: menu_block.module:21
+#: menu_block.admin.inc:22;40
 msgid "@menu (3rd level)"
 msgstr ""
 
-#: menu_block.module:22
+#: menu_block.admin.inc:23;43
 msgid "@menu (4th level)"
+msgstr ""
+
+#: menu_block.module:20
+msgid "Menu blocks"
+msgstr ""
+
+#: menu_block.module:21
+msgid "Enable blocks to appear on the <a href=\"!url\">administer blocks page</a>."
+msgstr ""
+
+#: menu_block.module:8
+msgid "administer menu block"
 msgstr ""
 
 #: menu_block.module:0
@@ -40,6 +61,6 @@ msgid "Menu Block"
 msgstr ""
 
 #: menu_block.info:0
-msgid "Provides blocks for the 2nd, 3rd and 4th levels of every menu."
+msgid "Provides blocks of menu trees starting with a specified level of a menu."
 msgstr ""
 
