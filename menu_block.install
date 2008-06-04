@@ -1,0 +1,9 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function block_menu_uninstall() {
+  variable_del('menu_block_enabled_blocks');
+}

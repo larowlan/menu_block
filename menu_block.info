@@ -1,4 +1,4 @@
 ; $Id$
 
 name = "Menu Block"
-description = "Provides blocks for the 2nd, 3rd and 4th levels of every menu."
+description = "Provides blocks of menu trees starting with a specified level of a menu."

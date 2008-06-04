@@ -2,33 +2,67 @@
 // $Id$
 
 /**
+ * Implementation of hook_perm().
+ */
+function menu_block_perm() {
+  return array('administer menu block');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function menu_block_menu($may_cache) {
+  $items = array();
+
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'admin/build/menu-block',
+      'title' => t('Menu blocks'),
+      'description' => t('Enable blocks to appear on the <a href="!url">administer blocks page</a>.', array('!url' => url('admin/build/block'))),
+      'access' => user_access('administer menu block'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => 'menu_block_settings',
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Display the settings form for Menu block.
+ *
+ * @return
+ *   The form array.
+ */
+function menu_block_settings() {
+  // The settings form is seldom used, so we store it in a separate file.
+  include_once './'. drupal_get_path('module', 'menu_block') .'/menu_block.admin.inc';
+  return _menu_block_settings();
+}
+
+
+/**
  * Implementation of hook_block().
  */
-function menu_block_block($op = 'list', $delta = 'secondary') {
+function menu_block_block($op = 'list', $delta = 'secondary', $edit = null) {
   $function = 'menu_block_block_' . $op;
   if (function_exists($function)) {
     return $function($delta);
   }
-}
-
-/**
- * Returns the 'list' $op info for hook_block().
- */
-function menu_block_block_list() {
-  $menus = menu_get_root_menus();
-  foreach ($menus AS $mid => $title) {
-    $blocks["$mid-2"]['info'] = t('@menu (2nd level)', array('@menu' => $title));
-    $blocks["$mid-3"]['info'] = t('@menu (3rd level)', array('@menu' => $title));
-    $blocks["$mid-4"]['info'] = t('@menu (4th level)', array('@menu' => $title));
+  else {
+    // "op"s besides "view" are seldom used, so we store them in a separate file.
+    include_once './'. drupal_get_path('module', 'menu_block') .'/menu_block.admin.inc';
+    if (function_exists($function)) {
+      return $function($delta, $edit);
+    }
   }
-  return $blocks;
 }
 
 /**
  * Returns the 'view' $op info for hook_block().
  *
  * @param $delta
- *   string The block to render.
+ *   string The name of the block to render.
  */
 function menu_block_block_view($delta) {
   $data = array();
