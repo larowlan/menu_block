@@ -18,9 +18,10 @@ function _menu_block_settings() {
   );
   $menus = menu_get_root_menus();
   foreach ($menus AS $mid => $title) {
-    $form['menu_block_enabled_blocks']['#options']["$mid-2"] = t('@menu (2nd level)', array('@menu' => $title));
-    $form['menu_block_enabled_blocks']['#options']["$mid-3"] = t('@menu (3rd level)', array('@menu' => $title));
-    $form['menu_block_enabled_blocks']['#options']["$mid-4"] = t('@menu (4th level)', array('@menu' => $title));
+    for ($i=2; $i<5; $i++) {
+      $form['menu_block_enabled_blocks']['#options']["$mid-$i"]
+        = t('@menu (levels @level+)', array( '@menu' => $title, '@level' => $i));
+    }
   }
   return system_settings_form($form);
 }
@@ -30,17 +31,11 @@ function _menu_block_settings() {
  */
 function menu_block_block_list() {
   $menus = menu_get_root_menus();
-  foreach (variable_get('menu_block_enabled_blocks', array()) AS $bid) {
-    list($mid, $level) = explode('-', $bid);
-    $title = $menus[$mid];
-    if ($level == '2') {
-      $blocks[$bid]['info'] = t('@menu (2nd level)', array('@menu' => $title));
-    }
-    elseif ($level == '3') {
-      $blocks[$bid]['info'] = t('@menu (3rd level)', array('@menu' => $title));
-    }
-    elseif ($level == '4') {
-      $blocks[$bid]['info'] = t('@menu (4th level)', array('@menu' => $title));
+  foreach (variable_get('menu_block_enabled_blocks', array()) AS $bid => $enabled) {
+    if ($enabled) {
+      list($mid, $level) = explode('-', $bid);
+      $title = $menus[$mid];
+      $blocks[$bid]['info'] = t('@menu (levels @level+)', array('@menu' => $title, '@level' => $level));
     }
   }
   return $blocks;
