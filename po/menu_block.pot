@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menu Block 5.x-1.x\n"
-"POT-Creation-Date: 2008-06-20 04:13-0600\n"
+"POT-Creation-Date: 2008-06-20 07:32-0600\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -28,8 +28,32 @@ msgstr ""
 msgid "Only enabled blocks will appear on the <a href=\"!url\">administer blocks page</a>."
 msgstr ""
 
-#: menu_block.admin.inc:23;38
-msgid "@menu (levels @level+)"
+#: menu_block.admin.inc:59
+msgid "@menu (level @level1)"
+msgstr ""
+
+#: menu_block.admin.inc:62
+msgid "@menu (levels @level1-@level2)"
+msgstr ""
+
+#: menu_block.admin.inc:65
+msgid "@menu (levels @level1+)"
+msgstr ""
+
+#: menu_block.admin.inc:77
+msgid "Maximum depth of menu tree"
+msgstr ""
+
+#: menu_block.admin.inc:92
+msgid "Trees with a maximum depth of 1 will be styled as a menu list, i.e. theme_menu_block_list() instead of theme_menu_block_tree()."
+msgstr ""
+
+#: menu_block.admin.inc:96
+msgid "Expand all childen"
+msgstr ""
+
+#: menu_block.admin.inc:98
+msgid "All sub-menus of this menu will be expanded."
 msgstr ""
 
 #: menu_block.module:20

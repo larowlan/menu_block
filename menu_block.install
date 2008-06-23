@@ -6,4 +6,11 @@
  */
 function block_menu_uninstall() {
   variable_del('menu_block_enabled_blocks');
+  $menus = menu_get_root_menus();
+  foreach ($menus AS $mid => $title) {
+    for ($i=1; $i<5; $i++) {
+      variable_del("menu_block_depth_{$mid}_{$i}");
+      variable_del("menu_block_expanded_{$mid}_{$i}");
+    }
+  }
 }
