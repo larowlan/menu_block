@@ -47,8 +47,8 @@ function menu_block_settings() {
 /**
  * Implementation of hook_block().
  */
-function menu_block_block($op = 'list', $delta = null, $edit = null) {
-  $function = 'menu_block_block_' . $op;
+function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
+  $function = '_menu_block_block_' . $op;
   if (function_exists($function)) {
     return $function($delta, $edit);
   }
@@ -67,7 +67,7 @@ function menu_block_block($op = 'list', $delta = null, $edit = null) {
  * @param $delta
  *   string The name of the block to render.
  */
-function menu_block_block_view($delta) {
+function _menu_block_block_view($delta) {
   $data = array();
 
   // Determine which menu and what level of the menu has been requested.

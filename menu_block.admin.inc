@@ -28,7 +28,7 @@ function _menu_block_settings() {
 /**
  * Returns the 'list' $op info for hook_block().
  */
-function menu_block_block_list() {
+function _menu_block_block_list() {
   $menus = menu_get_root_menus();
   foreach (variable_get('menu_block_enabled_blocks', array()) AS $bid => $enabled) {
     if ($enabled) {
@@ -70,7 +70,7 @@ function _menu_block_format_title($menu_title, $mid, $level) {
 /**
  * Returns the 'configure' $op info for hook_block().
  */
-function menu_block_block_configure($delta = null) {
+function _menu_block_block_configure($delta) {
   list($menu, $level) = explode('-', $delta);
   $form['depth'] = array(
     '#type' => 'select',
@@ -103,7 +103,7 @@ function menu_block_block_configure($delta = null) {
 /**
  * Returns the 'save' $op info for hook_block().
  */
-function menu_block_block_save($delta = null, $edit = null) {
+function _menu_block_block_save($delta, $edit) {
   list($menu, $level) = explode('-', $delta);
   variable_set("menu_block_depth_{$menu}_{$level}", $edit['depth']);
   variable_set("menu_block_expanded_{$menu}_{$level}", $edit['expanded']);
