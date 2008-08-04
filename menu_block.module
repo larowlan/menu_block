@@ -43,6 +43,10 @@ function menu_block_settings() {
   return _menu_block_settings();
 }
 
+function menu_block_settings_submit($form_id, $form_values) {
+  include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
+  return _menu_block_settings_submit($form_id, $form_values);
+}
 
 /**
  * Implementation of hook_block().
@@ -71,16 +75,13 @@ function _menu_block_block_view($delta) {
   $data = array();
 
   // Determine which menu and what level of the menu has been requested.
-  list($menu, $level) = explode('-', $delta);
+  $mid = variable_get("menu_block_{$delta}_mid", 1);
+  $level = variable_get("menu_block_{$delta}_level", 1);
 
   // Render the block if the active menu item is in this menu.
-  if ($level == 1 || menu_in_active_trail($menu)) {
+  if ($level == 1 || menu_in_active_trail($mid)) {
 
-    if ($level == 1) {
-      // Get the menu item of the top of the menu.
-      $mid = $menu;
-    }
-    else {
+    if ($level != 1) {
       // Get the menu item of the n-level link in the active trail.
       $active_trail =_menu_get_active_trail();
       $mid = $active_trail[$level-1];
@@ -88,12 +89,12 @@ function _menu_block_block_view($delta) {
     $menu_item = menu_get_item($mid);
 
     $data['subject'] = $menu_item['title'];
-    $depth = variable_get("menu_block_depth_{$menu}_{$level}", 0);
+    $depth = variable_get("menu_block_{$delta}_depth", 0);
     if ($depth == 1) {
       $data['content'] = theme('menu_block_list', $mid);
     }
     else {
-      $expanded = variable_get("menu_block_expanded_{$menu}_{$level}", 0);
+      $expanded = variable_get("menu_block_{$delta}_expanded", 0);
       $data['content'] = theme('menu_block_tree', $mid, $depth, $expanded);
     }
   }
