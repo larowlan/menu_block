@@ -11,19 +11,15 @@ function menu_block_perm() {
 /**
  * Implements hook_menu().
  */
-function menu_block_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'admin/build/menu-block',
-      'title' => t('Menu blocks'),
-      'description' => t('Enable blocks to appear on the <a href="!url">administer blocks page</a>.', array('!url' => url('admin/build/block'))),
-      'access' => user_access('administer menu block'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => 'menu_block_settings',
-    );
-  }
+function menu_block_menu() {
+  $items['admin/build/menu-block'] = array(
+    'title' => 'Menu blocks',
+    'description' => 'Enable blocks to appear on the <a href="!url">administer blocks page</a>.',
+//    'description' => t('Enable blocks to appear on the <a href="!url">administer blocks page</a>.', array('!url' => url('admin/build/block'))),
+    'access arguments' => array('administer menu block'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_block_settings'),
+  );
 
   return $items;
 }
