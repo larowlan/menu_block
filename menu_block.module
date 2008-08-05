@@ -24,11 +24,15 @@ function menu_block_menu($may_cache) {
       'callback arguments' => 'menu_block_settings',
     );
   }
-  else {
-    drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu_block.css');
-  }
 
   return $items;
+}
+
+/**
+ * Implements hook_init().
+ */
+function menu_block_init() {
+  drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu_block.css');
 }
 
 /**
