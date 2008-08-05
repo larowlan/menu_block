@@ -3,6 +3,9 @@ Menu Block 6.x-1.x-dev
   * Removed ability to upgrade directly from 5.x-0.9 or earlier. Site admins
     seeking smoother upgrade experience should upgrade to 5.x-1.0 first.
 
+Menu Block 5.x-1.x-dev
+  * Added missing dependency on menu module.
+
 Menu Block 5.x-1.0
   * Simplified block configuration.
 
