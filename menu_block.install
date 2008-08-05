@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function menu_block_uninstall() {
   foreach (variable_get('menu_block_enabled_blocks', array()) AS $delta => $enabled) {

@@ -2,14 +2,14 @@
 // $Id$
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_perm().
  */
 function menu_block_perm() {
   return array('administer menu block');
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function menu_block_menu($may_cache) {
   $items = array();
@@ -49,7 +49,7 @@ function menu_block_settings_submit($form_id, $form_values) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implements hook_block().
  */
 function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
   $function = '_menu_block_block_' . $op;
