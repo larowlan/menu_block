@@ -2,4 +2,6 @@
 
 name = "Menu Block"
 description = "Provides configurable blocks of menu items."
+
 core = 6.x
+dependencies[] = menu
