@@ -181,7 +181,10 @@ function menu_block_tree($pid = 1, $depth_limit = 0, $expanded = FALSE) {
         $link_item = menu_get_item($item['pid']);
         $item['path'] = $link_item['path'];
       }
-      $link = theme('menu_block_item_link', $item);
+      // Do we need to do the next 2 lines?
+      $item['href'] = $item['path'];
+      $item['localized_options'] = $item['attributes'];
+      $link = theme('menu_item_link', $item);
 
       // Theme the menu tree containing the children
       $has_children = !empty($menu['visible'][$mid]['children']);
@@ -198,45 +201,11 @@ function menu_block_tree($pid = 1, $depth_limit = 0, $expanded = FALSE) {
       $extra_class .= $count == 1 ? ' first' : '';
       $extra_class .= $count == $total_children ? ' last' : '';
       $extra_class .= ($mid == $active_id || $item['path'] == '<front>' && drupal_is_front_page()) ? ' active' : '';
-      $output .= theme('menu_block_item', $link, $has_children, $children, $in_active_trail, $extra_class);
+      $output .= theme('menu_item', $link, $has_children, $children, $in_active_trail, $extra_class);
 
       $count++;
     }
   }
 
-  return $output;
-}
-
-/**
- * Generate the HTML output for a single menu link.
- *
- * @ingroup themeable
- *
- * @param $link
- *   array The menu item to render.
- * @return
- *   string The rendered menu link.
- */
-function theme_menu_block_item_link($link) {
-  if (empty($link['attributes'])) {
-    $link['attributes'] = array();
-  }
-
-  return l($link['title'], $link['path'], $link['attributes'], isset($link['query']) ? $link['query'] : NULL);
-}
-
-/**
- * Generate the HTML output for a menu item and submenu.
- *
- * @ingroup themeable
- */
-function theme_menu_block_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
-  $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
-  if (!empty($extra_class)) {
-    $class .= ' ' . $extra_class;
-  }
-  if ($in_active_trail) {
-    $class .= ' active-trail';
-  }
-  return '<li class="' . $class . '">' . $link . $menu . "</li>";
+  return str_replace("\n", '', $output);
 }
