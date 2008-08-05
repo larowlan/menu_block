@@ -2,3 +2,4 @@
 
 name = "Menu Block"
 description = "Provides blocks of menu trees starting with a specified level of a menu."
+core = 6.x
