@@ -5,14 +5,13 @@
 # Generated from files:
 #  menu_block.admin.inc,v 1.5 2008/08/04 19:56:56 johnalbin
 #  menu_block.module,v 1.7 2008/08/04 19:56:56 johnalbin
-#  menu_block.install,v 1.3 2008/08/04 19:56:56 johnalbin
-#  menu_block.info,v 1.3 2008/06/04 06:49:32 johnalbin
+#  menu_block.info,v 1.6 2008/08/05 03:45:10 johnalbin
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Menu Block 5.x-1.x\n"
-"POT-Creation-Date: 2008-08-04 13:57-0600\n"
+"POT-Creation-Date: 2008-08-04 22:48-0600\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -149,19 +148,11 @@ msgstr ""
 msgid "menu_block"
 msgstr ""
 
-#: menu_block.install:21
-msgid "To add menu blocks to the administer blocks page, enable them on the <a href=\"@url\">administer menu blocks page</a>."
-msgstr ""
-
-#: menu_block.install:51
-msgid "A pre-release version of Menu block has been detected. All menu blocks from the pre-release version have been given a new delta and are no longer placed in any block regions; their block placement should be re-configured immediately."
-msgstr ""
-
 #: menu_block.info:0
 msgid "Menu Block"
 msgstr ""
 
 #: menu_block.info:0
-msgid "Provides blocks of menu trees starting with a specified level of a menu."
+msgid "Provides configurable blocks of menu items."
 msgstr ""
 
