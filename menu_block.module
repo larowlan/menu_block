@@ -79,17 +79,18 @@ function _menu_block_block_view($delta) {
     $data['subject'] = $menu_item['title'];
     $depth = variable_get("menu_block_{$delta}_depth", 0);
     if ($depth == 1) {
-      $data['content'] = theme('menu_block_list', $mid);
+      $tree = menu_block_tree($mid, 1, FALSE);
+      $data['content'] = $tree ? theme('menu_block_list', $tree, $mid) : '';
     }
     else {
       $expanded = variable_get("menu_block_{$delta}_expanded", 0);
-      $data['content'] = theme('menu_block_tree', $mid, $depth, $expanded);
+      $tree = menu_block_tree($mid, $depth, $expanded);
+      $data['content'] = $tree ? theme('menu_block_tree', $tree, $mid) : '';
     }
   }
 
   return $data;
 }
-
 
 /**
  * Implements hook_theme().
@@ -97,10 +98,10 @@ function _menu_block_block_view($delta) {
 function menu_block_theme() {
   return array(
     'menu_block_tree' => array(
-      'arguments' => array('pid' => 1, 'depth_limit' => 0, 'expanded' => FALSE),
+      'arguments' => array('tree' => NULL, 'pid' => NULL),
     ),
     'menu_block_list' => array(
-      'arguments' => array('pid' => 1),
+      'arguments' => array('list' => NULL, 'pid' => NULL),
     ),
   );
 }
@@ -110,22 +111,15 @@ function menu_block_theme() {
  *
  * @ingroup themeable
  *
+ * @param $tree
+ *   string The menu tree.
  * @param $pid
  *   int The parent id of the menu.
- * @param $depth_limit
- *   int The maximum depth of the returned tree, 0 for unlimited.
- * @param $expanded
- *   boolean Whether to expand the entire menu tree.
  * @return
  *   string The rendered menu tree.
  */
-function theme_menu_block_tree($pid = 1, $depth_limit = 0, $expanded = FALSE) {
-  if ($tree = menu_block_tree($pid, $depth_limit, $expanded)) {
-    return '<ul class="menu menu-tree menu-' . $pid . '">' . $tree . '</ul>';
-  }
-  else {
-    return '';
-  }
+function theme_menu_block_tree($tree, $pid) {
+  return '<ul class="menu menu-tree menu-' . $pid . '">' . $tree . '</ul>';
 }
 
 /**
@@ -133,18 +127,15 @@ function theme_menu_block_tree($pid = 1, $depth_limit = 0, $expanded = FALSE) {
  *
  * @ingroup themeable
  *
+ * @param $tree
+ *   string The menu tree.
  * @param $pid
  *   int The parent id of the menu.
  * @return
  *   string The rendered menu list.
  */
-function theme_menu_block_list($pid = 1) {
-  if ($list = menu_block_tree($pid, 1, FALSE, TRUE)) {
-    return '<ul class="menu-list menu-' . $pid . '">' . $list . '</ul>';
-  }
-  else {
-    return '';
-  }
+function theme_menu_block_list($list, $pid) {
+  return '<ul class="menu-list menu-' . $pid . '">' . $list . '</ul>';
 }
 
 /**
@@ -159,7 +150,7 @@ function theme_menu_block_list($pid = 1) {
  * @return
  *   string The rendered items of a menu.
  */
-function menu_block_tree($pid = 1, $depth_limit = 0, $expanded = FALSE) {
+function menu_block_tree($pid, $depth_limit = 0, $expanded = FALSE) {
   $menu = menu_get_menu();
   $output = '';
 
