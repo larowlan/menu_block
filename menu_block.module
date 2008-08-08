@@ -45,7 +45,7 @@ function menu_block_settings() {
 
 function menu_block_settings_submit($form, &$form_state) {
   include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
-  return _menu_block_settings_submit($form, &$form_state);
+  _menu_block_settings_submit($form, &$form_state);
 }
 
 /**
