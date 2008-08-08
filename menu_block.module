@@ -90,6 +90,21 @@ function _menu_block_block_view($delta) {
   return $data;
 }
 
+
+/**
+ * Implements hook_theme().
+ */
+function menu_block_theme() {
+  return array(
+    'menu_block_tree' => array(
+      'arguments' => array('pid' => 1, 'depth_limit' => 0, 'expanded' => FALSE),
+    ),
+    'menu_block_list' => array(
+      'arguments' => array('pid' => 1),
+    ),
+  );
+}
+
 /**
  * Generate the HTML for a menu tree.
  *
