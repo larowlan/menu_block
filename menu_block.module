@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Provides configurable blocks of menu items.
+ */
+
+/**
  * Implements hook_perm().
  */
 function menu_block_perm() {
@@ -15,7 +20,6 @@ function menu_block_menu() {
   $items['admin/build/menu-block'] = array(
     'title' => 'Menu blocks',
     'description' => 'Enable blocks to appear on the <a href="!url">administer blocks page</a>.',
-//    'description' => t('Enable blocks to appear on the <a href="!url">administer blocks page</a>.', array('!url' => url('admin/build/block'))),
     'access arguments' => array('administer menu block'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_block_settings'),
@@ -34,8 +38,8 @@ function menu_block_init() {
 /**
  * Display the settings form for Menu block.
  *
- * @return
- *   The form array.
+ * @ingroup forms
+ * @see menu_block_settings_submit()
  */
 function menu_block_settings() {
   // The settings form is seldom used, so we store it in a separate file.

@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Provides infrequently used functions for menu_block.
+ */
+
+/**
  * Display the settings form for Menu block.
  *
  * @return
@@ -30,7 +35,7 @@ function _menu_block_settings() {
 }
 
 /**
- * Implments submit handler for menu_block_settings form.
+ * Implements submit handler for menu_block_settings form.
  */
 function _menu_block_settings_submit($form, &$form_state) {
   $enabled_blocks = $form_state['values']['menu_block_enabled_blocks'];

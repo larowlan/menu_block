@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Provides install and un-install functions for menu_block.
+ */
+
+/**
  * Implements hook_uninstall().
  */
 function menu_block_uninstall() {
