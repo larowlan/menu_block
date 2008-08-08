@@ -23,6 +23,7 @@ function menu_block_menu() {
     'access arguments' => array('administer menu block'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_block_settings'),
+    'file' => 'menu_block.admin.inc',
   );
 
   return $items;
@@ -33,23 +34,6 @@ function menu_block_menu() {
  */
 function menu_block_init() {
   drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu_block.css');
-}
-
-/**
- * Display the settings form for Menu block.
- *
- * @ingroup forms
- * @see menu_block_settings_submit()
- */
-function menu_block_settings() {
-  // The settings form is seldom used, so we store it in a separate file.
-  include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
-  return _menu_block_settings();
-}
-
-function menu_block_settings_submit($form, &$form_state) {
-  include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
-  _menu_block_settings_submit($form, $form_state);
 }
 
 /**

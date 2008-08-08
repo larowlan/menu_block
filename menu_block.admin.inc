@@ -9,10 +9,10 @@
 /**
  * Display the settings form for Menu block.
  *
- * @return
- *   The form array.
+ * @ingroup forms
+ * @see menu_block_settings_submit()
  */
-function _menu_block_settings() {
+function menu_block_settings() {
   $form = array();
   $form['menu_block_enabled_blocks'] = array(
     '#type'          => 'checkboxes',
@@ -37,7 +37,7 @@ function _menu_block_settings() {
 /**
  * Implements submit handler for menu_block_settings form.
  */
-function _menu_block_settings_submit($form, &$form_state) {
+function menu_block_settings_submit($form, &$form_state) {
   $enabled_blocks = $form_state['values']['menu_block_enabled_blocks'];
 
   // Optionally add a new unconfigured block.
