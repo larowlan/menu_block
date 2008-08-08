@@ -32,8 +32,8 @@ function _menu_block_settings() {
 /**
  * Implments submit handler for menu_block_settings form.
  */
-function _menu_block_settings_submit($form_id, $form_values) {
-  $enabled_blocks = $form_values['menu_block_enabled_blocks'];
+function _menu_block_settings_submit($form, &$form_state) {
+  $enabled_blocks = $form_state['values']['menu_block_enabled_blocks'];
 
   // Optionally add a new unconfigured block.
   if ($enabled_blocks['-1']) {
