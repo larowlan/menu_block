@@ -56,6 +56,7 @@ function menu_block_settings_submit($form, &$form_state) {
  * Returns the 'list' $op info for hook_block().
  */
 function _menu_block_block_list() {
+  $blocks = array();
   foreach (variable_get('menu_block_enabled_blocks', array()) AS $delta => $enabled) {
     if ($enabled) {
       $blocks[$delta]['info'] = _menu_block_format_title($delta);
