@@ -78,7 +78,7 @@ function menu_block_delete_submit($form, &$form_state) {
   unset($block_ids[array_search($delta, $block_ids)]);
   sort($block_ids);
   variable_set('menu_block_ids', $block_ids);
-  variable_del("menu_block_{$delta}_mid");
+  variable_del("menu_block_{$delta}_menu_name");
   variable_del("menu_block_{$delta}_level");
   variable_del("menu_block_{$delta}_depth");
   variable_del("menu_block_{$delta}_expanded");
@@ -110,8 +110,8 @@ function _menu_block_block_list() {
  *   string The title of the block
  */
 function _menu_block_format_title($delta) {
-  $mid = variable_get("menu_block_{$delta}_mid", NULL);
-  if (is_null($mid)) {
+  $menu_name = variable_get("menu_block_{$delta}_menu_name", NULL);
+  if (is_null($menu_name)) {
     $title = t('Unconfigured menu block');
   }
   else {
@@ -119,7 +119,7 @@ function _menu_block_format_title($delta) {
     $depth = variable_get("menu_block_{$delta}_depth", 0);
     $menus = menu_get_menus(TRUE);
     // Show the configured levels in the block info
-    $replacements = array('@menu_name' => $menus[$mid], '@level1' => $level, '@level2' => $level + $depth - 1);
+    $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
     if ($depth == 1) {
       $title = t('@menu_name (level @level1)', $replacements);
     }
@@ -138,16 +138,13 @@ function _menu_block_format_title($delta) {
  */
 function _menu_block_block_configure($delta) {
 
-  $form['mid'] = array(
+  $form['menu_name'] = array(
     '#type' => 'select',
     '#title' => t('Menu'),
-    '#default_value' => variable_get("menu_block_{$delta}_mid", 1),
-    '#options' => array(),
+    '#default_value' => variable_get("menu_block_{$delta}_menu_name", "navigation"),
+    '#options' => menu_get_menus(TRUE),
     '#description' => t('The tree (or list) of links will be taken from this menu.'),
   );
-  foreach (menu_get_menus(TRUE) AS $mid => $title) {
-    $form['mid']['#options'][$mid] = $title;
-  }
   $form['level'] = array(
     '#type' => 'select',
     '#title' => t('Starting level of menu tree'),
@@ -198,7 +195,7 @@ function _menu_block_block_configure($delta) {
  * Returns the 'save' $op info for hook_block().
  */
 function _menu_block_block_save($delta, $edit) {
-  variable_set("menu_block_{$delta}_mid", $edit['mid']);
+  variable_set("menu_block_{$delta}_menu_name", $edit['menu_name']);
   variable_set("menu_block_{$delta}_level", $edit['level']);
   variable_set("menu_block_{$delta}_depth", $edit['depth']);
   variable_set("menu_block_{$delta}_expanded", $edit['expanded']);

@@ -3,20 +3,22 @@
 
 /**
  * @file
- * Provides install and un-install functions for menu_block.
+ * Provides install, upgrade and un-install functions for menu_block.
  */
 
 /**
  * Implements hook_uninstall().
  */
 function menu_block_uninstall() {
+  // Delete menu block variables.
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    variable_del("menu_block_{$delta}_mid");
+    variable_del("menu_block_{$delta}_menu_name");
     variable_del("menu_block_{$delta}_level");
     variable_del("menu_block_{$delta}_depth");
     variable_del("menu_block_{$delta}_expanded");
   }
   variable_del('menu_block_ids');
+  // Remove block configurations.
   db_query("DELETE FROM {blocks} WHERE module = 'menu_block'");
   cache_clear_all();
 }
@@ -61,15 +63,21 @@ function menu_block_update_5100() {
 /**
  * Implements hook_update_N().
  *
- * Converts $menu_block_enabled_blocks to $menu_block_ids.
+ * Converts $menu_block_enabled_blocks to $menu_block_ids and
+ * $menu_block_DELTA_mid to $menu_block_DELTA_menu_name. Also deletes un-enabled
+ * menu blocks.
  */
 function menu_block_update_6100() {
   $block_ids = array();
   foreach (variable_get('menu_block_enabled_blocks', array()) AS $delta => $enabled) {
     if ($enabled) {
-      $block_ids[] = $delta;
+      $block_ids[] = $delta; // Build new $menu_block_ids.
+      // Convert $menu_block_DELTA_mid to $menu_block_DELTA_menu_name.
+      variable_set("menu_block_{$delta}_menu_name", variable_get("menu_block_{$delta}_mid", 'navigation'));
+      variable_del("menu_block_{$delta}_mid");
     }
     else {
+      // Delete un-enabled menu block.
       variable_del("menu_block_{$delta}_mid");
       variable_del("menu_block_{$delta}_level");
       variable_del("menu_block_{$delta}_depth");
@@ -77,6 +85,7 @@ function menu_block_update_6100() {
       db_query("DELETE FROM {blocks} WHERE module = 'menu_block' AND delta = %d", $delta);
     }
   }
+  // Finish conversion of $menu_block_enabled_blocks to $menu_block_ids.
   sort($block_ids);
   variable_set('menu_block_ids', $block_ids);
   variable_del('menu_block_enabled_blocks');

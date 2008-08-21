@@ -73,11 +73,11 @@ function _menu_block_block_view($delta) {
   $data = array();
 
   // Determine which menu and what level of the menu has been requested.
-  $mid = variable_get("menu_block_{$delta}_mid", 1);
+  $menu_name = variable_get("menu_block_{$delta}_menu_name", "navigation");
   $level = variable_get("menu_block_{$delta}_level", 1);
 
   // Render the block if the active menu item is in this menu.
-  if ($level == 1 || menu_in_active_trail($mid)) {
+  if ($level == 1 || menu_in_active_trail($menu_name)) {
 
     if ($level != 1) {
       // Get the menu item of the n-level link in the active trail.
@@ -89,13 +89,13 @@ function _menu_block_block_view($delta) {
     $data['subject'] = $menu_item['title'];
     $depth = variable_get("menu_block_{$delta}_depth", 0);
     if ($depth == 1) {
-      $tree = menu_block_tree($mid, 1, FALSE);
-      $data['content'] = $tree ? theme('menu_block_list', $tree, $mid) : '';
+      $tree = menu_block_tree($menu_name, 1, FALSE);
+      $data['content'] = $tree ? theme('menu_block_list', $tree, $menu_name) : '';
     }
     else {
       $expanded = variable_get("menu_block_{$delta}_expanded", 0);
-      $tree = menu_block_tree($mid, $depth, $expanded);
-      $data['content'] = $tree ? theme('menu_block_tree', $tree, $mid) : '';
+      $tree = menu_block_tree($menu_name, $depth, $expanded);
+      $data['content'] = $tree ? theme('menu_block_tree', $tree, $menu_name) : '';
     }
   }
 
