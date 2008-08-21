@@ -7,22 +7,24 @@
  */
 
 /**
- * Implements hook_perm().
- */
-function menu_block_perm() {
-  return array('administer menu block');
-}
-
-/**
  * Implements hook_menu().
  */
 function menu_block_menu() {
-  $items['admin/build/menu-block'] = array(
-    'title' => 'Menu blocks',
-    'description' => 'Enable blocks to appear on the <a href="!url">administer blocks page</a>.',
-    'access arguments' => array('administer menu block'),
+  $items['admin/build/block/add-menu-block'] = array(
+    'title' => 'Add menu block',
+    'description' => 'Add a new menu block.',
+    'access arguments' => array('administer blocks'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_block_settings'),
+    'page arguments' => array('menu_block_add_block_form'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'menu_block.admin.inc',
+  );
+  $items['admin/build/block/delete-menu-block'] = array(
+    'title' => 'Delete menu block',
+    'access arguments' => array('administer blocks'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_block_delete'),
+    'type' => MENU_CALLBACK,
     'file' => 'menu_block.admin.inc',
   );
 
@@ -34,6 +36,14 @@ function menu_block_menu() {
  */
 function menu_block_init() {
   drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu_block.css');
+}
+
+/**
+ * Alters the block admin form to add delete links next to menu blocks.
+ */
+function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
+  include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
+  _menu_block_form_block_admin_display_form_alter($form, $form_state);
 }
 
 /**
