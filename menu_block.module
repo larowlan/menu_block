@@ -76,15 +76,23 @@ function _menu_block_block_view($delta) {
   $menu_name = variable_get("menu_block_{$delta}_menu_name", "navigation");
   $level = variable_get("menu_block_{$delta}_level", 1);
 
+  // D6 menu changes are so vast, just printing standard menu tree for now.
+  $menu_names = menu_get_menus(TRUE);
+  $data['subject'] = $menu_names[$menu_name];
+  $tree = menu_tree_page_data($menu_name);
+  $data['content'] = menu_block_tree_output($tree, $menu_name);
+
+return $data;
+// The section below does not work yet.
+
   // Render the block if the active menu item is in this menu.
   if ($level == 1 || menu_in_active_trail($menu_name)) {
 
     if ($level != 1) {
       // Get the menu item of the n-level link in the active trail.
-      $active_trail =_menu_get_active_trail();
-      $mid = $active_trail[$level-1];
+      $active_trail = menu_get_active_trail();
+      $menu_item = menu_get_item();
     }
-    $menu_item = menu_get_item($mid);
 
     $data['subject'] = $menu_item['title'];
     $depth = variable_get("menu_block_{$delta}_depth", 0);
@@ -108,10 +116,10 @@ function _menu_block_block_view($delta) {
 function menu_block_theme() {
   return array(
     'menu_block_tree' => array(
-      'arguments' => array('tree' => NULL, 'pid' => NULL),
+      'arguments' => array('tree' => NULL, 'menu_name' => NULL, 'pid' => NULL),
     ),
     'menu_block_list' => array(
-      'arguments' => array('list' => NULL, 'pid' => NULL),
+      'arguments' => array('list' => NULL, 'menu_name' => NULL, 'pid' => NULL),
     ),
   );
 }
@@ -123,13 +131,22 @@ function menu_block_theme() {
  *
  * @param $tree
  *   string The menu tree.
+ * @param $menu_name
+ *   The name of the menu from which the tree is being rendered.
  * @param $pid
  *   int The parent id of the menu.
  * @return
  *   string The rendered menu tree.
  */
-function theme_menu_block_tree($tree, $pid) {
-  return '<ul class="menu menu-tree menu-' . $pid . '">' . $tree . '</ul>';
+function theme_menu_block_tree($tree, $menu_name = NULL, $pid = NULL) {
+  $menu_classes = array('menu', 'menu-tree');
+  if ($menu_name) {
+    $menu_classes[] = 'menu-name-' . $menu_name;
+  }
+  if ($pid) {
+    $menu_classes[] = 'menu-pid-' . $pid;
+  }
+  return '<ul class="' . implode(' ', $menu_classes) . '">' . $tree . '</ul>';
 }
 
 /**
@@ -139,13 +156,64 @@ function theme_menu_block_tree($tree, $pid) {
  *
  * @param $tree
  *   string The menu tree.
+ * @param $menu_name
+ *   The name of the menu from which the tree is being rendered.
  * @param $pid
  *   int The parent id of the menu.
  * @return
  *   string The rendered menu list.
  */
-function theme_menu_block_list($list, $pid) {
-  return '<ul class="menu-list menu-' . $pid . '">' . $list . '</ul>';
+function theme_menu_block_list($list, $menu_name = NULL, $pid = NULL) {
+  $menu_classes = array('menu-list');
+  if ($menu_name) {
+    $menu_classes[] = 'menu-name-' . $menu_name;
+  }
+  if ($pid) {
+    $menu_classes[] = 'menu-pid-' . $pid;
+  }
+  return '<ul class="' . implode(' ', $menu_classes) . '">' . $list . '</ul>';
+}
+
+/**
+ * Returns a rendered menu tree.
+ *
+ * @param $tree
+ *   A data structure representing the tree as returned from menu_tree_data.
+ * @param $menu_name
+ *   The name of the menu from which the tree is being rendered.
+ * @return
+ *   The rendered HTML of that data structure.
+ */
+function menu_block_tree_output($tree, $menu_name) {
+  $output = '';
+  $items = array();
+
+  // Pull out just the menu items we are going to render so that we
+  // get an accurate count for the first/last classes.
+  foreach ($tree as $data) {
+    if (!$data['link']['hidden']) {
+      $items[] = $data;
+    }
+  }
+
+  $num_items = count($items);
+  foreach ($items as $i => $data) {
+    $extra_class = NULL;
+    if ($i == 0) {
+      $extra_class = 'first';
+    }
+    if ($i == $num_items - 1) {
+      $extra_class = 'last';
+    }
+    $link = theme('menu_item_link', $data['link']);
+    if ($data['below']) {
+      $output .= theme('menu_item', $link, $data['link']['has_children'], menu_tree_output($data['below']), $data['link']['in_active_trail'], $extra_class);
+    }
+    else {
+      $output .= theme('menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail'], $extra_class);
+    }
+  }
+  return $output ? theme('menu_block_tree', $output, $menu_name) : '';
 }
 
 /**
@@ -212,4 +280,92 @@ function menu_block_tree($pid, $depth_limit = 0, $expanded = FALSE) {
   }
 
   return str_replace("\n", '', $output);
+}
+
+/**
+ * Set (or get) the active trail for the current page - the path to root in the menu tree.
+ *
+ * This is a patched version of menu_set_active_trail(). Using the patch from
+ * http://drupal.org/node/184955#comment-971852
+ *
+ * @param $new_trail
+ *   An array of links that overrides the default trail.
+ * @param $active_menu_name
+ *   The menu tree in which to set (or get) the active trail.
+ */
+function menu_block_set_active_trail($new_trail = NULL, $active_menu_name = NULL) {
+  static $trail;
+
+  // The trail can vary depending on the active menu.
+  if (empty($active_menu_name)) {
+    $active_menu_name = menu_get_active_menu_name();
+  }
+
+  if (isset($new_trail)) {
+    $trail[$active_menu_name] = $new_trail;
+  }
+  elseif (empty($trail[$active_menu_name])) {
+    $trail[$active_menu_name] = array();
+    $trail[$active_menu_name][] = array('title' => t('Home'), 'href' => '<front>', 'localized_options' => array(), 'type' => 0);
+    $item = menu_get_item();
+
+    // Check whether the current item is a local task (displayed as a tab).
+    if ($item['tab_parent']) {
+      // The title of a local task is used for the tab, never the page title.
+      // Thus, replace it with the item corresponding to the root path to get
+      // the relevant href and title.  For example, the menu item corresponding
+      // to 'admin' is used when on the 'By module' tab at 'admin/by-module'.
+      $parts = explode('/', $item['tab_root']);
+      $args = arg();
+      // Replace wildcards in the root path using the current path.
+      foreach ($parts as $index => $part) {
+        if ($part == '%') {
+          $parts[$index] = $args[$index];
+        }
+      }
+      // Retrieve the menu item using the root path after wildcard replacement.
+      $root_item = menu_get_item(implode('/', $parts));
+      if ($root_item && $root_item['access']) {
+        $item = $root_item;
+      }
+    }
+
+    $tree = menu_tree_page_data($active_menu_name);
+    list($key, $curr) = each($tree);
+
+    while ($curr) {
+      // Terminate the loop when we find the current path in the active trail.
+      if ($curr['link']['href'] == $item['href']) {
+        $trail[$active_menu_name][] = $curr['link'];
+        $curr = FALSE;
+      }
+      else {
+        // Add the link if it's in the active trail, then move to the link below.
+        if ($curr['link']['in_active_trail']) {
+          $trail[$active_menu_name][] = $curr['link'];
+          $tree = $curr['below'] ? $curr['below'] : array();
+        }
+        list($key, $curr) = each($tree);
+      }
+    }
+    // Make sure the current page is in the trail (needed for the page title),
+    // but exclude tabs and the front page.
+    $last = count($trail[$active_menu_name]) - 1;
+    if ($trail[$active_menu_name][$last]['href'] != $item['href'] && !(bool)($item['type'] & MENU_IS_LOCAL_TASK) && !drupal_is_front_page()) {
+      $trail[$active_menu_name][] = $item;
+    }
+  }
+  return $trail[$active_menu_name];
+}
+
+/**
+ * Get the active trail for the current page - the path to root in the menu tree.
+ *
+ * This is a patched version of menu_get_active_trail().
+ *
+ * @param $active_menu_name
+ *   The menu tree from which to get the active trail.
+ */
+function menu_block_get_active_trail($active_menu_name = NULL) {
+  return menu_block_set_active_trail(NULL, $active_menu_name);
 }
