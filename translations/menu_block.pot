@@ -3,15 +3,17 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  menu_block.admin.inc,v 1.5 2008/08/04 19:56:56 johnalbin
-#  menu_block.module,v 1.7 2008/08/04 19:56:56 johnalbin
+#  menu_block.admin.inc,v 1.12 2008/08/22 12:44:42 johnalbin
+#  menu_block.pages.inc,v 1.1 2008/08/22 12:44:42 johnalbin
+#  menu_block.module,v 1.23 2008/08/22 12:44:42 johnalbin
+#  menu_block.install,v 1.8 2008/08/21 23:53:05 johnalbin
 #  menu_block.info,v 1.6 2008/08/05 03:45:10 johnalbin
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Menu Block 5.x-1.x\n"
-"POT-Creation-Date: 2008-08-04 22:48-0600\n"
+"Project-Id-Version: Menu Block 6.x-1.x\n"
+"POT-Creation-Date: 2008-08-22 06:44-0600\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -20,132 +22,184 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: menu_block.admin.inc:14
-msgid "Enable the following blocks of menu trees"
+#: menu_block.admin.inc:44
+msgid "The block has been created."
 msgstr ""
 
-#: menu_block.admin.inc:17
-msgid "Only enabled blocks will appear on the <a href=\"!url\">administer blocks page</a>."
+#: menu_block.admin.inc:56
+msgid "delete"
 msgstr ""
 
-#: menu_block.admin.inc:22
-msgid "Add a new unconfigured menu block."
+#: menu_block.admin.inc:68
+msgid "Are you sure you want to delete the \"%name\" block?"
 msgstr ""
 
-#: menu_block.admin.inc:24
-msgid "Save configuration"
+#: menu_block.admin.inc:68
+msgid "Delete"
 msgstr ""
 
-#: menu_block.admin.inc:27
-msgid "The settings have not been saved because of the errors."
+#: menu_block.admin.inc:68
+msgid "Cancel"
 msgstr ""
 
-#: menu_block.admin.inc:47
-msgid "The configuration options have been saved."
-msgstr ""
-
-#: menu_block.admin.inc:73
-msgid "Unconfigured menu block"
-msgstr ""
-
-#: menu_block.admin.inc:82
-msgid "@menu_name (level @level1)"
-msgstr ""
-
-#: menu_block.admin.inc:85
-msgid "@menu_name (levels @level1-@level2)"
-msgstr ""
-
-#: menu_block.admin.inc:88
-msgid "@menu_name (levels @level1+)"
-msgstr ""
-
-#: menu_block.admin.inc:101
-msgid "Menu"
-msgstr ""
-
-#: menu_block.admin.inc:104
-msgid "The tree (or list) of links will be taken from this menu."
-msgstr ""
-
-#: menu_block.admin.inc:111
-msgid "Starting level of menu tree"
-msgstr ""
-
-#: menu_block.admin.inc:114
-msgid "1st level (primary)"
+#: menu_block.admin.inc:87
+msgid "The \"%name\" block has been removed."
 msgstr ""
 
 #: menu_block.admin.inc:115
+msgid "Unconfigured menu block"
+msgstr ""
+
+#: menu_block.admin.inc:124
+msgid "@menu_name (level @level1)"
+msgstr ""
+
+#: menu_block.admin.inc:127
+msgid "@menu_name (levels @level1-@level2)"
+msgstr ""
+
+#: menu_block.admin.inc:130
+msgid "@menu_name (levels @level1+)"
+msgstr ""
+
+#: menu_block.admin.inc:143 menu_block.pages.inc:22
+msgid "Menu"
+msgstr ""
+
+#: menu_block.admin.inc:146 menu_block.pages.inc:23
+msgid "The tree (or list) of links will be taken from this menu."
+msgstr ""
+
+#: menu_block.admin.inc:150 menu_block.pages.inc:24
+msgid "Starting level of menu tree"
+msgstr ""
+
+#: menu_block.admin.inc:153
+msgid "1st level (primary)"
+msgstr ""
+
+#: menu_block.admin.inc:154
 msgid "2nd level (secondary)"
 msgstr ""
 
-#: menu_block.admin.inc:116
+#: menu_block.admin.inc:155
 msgid "3rd level (tertiary)"
 msgstr ""
 
-#: menu_block.admin.inc:117
+#: menu_block.admin.inc:156
 msgid "4th level"
 msgstr ""
 
-#: menu_block.admin.inc:118
+#: menu_block.admin.inc:157
 msgid "5th level"
 msgstr ""
 
-#: menu_block.admin.inc:119
+#: menu_block.admin.inc:158
 msgid "6th level"
 msgstr ""
 
-#: menu_block.admin.inc:120
+#: menu_block.admin.inc:159
 msgid "7th level"
 msgstr ""
 
-#: menu_block.admin.inc:121
+#: menu_block.admin.inc:160
 msgid "8th level"
 msgstr ""
 
-#: menu_block.admin.inc:122
+#: menu_block.admin.inc:161
 msgid "9th level"
 msgstr ""
 
-#: menu_block.admin.inc:123
+#: menu_block.admin.inc:162
 msgid "10th level"
 msgstr ""
 
-#: menu_block.admin.inc:125
-msgid "Blocks that start with the 2nd level or deeper will only be visible when the active menu item is in the block's tree. Blocks that start with the 1st level will always be visible."
+#: menu_block.admin.inc:164 menu_block.pages.inc:25
+msgid "Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree."
 msgstr ""
 
-#: menu_block.admin.inc:129
+#: menu_block.admin.inc:168 menu_block.pages.inc:26
 msgid "Maximum depth of menu tree"
 msgstr ""
 
-#: menu_block.admin.inc:144
+#: menu_block.admin.inc:183 menu_block.pages.inc:27
 msgid "Trees with a maximum depth of 1 will be styled as a menu list, i.e. theme_menu_block_list() instead of theme_menu_block_tree()."
 msgstr ""
 
-#: menu_block.admin.inc:148
+#: menu_block.admin.inc:187 menu_block.pages.inc:28
 msgid "Expand all children"
 msgstr ""
 
-#: menu_block.admin.inc:150
+#: menu_block.admin.inc:189 menu_block.pages.inc:29
 msgid "All sub-menus of this menu will be expanded."
 msgstr ""
 
-#: menu_block.module:20
-msgid "Menu blocks"
+#: menu_block.pages.inc:17
+msgid "Adding menu blocks"
 msgstr ""
 
-#: menu_block.module:21
-msgid "Enable blocks to appear on the <a href=\"!url\">administer blocks page</a>."
+#: menu_block.pages.inc:18
+msgid "To add new menu blocks, use the \"Add menu block\" button on the <a href=\"@url\">administer blocks page</a>. You will then be able to configure your menu block before adding it."
 msgstr ""
 
-#: menu_block.module:8
-msgid "administer menu block"
+#: menu_block.pages.inc:19
+msgid "Configuring menu blocks"
+msgstr ""
+
+#: menu_block.pages.inc:20
+msgid "When adding or configuring a menu block, several configuration options are available:"
+msgstr ""
+
+#: menu_block.pages.inc:31
+msgid "Styling menu blocks"
+msgstr ""
+
+#: menu_block.pages.inc:32
+msgid "Themers should look at the myriad of classes added to the %ul and %li elements."
+msgstr ""
+
+#: menu_block.pages.inc:33
+msgid "Menu block API"
+msgstr ""
+
+#: menu_block.pages.inc:34
+msgid "Developers can use the API of this module to create their own menu trees or lists outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file."
+msgstr ""
+
+#: menu_block.pages.inc:38
+msgid "<a href=\"@url\">More detailed help</a> is available."
+msgstr ""
+
+#: menu_block.module:326
+msgid "Home"
+msgstr ""
+
+#: menu_block.module:14
+msgid "Add menu block"
+msgstr ""
+
+#: menu_block.module:15
+msgid "Add a new menu block."
+msgstr ""
+
+#: menu_block.module:23
+msgid "Delete menu block"
 msgstr ""
 
 #: menu_block.module:0
 msgid "menu_block"
+msgstr ""
+
+#: menu_block.install:30
+msgid "To configure menu blocks, use the \"Add menu block\" button on the <a href=\"@url\">administer blocks page</a>."
+msgstr ""
+
+#: menu_block.install:60
+msgid "A pre-release version of Menu block has been detected. All menu blocks from the pre-release version have been given a new delta and are no longer placed in any block regions; their block placement should be re-configured immediately."
+msgstr ""
+
+#: menu_block.install:94
+msgid "The Drupal 5 version of Menu block has been upgraded. To configure menu blocks in Drupal 6, use the \"Add menu block\" button on the <a href=\"@url\">administer blocks page</a>."
 msgstr ""
 
 #: menu_block.info:0
