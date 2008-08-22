@@ -161,7 +161,7 @@ function _menu_block_block_configure($delta) {
       '9'  => t('9th level'),
       '10' => t('10th level'),
     ),
-    '#description' => t("Blocks that start with the 2nd level or deeper will only be visible when the active menu item is in the block's tree. Blocks that start with the 1st level will always be visible."),
+    '#description' => t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.'),
   );
   $form['depth'] = array(
     '#type' => 'select',

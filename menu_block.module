@@ -39,6 +39,18 @@ function menu_block_init() {
 }
 
 /**
+ * Implements hook_help().
+ */
+function menu_block_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#menu_block':
+    case 'admin/build/block/add-menu-block':
+      include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.pages.inc';
+      return _menu_block_help($path, $arg);
+  }
+}
+
+/**
  * Alters the block admin form to add delete links next to menu blocks.
  */
 function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
