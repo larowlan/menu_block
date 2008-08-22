@@ -75,11 +75,17 @@ function _menu_block_block_view($delta) {
   // Determine which menu and what level of the menu has been requested.
   $menu_name = variable_get("menu_block_{$delta}_menu_name", "navigation");
   $level = variable_get("menu_block_{$delta}_level", 1);
+  $expanded = variable_get("menu_block_{$delta}_expanded", 0);
 
   // D6 menu changes are so vast, just printing standard menu tree for now.
   $menu_names = menu_get_menus(TRUE);
   $data['subject'] = $menu_names[$menu_name];
-  $tree = menu_tree_page_data($menu_name);
+  if ($expanded) {
+    $tree = menu_tree_all_data($menu_name);
+  }
+  else {
+    $tree = menu_tree_page_data($menu_name);
+  }
   $data['content'] = menu_block_tree_output($tree, $menu_name);
 
 return $data;
@@ -90,7 +96,7 @@ return $data;
 
     if ($level != 1) {
       // Get the menu item of the n-level link in the active trail.
-      $active_trail = menu_get_active_trail();
+      $active_trail = menu_block_get_active_trail($menu_name);
       $menu_item = menu_get_item();
     }
 
@@ -101,7 +107,6 @@ return $data;
       $data['content'] = $tree ? theme('menu_block_list', $tree, $menu_name) : '';
     }
     else {
-      $expanded = variable_get("menu_block_{$delta}_expanded", 0);
       $tree = menu_block_tree($menu_name, $depth, $expanded);
       $data['content'] = $tree ? theme('menu_block_tree', $tree, $menu_name) : '';
     }
