@@ -1,4 +1,4 @@
-Menu Block 6.x-1.x-dev
+Menu Block 6.x-2.x-dev
   * Still porting to D6 (see #266230)
 
 Menu Block 5.x-1.x-dev
