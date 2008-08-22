@@ -67,7 +67,7 @@ function menu_block_update_5100() {
  * $menu_block_DELTA_mid to $menu_block_DELTA_menu_name. Also deletes un-enabled
  * menu blocks.
  */
-function menu_block_update_6100() {
+function menu_block_update_6200() {
   $block_ids = array();
   foreach (variable_get('menu_block_enabled_blocks', array()) AS $delta => $enabled) {
     if ($enabled) {
