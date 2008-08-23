@@ -117,6 +117,7 @@ function _menu_block_format_title($delta) {
   else {
     $level = variable_get("menu_block_{$delta}_level", 1);
     $depth = variable_get("menu_block_{$delta}_depth", 0);
+    $expanded = variable_get("menu_block_{$delta}_expanded", 0);
     $menus = menu_get_menus(TRUE);
     // Show the configured levels in the block info
     $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
@@ -124,10 +125,20 @@ function _menu_block_format_title($delta) {
       $title = t('@menu_name (level @level1)', $replacements);
     }
     elseif ($depth) {
-      $title = t('@menu_name (levels @level1-@level2)', $replacements);
+      if ($expanded) {
+        $title = t('@menu_name (expanded levels @level1-@level2)', $replacements);
+      }
+      else {
+        $title = t('@menu_name (levels @level1-@level2)', $replacements);
+      }
     }
     else {
-      $title = t('@menu_name (levels @level1+)', $replacements);
+      if ($expanded) {
+        $title = t('@menu_name (expanded levels @level1+)', $replacements);
+      }
+      else {
+        $title = t('@menu_name (levels @level1+)', $replacements);
+      }
     }
   }
   return $title;
@@ -138,6 +149,10 @@ function _menu_block_format_title($delta) {
  */
 function _menu_block_block_configure($delta) {
 
+  $form['help'] = array(
+    '#value' => '<p>' . t('To learn more about configuring menu blocks, see <a href="@url">menu block’s detailed help</a>.', array('@url' => url('admin/help/menu_block'))) . '</p>',
+    '#weight' => -18,
+  );
   $form['menu_name'] = array(
     '#type' => 'select',
     '#title' => t('Menu'),
@@ -180,7 +195,7 @@ function _menu_block_block_configure($delta) {
       '10' => '10',
       '0'  => 'Unlimited',
     ),
-    '#description' => t('Trees with a maximum depth of 1 will be styled as a menu list, i.e. theme_menu_block_list() instead of theme_menu_block_tree().'),
+    '#description' => t('From the starting level, specify the maximum depth of the tree.'),
   );
   $form['expanded'] = array(
     '#type' => 'checkbox',
