@@ -3,17 +3,17 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  menu_block.admin.inc,v 1.12 2008/08/22 12:44:42 johnalbin
-#  menu_block.pages.inc,v 1.1 2008/08/22 12:44:42 johnalbin
-#  menu_block.module,v 1.23 2008/08/22 12:44:42 johnalbin
-#  menu_block.install,v 1.8 2008/08/21 23:53:05 johnalbin
+#  menu_block.admin.inc,v 1.13 2008/08/23 16:58:59 johnalbin
+#  menu_block.pages.inc,v 1.2 2008/08/23 16:58:59 johnalbin
+#  menu_block.module,v 1.24 2008/08/22 17:49:02 johnalbin
+#  menu_block.install,v 1.9 2008/08/22 17:53:46 johnalbin
 #  menu_block.info,v 1.6 2008/08/05 03:45:10 johnalbin
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Menu Block 6.x-1.x\n"
-"POT-Creation-Date: 2008-08-22 06:44-0600\n"
+"Project-Id-Version: Menu Block 6.x-2.x\n"
+"POT-Creation-Date: 2008-08-23 10:59-0600\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -50,87 +50,99 @@ msgstr ""
 msgid "Unconfigured menu block"
 msgstr ""
 
-#: menu_block.admin.inc:124
+#: menu_block.admin.inc:125
 msgid "@menu_name (level @level1)"
 msgstr ""
 
-#: menu_block.admin.inc:127
+#: menu_block.admin.inc:129
+msgid "@menu_name (expanded levels @level1-@level2)"
+msgstr ""
+
+#: menu_block.admin.inc:132
 msgid "@menu_name (levels @level1-@level2)"
 msgstr ""
 
-#: menu_block.admin.inc:130
+#: menu_block.admin.inc:137
+msgid "@menu_name (expanded levels @level1+)"
+msgstr ""
+
+#: menu_block.admin.inc:140
 msgid "@menu_name (levels @level1+)"
 msgstr ""
 
-#: menu_block.admin.inc:143 menu_block.pages.inc:22
+#: menu_block.admin.inc:153
+msgid "To learn more about configuring menu blocks, see <a href=\"@url\">menu block’s detailed help</a>."
+msgstr ""
+
+#: menu_block.admin.inc:158 menu_block.pages.inc:25
 msgid "Menu"
 msgstr ""
 
-#: menu_block.admin.inc:146 menu_block.pages.inc:23
+#: menu_block.admin.inc:161 menu_block.pages.inc:26
 msgid "The tree (or list) of links will be taken from this menu."
 msgstr ""
 
-#: menu_block.admin.inc:150 menu_block.pages.inc:24
+#: menu_block.admin.inc:165 menu_block.pages.inc:27
 msgid "Starting level of menu tree"
 msgstr ""
 
-#: menu_block.admin.inc:153
+#: menu_block.admin.inc:168
 msgid "1st level (primary)"
 msgstr ""
 
-#: menu_block.admin.inc:154
+#: menu_block.admin.inc:169
 msgid "2nd level (secondary)"
 msgstr ""
 
-#: menu_block.admin.inc:155
+#: menu_block.admin.inc:170
 msgid "3rd level (tertiary)"
 msgstr ""
 
-#: menu_block.admin.inc:156
+#: menu_block.admin.inc:171
 msgid "4th level"
 msgstr ""
 
-#: menu_block.admin.inc:157
+#: menu_block.admin.inc:172
 msgid "5th level"
 msgstr ""
 
-#: menu_block.admin.inc:158
+#: menu_block.admin.inc:173
 msgid "6th level"
 msgstr ""
 
-#: menu_block.admin.inc:159
+#: menu_block.admin.inc:174
 msgid "7th level"
 msgstr ""
 
-#: menu_block.admin.inc:160
+#: menu_block.admin.inc:175
 msgid "8th level"
 msgstr ""
 
-#: menu_block.admin.inc:161
+#: menu_block.admin.inc:176
 msgid "9th level"
 msgstr ""
 
-#: menu_block.admin.inc:162
+#: menu_block.admin.inc:177
 msgid "10th level"
 msgstr ""
 
-#: menu_block.admin.inc:164 menu_block.pages.inc:25
+#: menu_block.admin.inc:179 menu_block.pages.inc:28
 msgid "Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree."
 msgstr ""
 
-#: menu_block.admin.inc:168 menu_block.pages.inc:26
+#: menu_block.admin.inc:183 menu_block.pages.inc:29
 msgid "Maximum depth of menu tree"
 msgstr ""
 
-#: menu_block.admin.inc:183 menu_block.pages.inc:27
-msgid "Trees with a maximum depth of 1 will be styled as a menu list, i.e. theme_menu_block_list() instead of theme_menu_block_tree()."
+#: menu_block.admin.inc:198
+msgid "From the starting level, specify the maximum depth of the tree."
 msgstr ""
 
-#: menu_block.admin.inc:187 menu_block.pages.inc:28
+#: menu_block.admin.inc:202 menu_block.pages.inc:31
 msgid "Expand all children"
 msgstr ""
 
-#: menu_block.admin.inc:189 menu_block.pages.inc:29
+#: menu_block.admin.inc:204 menu_block.pages.inc:32
 msgid "All sub-menus of this menu will be expanded."
 msgstr ""
 
@@ -150,28 +162,40 @@ msgstr ""
 msgid "When adding or configuring a menu block, several configuration options are available:"
 msgstr ""
 
-#: menu_block.pages.inc:31
-msgid "Styling menu blocks"
+#: menu_block.pages.inc:22
+msgid "Block title"
 msgstr ""
 
-#: menu_block.pages.inc:32
-msgid "Themers should look at the myriad of classes added to the %ul and %li elements."
+#: menu_block.pages.inc:23
+msgid "For menu trees that start with the 1st level, the default block title will be the menu name. For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level."
 msgstr ""
 
-#: menu_block.pages.inc:33
-msgid "Menu block API"
+#: menu_block.pages.inc:24
+msgid "For example, if the active menu trail for the Navigation menu is: Administer › Site building › Menus › Primary links, then a menu block configured to start with the 1st level of the Navigation will display a block title of “Navigation”. And a menu block configured to start with the 3rd level of the Navigation menu will display a block title of “Site building”."
+msgstr ""
+
+#: menu_block.pages.inc:30
+msgid "From the starting level, specify the maximum depth of the tree. Blocks with a maximum dpeth of 1 will just be a single un-nested list of links with none of those links’ children displayed."
 msgstr ""
 
 #: menu_block.pages.inc:34
+msgid "Styling menu blocks"
+msgstr ""
+
+#: menu_block.pages.inc:35
+msgid "Trees with a maximum depth of 1 will be styled as a menu list, i.e. %function1 instead of %function2. Themers should look at the myriad of classes added to the %ul and %li elements."
+msgstr ""
+
+#: menu_block.pages.inc:36
+msgid "Menu block API"
+msgstr ""
+
+#: menu_block.pages.inc:37
 msgid "Developers can use the API of this module to create their own menu trees or lists outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file."
 msgstr ""
 
-#: menu_block.pages.inc:38
+#: menu_block.pages.inc:42
 msgid "<a href=\"@url\">More detailed help</a> is available."
-msgstr ""
-
-#: menu_block.module:326
-msgid "Home"
 msgstr ""
 
 #: menu_block.module:14
