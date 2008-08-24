@@ -110,151 +110,108 @@ function _menu_block_block_view($delta) {
     $tree = menu_tree_page_data($menu_name);
   }
 
+  // @TODO: Expanded blocks don't work with level-pruned trees because the active
+  // trail is missing from the data structure.
+
   // Optionally prune the tree
-  if ($level > 1 || $depth > 0) {
-    list($data['subject'], $tree) = menu_tree_prune_tree($tree, $level); // Still need to implement depth.
+  if ($level > 1) {
+    $data['subject'] = menu_tree_prune_tree($tree, $level);
+  }
+  if ($depth > 0) {
+    menu_tree_depth_trim($tree, $depth);
   }
 
-  // Render the list or the tree.
-  if ($depth == 1) {
-    $data['content'] = menu_block_list_output($tree, $menu_name);
-  }
-  else {
-    $data['content'] = menu_tree_output($tree, $menu_name);
-  }
+  // Render the tree.
+  $data['content'] = menu_tree_output($tree, $menu_name);
 
   return $data;
 }
 
 /**
- * Implements hook_theme().
- */
-function menu_block_theme() {
-  return array(
-    'menu_block_tree' => array(
-      'arguments' => array('tree' => NULL, 'menu_name' => NULL, 'pid' => NULL),
-    ),
-    'menu_block_list' => array(
-      'arguments' => array('list' => NULL, 'menu_name' => NULL, 'pid' => NULL),
-    ),
-  );
-}
-
-/**
- * Generate the HTML for a menu tree.
+ * Prune a tree so that it begins at the specified level.
  *
- * @ingroup themeable
+ * This function will follow the active menu trail to the specified level.
  *
  * @param $tree
- *   string The menu tree.
- * @param $menu_name
- *   The name of the menu from which the tree is being rendered.
- * @param $pid
- *   int The parent id of the menu.
+ *   array The menu tree to prune.
+ * @param $level
+ *   int The level of the original tree that will start the pruned tree.
  * @return
- *   string The rendered menu tree.
+ *   string Returns the title of pruned tree.
  */
-function theme_menu_block_tree($tree, $menu_name = NULL, $pid = NULL) {
-  $menu_classes = array('menu', 'menu-tree');
-  if ($menu_name) {
-    $menu_classes[] = 'menu-name-' . $menu_name;
+function menu_tree_prune_tree(&$tree, $level) {
+  // Get the default menu title.
+  if ($level == 1) {
+    $menu_names = menu_get_menus(TRUE);
+    // Grab any menu item to find the menu_name for this tree.
+    $menu_item = current($tree);
+    $menu_title = $menu_names[$menu_item['link']['menu_name']];
   }
-  if ($pid) {
-    $menu_classes[] = 'menu-pid-' . $pid;
-  }
-  return '<ul class="' . implode(' ', $menu_classes) . '">' . $tree . '</ul>';
-}
-
-/**
- * Generate the HTML for a menu list.
- *
- * @ingroup themeable
- *
- * @param $tree
- *   string The menu tree.
- * @param $menu_name
- *   The name of the menu from which the tree is being rendered.
- * @param $pid
- *   int The parent id of the menu.
- * @return
- *   string The rendered menu list.
- */
-function theme_menu_block_list($list, $menu_name = NULL, $pid = NULL) {
-  $menu_classes = array('menu-list');
-  if ($menu_name) {
-    $menu_classes[] = 'menu-name-' . $menu_name;
-  }
-  if ($pid) {
-    $menu_classes[] = 'menu-pid-' . $pid;
-  }
-  return '<ul class="' . implode(' ', $menu_classes) . '">' . $list . '</ul>';
-}
-
-/**
- * Returns a rendered menu tree.
- *
- * This is a near-copy of menu_tree_output; it uses theme_menu_block_list()
- * instead of theme_menu_tree().
- *
- * @param $tree
- *   A data structure representing the tree as returned from menu_tree_data.
- * @return
- *   The rendered HTML of that data structure.
- */
-function menu_block_list_output($tree) {
-  $output = '';
-  $items = array();
-
-  // Pull out just the menu items we are going to render so that we
-  // get an accurate count for the first/last classes.
-  foreach ($tree as $data) {
-    if (!$data['link']['hidden']) {
-      $items[] = $data;
-    }
+  else {
+    // We won't know the title until we've pruned the tree.
+    $menu_title = '';
   }
 
-  $num_items = count($items);
-  foreach ($items as $i => $data) {
-    $extra_class = NULL;
-    if ($i == 0) {
-      $extra_class = 'first';
-    }
-    if ($i == $num_items - 1) {
-      $extra_class = 'last';
-    }
-    $link = theme('menu_item_link', $data['link']);
-    if ($data['below']) {
-      $output .= theme('menu_item', $link, $data['link']['has_children'], menu_block_list_output($data['below']), $data['link']['in_active_trail'], $extra_class);
-    }
-    else {
-      $output .= theme('menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail'], $extra_class);
-    }
-  }
-  return $output ? theme('menu_block_list', $output) : '';
-}
-
-/**
- * Prune a tree.
- */
-function menu_tree_prune_tree($tree, $level = 1) {
-  $menu_title = '';
-
-  // Trim down to the level specified.
+  // Trim the upper levels down to the one desired.
   for ($i=$level; $i > 1; $i--) {
-    $tree_pruned = FALSE;
-    foreach ($tree AS $curr) {
-      if ($curr['link']['in_active_trail']) {
-        $menu_title = $curr['link']['options']['attributes']['title'];
-        $tree = $curr['below'] ? $curr['below'] : array();
-        $tree_pruned = TRUE;
+    $found_active_trail = FALSE;
+    // Examine each element at this level for the active trail.
+    // @TODO: When PHP 5 becomes required (Drupal 7.x), use the following faster
+    // implementation: foreach ($array AS $key => &$value) {}
+    foreach (array_keys($tree) AS $key) {
+      if ($tree[$key]['link']['in_active_trail']) {
+        // Get the title for the pruned tree.
+        if (!empty($tree[$key]['link']['localized_options']['attributes']['title'])
+            && $tree[$key]['link']['description'] != $tree[$key]['link']['localized_options']['attributes']['title']) {
+          // Node-based links have the "page title" in the title attribute.
+          $menu_title = $tree[$key]['link']['localized_options']['attributes']['title'];
+        }
+        else {
+          // Otherwise use the menu item title.
+          $menu_title = $tree[$key]['link']['title'];
+        }
+        // Prune the tree to the children of the item in the active trail.
+        $tree = $tree[$key]['below'] ? $tree[$key]['below'] : array();
+        $found_active_trail = TRUE;
         break;
       }
     }
-    if (!$tree_pruned) {
+    // If we don't find the active trail, the active item isn't in the tree we want.
+    if (!$found_active_trail) {
       $tree = array();
       break;
     }
   }
 
-  return array($menu_title, $tree);
+  return $menu_title;
+}
+
+/**
+ * Prune a tree so it does not extend beyond the specified depth limit.
+ *
+ * @param $tree
+ *   array The menu tree to prune.
+ * @param $depth_limit
+ *   int The maximum depth of the returned tree, 0 for unlimited.
+ * @return
+ *   void
+ */
+function menu_tree_depth_trim(&$tree, $depth_limit) {
+  // Prevent dumb input from returning trimmed tree.
+  if ($depth_limit < 1) { return; }
+
+  // Examine each element at this level to find any possible children.
+  // @TODO: When PHP 5 becomes required (Drupal 7.x), use the following faster
+  // implementation: foreach ($array AS $key => &$value) {}
+  foreach (array_keys($tree) AS $key) {
+    if ($tree[$key]['below'] && $depth_limit > 1) {
+      menu_tree_depth_trim($tree[$key]['below'], $depth_limit-1);
+    }
+    else {
+      // Remove the children items.
+      $tree[$key]['below'] = FALSE;
+      // Turn off the menu styling that shows there are children.
+      $tree[$key]['link']['has_children'] = FALSE;
+    }
+  }
 }
