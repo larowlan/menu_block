@@ -1,5 +1,9 @@
-Menu Block 6.x-2.x-dev
-  * Still porting to D6 (see #266230)
+Menu Block 6.x-2.0
+  * Added extensive documentation help text.
+  * Added extended classes to menu trees.
+  * Menu block's administrative interface now matches the block module's
+    standard add, configure, and delete interface.
+  #266230: Port Menu block to D6
 
 Menu Block 5.x-1.x-dev
   * Added missing dependency on menu module.
