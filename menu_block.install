@@ -20,6 +20,7 @@ function menu_block_uninstall() {
   variable_del('menu_block_ids');
   // Remove block configurations.
   db_query("DELETE FROM {blocks} WHERE module = 'menu_block'");
+  db_query("DELETE FROM {blocks_roles} WHERE module = 'menu_block'");
   cache_clear_all();
 }
 

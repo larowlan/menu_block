@@ -18,7 +18,6 @@ function menu_block_add_block_form(&$form_state) {
  * Save the new menu block.
  */
 function menu_block_add_block_form_submit($form, &$form_state) {
-
   // Determine the delta of the new block.
   $block_ids = variable_get('menu_block_ids', array());
   $delta = empty($block_ids) ? 1 : max($block_ids) + 1;
@@ -84,6 +83,7 @@ function menu_block_delete_submit($form, &$form_state) {
   variable_del("menu_block_{$delta}_expanded");
 
   db_query("DELETE FROM {blocks} WHERE module = 'menu_block' AND delta = %d", $delta);
+  db_query("DELETE FROM {blocks_roles} WHERE module = 'menu_block' AND delta = %d", $delta);
   drupal_set_message(t('The "%name" block has been removed.', array('%name' => $form_state['values']['block_title'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/build/block';
@@ -148,7 +148,6 @@ function _menu_block_format_title($delta) {
  * Returns the 'configure' $op info for hook_block().
  */
 function _menu_block_block_configure($delta) {
-
   $form['help'] = array(
     '#value' => '<p>' . t('To learn more about configuring menu blocks, see <a href="@url">menu block’s detailed help</a>.', array('@url' => url('admin/help/menu_block'))) . '</p>',
     '#weight' => -18,
