@@ -31,18 +31,10 @@ function menu_block_menu() {
     'title' => 'Menu block',
     'description' => 'Add a new menu block.',
     'access arguments' => array('administer blocks'),
-    'page callback' => '_menu_block_by_module_hack',
+    'page callback' => '_menu_block_by_module_hack', // And, I mean hack.
     'file' => 'menu_block.pages.inc',
   );
-
   return $items;
-}
-
-/**
- * Implements hook_init().
- */
-function menu_block_init() {
-  drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu_block.css');
 }
 
 /**
@@ -104,19 +96,20 @@ function _menu_block_block_view($delta) {
   if ($expanded) {
     // Get the full, un-pruned tree.
     $tree = menu_tree_all_data($menu_name);
+    // And add the active trail data back to the full tree.
+    menu_tree_add_active_path($tree);
   }
   else {
-    // Get the tree pruned for just the active path.
+    // Get the tree pruned for just the active trail.
     $tree = menu_tree_page_data($menu_name);
   }
 
-  // @TODO: Expanded blocks don't work with level-pruned trees because the active
-  // trail is missing from the data structure.
-
-  // Optionally prune the tree
+  // Prune the tree along the active trail to the specified level.
   if ($level > 1) {
     $data['subject'] = menu_tree_prune_tree($tree, $level);
   }
+
+  // Trim the branches that extend beyond the specified depth.
   if ($depth > 0) {
     menu_tree_depth_trim($tree, $depth);
   }
@@ -125,6 +118,45 @@ function _menu_block_block_view($delta) {
   $data['content'] = menu_tree_output($tree, $menu_name);
 
   return $data;
+}
+
+/**
+ * Add the active trail indicators into the tree.
+ *
+ * The data returned by menu_tree_page_data() has link['in_active_trail'] set to
+ * TRUE for each menu item in the active trail. The data returned from
+ * menu_tree_all_data() does not contain the active trail indicators. This is a
+ * helper function that adds it back in.
+ *
+ * @param $tree
+ *   array The menu tree to prune.
+ * @return
+ *   void
+ */
+function menu_tree_add_active_path(&$tree) {
+  // Grab any menu item to find the menu_name for this tree.
+  $menu_item = current($tree);
+  $tree_with_trail = menu_tree_page_data($menu_item['link']['menu_name']);
+
+  // To traverse the original tree down the active trail, we use a pointer.
+  $subtree_pointer =& $tree;
+
+  // Find each key in the active trail.
+  while ($tree_with_trail) {
+    foreach (array_keys($tree_with_trail) AS $key) {
+      if ($tree_with_trail[$key]['link']['in_active_trail']) {
+        // Set the active trail info in the original tree.
+        $subtree_pointer[$key]['link']['in_active_trail'] = TRUE;
+        // Continue in the subtree, if it exists.
+        $tree_with_trail =& $tree_with_trail[$key]['below'];
+        $subtree_pointer =& $subtree_pointer[$key]['below'];
+        break;
+      }
+      else {
+        unset($tree_with_trail[$key]);
+      }
+    }
+  }
 }
 
 /**
