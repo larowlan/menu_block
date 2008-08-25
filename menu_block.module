@@ -47,7 +47,7 @@ function menu_block_menu() {
 function menu_block_help($path, $arg) {
   switch ($path) {
     case 'admin/help#menu_block':
-    case 'admin/build/block/add-menu-block':
+    case 'admin/build/block':
       include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.pages.inc';
       return _menu_block_help($path, $arg);
   }
