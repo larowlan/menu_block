@@ -6,6 +6,10 @@
  * Provides configurable blocks of menu items.
  */
 
+// @TODO: For PHP 4 compatibility we use foreach (array_keys($array) AS $key).
+// When PHP 5 becomes required (Drupal 7.x), use the following faster
+// implementation: foreach ($array AS $key => &$value) {}
+
 /**
  * Implements hook_menu().
  */
@@ -188,20 +192,10 @@ function menu_tree_prune_tree(&$tree, $level) {
   for ($i=$level; $i > 1; $i--) {
     $found_active_trail = FALSE;
     // Examine each element at this level for the active trail.
-    // @TODO: When PHP 5 becomes required (Drupal 7.x), use the following faster
-    // implementation: foreach ($array AS $key => &$value) {}
     foreach (array_keys($tree) AS $key) {
       if ($tree[$key]['link']['in_active_trail']) {
         // Get the title for the pruned tree.
-        if (!empty($tree[$key]['link']['localized_options']['attributes']['title'])
-            && $tree[$key]['link']['description'] != $tree[$key]['link']['localized_options']['attributes']['title']) {
-          // Node-based links have the "page title" in the title attribute.
-          $menu_title = $tree[$key]['link']['localized_options']['attributes']['title'];
-        }
-        else {
-          // Otherwise use the menu item title.
-          $menu_title = $tree[$key]['link']['title'];
-        }
+        $menu_title = $tree[$key]['link']['title'];
         // Prune the tree to the children of the item in the active trail.
         $tree = $tree[$key]['below'] ? $tree[$key]['below'] : array();
         $found_active_trail = TRUE;
@@ -233,8 +227,6 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
   if ($depth_limit < 1) { return; }
 
   // Examine each element at this level to find any possible children.
-  // @TODO: When PHP 5 becomes required (Drupal 7.x), use the following faster
-  // implementation: foreach ($array AS $key => &$value) {}
   foreach (array_keys($tree) AS $key) {
     if ($tree[$key]['below'] && $depth_limit > 1) {
       menu_tree_depth_trim($tree[$key]['below'], $depth_limit-1);
@@ -242,7 +234,7 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
     else {
       // Remove the children items.
       $tree[$key]['below'] = FALSE;
-      // Turn off the menu styling that shows there are children.
+      // Turn off the menu styling that shows there were children.
       $tree[$key]['link']['has_children'] = FALSE;
     }
   }
