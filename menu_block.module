@@ -119,7 +119,16 @@ function _menu_block_block_view($delta) {
   }
 
   // Render the tree.
-  $data['content'] = menu_tree_output($tree, $menu_name);
+  $data['content'] = menu_block_tree_output($tree);
+  if ($data['content']) {
+    $classes[] = 'menu-name-' . $menu_name;
+    $classes[] = 'menu-level-' . $level;
+    $classes[] = 'menu-depth-' . $depth;
+    if ($expanded) {
+      $classes[] = 'menu-expanded';
+    }
+    $data['content'] = '<div class="' . check_plain(implode(' ', $classes)) . '">' . $data['content'] . '</div>';
+  }
 
   return $data;
 }
@@ -238,4 +247,65 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
       $tree[$key]['link']['has_children'] = FALSE;
     }
   }
+}
+
+/**
+ * Returns a rendered menu tree.
+ *
+ * This is an optimized version of menu_tree_output() with additional classes
+ * added to the output.
+ *
+ * @param $tree
+ *   array A data structure representing the tree as returned from menu_tree_data.
+ * @return
+ *   string The rendered HTML of that data structure.
+ */
+function menu_block_tree_output(&$tree) {
+  $output = '';
+  $items = array();
+
+  // Pull out just the menu items we are going to render so that we
+  // get an accurate count for the first/last classes.
+  foreach (array_keys($tree) as $key) {
+    if (!$tree[$key]['link']['hidden']) {
+      $items[$key] = array(
+        'link' => $tree[$key]['link'],
+        // To prevent copying the entire child array, we render it first.
+        'below' => !empty($tree[$key]['below']) ? menu_block_tree_output($tree[$key]['below']) : '',
+      );
+    }
+  }
+
+  $num_items = count($items);
+  $i = 1;
+  foreach (array_keys($items) as $key) {
+    // Render the link.
+    $link_class = array();
+    if (!empty($items[$key]['link']['localized_options']['attributes']['class'])) {
+      $link_class[] = $items[$key]['link']['localized_options']['attributes']['class'];
+    }
+    if ($items[$key]['link']['in_active_trail']) {
+      $link_class[] = 'active-trail';
+    }
+    if (!empty($link_class)) {
+      $items[$key]['link']['localized_options']['attributes']['class'] = implode(' ', $link_class);
+    }
+    $link = theme('menu_item_link', $items[$key]['link']);
+    // Render the menu item.
+    $extra_class = array();
+    if ($i == 1) {
+      $extra_class[] = 'first';
+    }
+    if ($i == $num_items) {
+      $extra_class[] = 'last';
+    }
+    $extra_class[] = 'menu-mlid-' . $items[$key]['link']['mlid'];
+    if ($items[$key]['link']['href'] == $_GET['q'] || ($items[$key]['link']['href'] == '<front>' && drupal_is_front_page())) {
+      $extra_class[] = 'active';
+    }
+    $extra_class = !empty($extra_class) ? implode(' ', $extra_class) : NULL;
+    $output .= theme('menu_item', $link, $items[$key]['link']['has_children'], $items[$key]['below'], $items[$key]['link']['in_active_trail'], $extra_class);
+    $i++;
+  }
+  return $output ? theme('menu_tree', $output) : '';
 }
