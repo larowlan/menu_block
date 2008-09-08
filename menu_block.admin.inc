@@ -97,6 +97,9 @@ function _menu_block_block_list() {
   $blocks = array();
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
     $blocks[$delta]['info'] = _menu_block_format_title($delta);
+    // Menu blocks can't be cached because each menu item can have
+    // a custom access callback. menu.inc manages its own caching.
+    $blocks[$delta]['cache'] = BLOCK_NO_CACHE;
   }
   return $blocks;
 }
