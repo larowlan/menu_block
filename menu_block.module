@@ -267,14 +267,16 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
 
   // Examine each element at this level to find any possible children.
   foreach (array_keys($tree) AS $key) {
-    if ($tree[$key]['below'] && $depth_limit > 1) {
-      menu_tree_depth_trim($tree[$key]['below'], $depth_limit-1);
-    }
-    else {
-      // Remove the children items.
-      $tree[$key]['below'] = FALSE;
-      // Turn off the menu styling that shows there were children.
-      $tree[$key]['link']['has_children'] = FALSE;
+    if ($tree[$key]['below']) {
+      if ($depth_limit > 1) {
+        menu_tree_depth_trim($tree[$key]['below'], $depth_limit-1);
+      }
+      else {
+        // Remove the children items.
+        $tree[$key]['below'] = FALSE;
+        // Turn off the menu styling that shows there were children.
+        $tree[$key]['link']['has_children'] = FALSE;
+      }
     }
   }
 }

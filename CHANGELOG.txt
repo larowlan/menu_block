@@ -1,4 +1,5 @@
 Menu Block 6.x-2.x-dev
+  #332974: Collapsed menu items get "leaf" class when using "depth" option.
   #333988: Create template for menu-block-wrapper.
   #331933 by sun: Help links are displayed if Help module is disabled.
   #338263: Migration from 5.x-1.x to 6.x-2.x is broken.
