@@ -1,6 +1,6 @@
 Menu Block 6.x-2.x-dev
-  #338263: Migration from 5.x-1.x to 6.x-2.x is broken
-  #305267: Menu blocks incorrectly cached per role
+  #338263: Migration from 5.x-1.x to 6.x-2.x is broken.
+  #305267: Menu blocks incorrectly cached per role.
 
 Menu Block 6.x-2.0
   * Added extensive documentation help text.
@@ -9,13 +9,14 @@ Menu Block 6.x-2.0
     standard add, configure, and delete interface.
   #266230: Port Menu block to D6
 
-Menu Block 5.x-1.x-dev
+Menu Block 5.x-2.0
+  #304675: Port 6.x admin interface to 5.x.
   * Added missing dependency on menu module.
 
 Menu Block 5.x-1.0
   * Simplified block configuration.
 
 Menu Block 5.x-0.9
-  #266223: Add option to limit the depth of the tree to an arbitrary level
+  #266223: Add option to limit the depth of the tree to an arbitrary level.
   * Added block config to specify whether to expand all children.
   * Added settings to enable specific menu blocks.
