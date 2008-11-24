@@ -48,7 +48,7 @@ function menu_block_help($path, $arg) {
   switch ($path) {
     case 'admin/help#menu_block':
     case 'admin/build/block':
-      include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.pages.inc';
+      module_load_include('inc', 'menu_block', 'menu_block.pages');
       return _menu_block_help($path, $arg);
   }
 }
@@ -57,7 +57,7 @@ function menu_block_help($path, $arg) {
  * Alters the block admin form to add delete links next to menu blocks.
  */
 function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
-  include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
   _menu_block_form_block_admin_display_form_alter($form, $form_state);
 }
 
@@ -71,7 +71,7 @@ function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
   }
   else {
     // "op"s besides "view" are seldom used, so we store them in a separate file.
-    include_once './' . drupal_get_path('module', 'menu_block') . '/menu_block.admin.inc';
+    module_load_include('inc', 'menu_block', 'menu_block.admin');
     if (function_exists($function)) {
       return $function($delta, $edit);
     }
@@ -88,7 +88,7 @@ function _menu_block_block_view($delta) {
   $data = array();
 
   // Get the block configuration options.
-  $menu_name = variable_get("menu_block_{$delta}_menu_name", "navigation");
+  $menu_name = variable_get("menu_block_{$delta}_menu_name", 'navigation');
   $level = variable_get("menu_block_{$delta}_level", 1);
   $depth = variable_get("menu_block_{$delta}_depth", 0);
   $expanded = variable_get("menu_block_{$delta}_expanded", 0);
