@@ -48,6 +48,7 @@ function menu_block_help($path, $arg) {
   switch ($path) {
     case 'admin/help#menu_block':
     case 'admin/build/block':
+    case 'admin/build/block/add-menu-block':
       module_load_include('inc', 'menu_block', 'menu_block.pages');
       return _menu_block_help($path, $arg);
   }

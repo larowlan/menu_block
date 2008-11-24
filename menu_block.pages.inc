@@ -13,11 +13,18 @@ function _menu_block_help($path, $arg) {
   $output = '';
   switch ($path) {
     case 'admin/build/block':
-      $output =
-        '<p>' . t('Use the <a href="@url">add menu block page</a> to create a customizable menu block. You will then be able to configure your menu block before adding it.', array('@url' => url('admin/build/block/add-menu-block'))) . '</p>'
-      . theme('more_help_link', url('admin/help/menu_block'));
-      
+      $output = '<p>' . t('Use the <a href="@url">add menu block page</a> to create a customizable menu block. You will then be able to configure your menu block before adding it.', array('@url' => url('admin/build/block/add-menu-block'))) . '</p>';
+      if (module_exists('help')) {
+        $output .= theme('more_help_link', url('admin/help/menu_block'));
+      }
       break;
+
+    case 'admin/build/block/add-menu-block':
+      if (module_exists('help')) {
+        $output = '<p>' . t('To learn more about configuring menu blocks, see <a href="@url">menu block’s detailed help</a>.', array('@url' => url('admin/help/menu_block'))) . '</p>';
+      }
+      break;
+
     case 'admin/help#menu_block':
       $output =
         '<h3>' . t('Adding menu blocks') . '</h3>'

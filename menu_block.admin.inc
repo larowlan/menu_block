@@ -151,10 +151,6 @@ function _menu_block_format_title($delta) {
  * Returns the 'configure' $op info for hook_block().
  */
 function _menu_block_block_configure($delta) {
-  $form['help'] = array(
-    '#value' => '<p>' . t('To learn more about configuring menu blocks, see <a href="@url">menu block’s detailed help</a>.', array('@url' => url('admin/help/menu_block'))) . '</p>',
-    '#weight' => -18,
-  );
   $form['menu_name'] = array(
     '#type' => 'select',
     '#title' => t('Menu'),
