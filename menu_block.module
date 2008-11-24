@@ -55,6 +55,35 @@ function menu_block_help($path, $arg) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function menu_block_theme() {
+  return array(
+    'menu_block_wrapper' => array(
+      'template' => 'menu-block-wrapper',
+      'arguments' => array('content' => NULL, 'settings' => NULL),
+    ),
+  );
+}
+
+/**
+ * Process variables for menu-block-wrapper.tpl.php.
+ *
+ * @see menu-block-wrapper.tpl.php
+ * @see theme_menu_block_wrapper()
+ */
+function template_preprocess_menu_block_wrapper(&$variables) {
+  $variables['classes_array'][] = 'menu-name-' . $variables['settings']['menu_name'];
+  $variables['classes_array'][] = 'menu-level-' . $variables['settings']['level'];
+  $variables['classes_array'][] = 'menu-depth-' . $variables['settings']['depth'];
+  if ($variables['settings']['expanded']) {
+    $variables['classes_array'][] = 'menu-expanded';
+  }
+  $variables['classes'] = check_plain(implode(' ', $variables['classes_array']));
+  $variables['template_files'][] = 'menu-block-wrapper-' . $variables['settings']['menu_name'];
+}
+
+/**
  * Alters the block admin form to add delete links next to menu blocks.
  */
 function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
@@ -122,13 +151,13 @@ function _menu_block_block_view($delta) {
   // Render the tree.
   $data['content'] = menu_block_tree_output($tree);
   if ($data['content']) {
-    $classes[] = 'menu-name-' . $menu_name;
-    $classes[] = 'menu-level-' . $level;
-    $classes[] = 'menu-depth-' . $depth;
-    if ($expanded) {
-      $classes[] = 'menu-expanded';
-    }
-    $data['content'] = '<div class="' . check_plain(implode(' ', $classes)) . '">' . $data['content'] . '</div>';
+    $settings = array(
+      'menu_name' => $menu_name,
+      'level' => $level,
+      'depth' => $depth,
+      'expanded' => $expanded,
+    );
+    $data['content'] = theme('menu_block_wrapper', $data['content'], $settings);
   }
 
   return $data;
