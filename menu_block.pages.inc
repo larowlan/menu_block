@@ -54,21 +54,10 @@ function _menu_block_help($path, $arg) {
       . '<dt>' . theme('placeholder', '<a>') . '</dt>'
       . '<dd>' . t('The %a elements of the menu tree can have: %class.', array('%a' => '<a>', '%class' => 'active active-trail')) . '</dd>'
       . '</dl>'
+      . '<p>' . t('In addition, the wrapper %div for the block is generated using the %template_default template. And Menu block provides template suggestions of the form %template_suggestion. For example, a file in your theme called %template_example can be used to override the %div for just the primary-links menu blocks.', array('%div' => '<div>', '%template_default' => 'menu-block-wrapper.tpl.php', '%template_suggestion' => 'menu-block-wrapper-MENUNAME.tpl.php', '%template_example' => 'menu-block-wrapper-primary-links.tpl.php')) . '</p>'
       . '<h3>' . t('Menu block API') . '</h3>'
       . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>';
       break;
   }
   return $output;
-}
-
-/**
- * This page is simply to make Menu block visible on admin pages.
- *
- * In Drupal 6, the admin/by-module page won't display Menu block's help link
- * because it doesn't have any non-tab menu links. So to allow Menu block to
- * have some "visibility" in the admin pages, we add a fake-ish page to
- * admin/settings/menu_block that redirects to the "Add menu block" tab.
- */
-function _menu_block_by_module_hack() {
-  drupal_goto('admin/build/block/add-menu-block', NULL, NULL, 301);
 }

@@ -31,13 +31,6 @@ function menu_block_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'menu_block.admin.inc',
   );
-  $items['admin/settings/menu_block'] = array(
-    'title' => 'Menu block',
-    'description' => 'Add a new menu block.',
-    'access arguments' => array('administer blocks'),
-    'page callback' => '_menu_block_by_module_hack', // And, I mean hack.
-    'file' => 'menu_block.pages.inc',
-  );
   return $items;
 }
 
