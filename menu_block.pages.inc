@@ -21,7 +21,7 @@ function _menu_block_help($path, $arg) {
     case 'admin/help#menu_block':
       $output =
         '<h3>' . t('Adding menu blocks') . '</h3>'
-      . '<p>' . t('To add new menu blocks, use the "Add menu block" button on the <a href="@url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('@url' => url('admin/build/block'))) . '</p>'
+      . '<p>' . t('To add new menu blocks, use the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('@url' => url('admin/build/block'))) . '</p>'
       . '<h3>' . t('Configuring menu blocks') . '</h3>'
       . '<p>' . t('When adding or configuring a menu block, several configuration options are available:') . '</p>'
       . '<dl>'
@@ -38,7 +38,7 @@ function _menu_block_help($path, $arg) {
       . '<dd>' . t('All sub-menus of this menu will be expanded.') . '</dd>'
       . '</dl>'
       . '<h3>' . t('Styling menu blocks') . '</h3>'
-      . '<p>' . t('Themers should look at the myriad of classes added to the %div, %li and %a elements.') . '</p>'
+      . '<p>' . t('Themers should look at the myriad of classes added to the %div, %li and %a elements.', array('%div' => '<div>', '%li' => '<li>', '%a' => '<a>')) . '</p>'
       . '<dl>'
       . '<dt>' . theme('placeholder', '<div>') . '</dt>'
       . '<dd>' . t('The %div wrapped around the menu tree has a class for each of the configurable options of the block: %class.', array('%div' => '<div>', '%class' => 'menu-name-NAME menu-level-LEVEL menu-depth-DEPTH menu-expanded')) . '</dd>'
@@ -53,16 +53,6 @@ function _menu_block_help($path, $arg) {
   }
   return $output;
 }
-/*
-first';
-    }
-    if ($i == $num_items) {
-      $extra_class[] = 'last';
-    }
-    $extra_class[] = 'menu-mlid-' . $items[$key]['link']['mlid'];
-    if ($items[$key]['link']['href'] == $_GET['q'] || ($items[$key]['link']['href'] == '<front>' && drupal_is_front_page())) {
-      $extra_class[] = 'active';
-     */
 
 /**
  * This page is simply to make Menu block visible on admin pages.
