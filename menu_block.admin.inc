@@ -64,7 +64,7 @@ function menu_block_delete(&$form_state, $delta = 0) {
   $form['block_title'] = array('#type' => 'hidden', '#value' => $title);
   $form['delta'] = array('#type' => 'hidden', '#value' => $delta);
 
-  return confirm_form($form, t('Are you sure you want to delete the "%name" block?', array('%name' => $title)), 'admin/build/block', '', t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the "%name" block?', array('%name' => $title)), 'admin/build/block', NULL, t('Delete'), t('Cancel'));
 }
 
 /**
@@ -158,7 +158,7 @@ function _menu_block_block_configure($delta) {
   $form['menu_name'] = array(
     '#type' => 'select',
     '#title' => t('Menu'),
-    '#default_value' => variable_get("menu_block_{$delta}_menu_name", "navigation"),
+    '#default_value' => variable_get("menu_block_{$delta}_menu_name", 'navigation'),
     '#options' => menu_get_menus(TRUE),
     '#description' => t('The tree (or list) of links will be taken from this menu.'),
   );
