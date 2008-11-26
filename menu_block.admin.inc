@@ -114,14 +114,14 @@ function _menu_block_block_list() {
  */
 function _menu_block_format_title($delta) {
   $menu_name = variable_get("menu_block_{$delta}_menu_name", NULL);
-  if (is_null($menu_name)) {
+  $menus = menu_get_menus();
+  if (empty($menu_name) || empty($menus[$menu_name])) {
     $title = t('Unconfigured menu block');
   }
   else {
     $level = variable_get("menu_block_{$delta}_level", 1);
     $depth = variable_get("menu_block_{$delta}_depth", 0);
     $expanded = variable_get("menu_block_{$delta}_expanded", 0);
-    $menus = menu_get_menus();
     // Show the configured levels in the block info
     $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
     if ($depth == 1) {
