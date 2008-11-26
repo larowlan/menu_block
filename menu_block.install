@@ -112,7 +112,7 @@ function menu_block_update_5200() {
  * Converts the mids to menu names using the D5-stored menu_title variable.
  */
 function menu_block_update_6200() {
-  $menus = menu_get_menus(TRUE);
+  $menus = menu_get_menus();
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
     // Drupal 6 uses the menu title to create the new menu_name.
     $menu_name = preg_replace('/[^a-zA-Z0-9]/', '-', strtolower(variable_get("menu_block_{$delta}_title", '')));

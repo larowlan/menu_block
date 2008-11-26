@@ -121,7 +121,7 @@ function _menu_block_format_title($delta) {
     $level = variable_get("menu_block_{$delta}_level", 1);
     $depth = variable_get("menu_block_{$delta}_depth", 0);
     $expanded = variable_get("menu_block_{$delta}_expanded", 0);
-    $menus = menu_get_menus(TRUE);
+    $menus = menu_get_menus();
     // Show the configured levels in the block info
     $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
     if ($depth == 1) {
@@ -155,7 +155,7 @@ function _menu_block_block_configure($delta) {
     '#type' => 'select',
     '#title' => t('Menu'),
     '#default_value' => variable_get("menu_block_{$delta}_menu_name", 'navigation'),
-    '#options' => menu_get_menus(TRUE),
+    '#options' => menu_get_menus(),
     '#description' => t('The tree (or list) of links will be taken from this menu.'),
   );
   $form['level'] = array(
