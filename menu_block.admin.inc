@@ -114,7 +114,7 @@ function _menu_block_block_list() {
  */
 function _menu_block_format_title($delta) {
   $menu_name = variable_get("menu_block_{$delta}_menu_name", NULL);
-  $menus = menu_get_menus();
+  $menus = menu_block_get_all_menus();
   if (empty($menu_name) || empty($menus[$menu_name])) {
     $title = t('Unconfigured menu block');
   }
@@ -155,7 +155,7 @@ function _menu_block_block_configure($delta) {
     '#type' => 'select',
     '#title' => t('Menu'),
     '#default_value' => variable_get("menu_block_{$delta}_menu_name", 'navigation'),
-    '#options' => menu_get_menus(),
+    '#options' => menu_block_get_all_menus(),
     '#description' => t('The tree (or list) of links will be taken from this menu.'),
   );
   $form['level'] = array(

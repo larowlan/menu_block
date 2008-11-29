@@ -1,4 +1,5 @@
 Menu Block 6.x-2.x-dev
+  #330978: Add hook_get_menus() and implement Book module integration
   #331935: Replace admin/by-module hack with README.txt.
   #332974: Collapsed menu items get "leaf" class when using "depth" option.
   #333988: Create template for menu-block-wrapper.
