@@ -227,7 +227,7 @@ function menu_tree_add_active_path(&$tree) {
  * @param $level
  *   int The level of the original tree that will start the pruned tree.
  * @return
- *   string Returns the title of pruned tree.
+ *   string Returns the title of the pruned tree.
  */
 function menu_tree_prune_tree(&$tree, $level) {
   // Get the default menu title.
@@ -272,12 +272,12 @@ function menu_tree_prune_tree(&$tree, $level) {
  * @param $tree
  *   array The menu tree to prune.
  * @param $depth_limit
- *   int The maximum depth of the returned tree, 0 for unlimited.
+ *   int The maximum depth of the returned tree; must be a positive integer.
  * @return
  *   void
  */
 function menu_tree_depth_trim(&$tree, $depth_limit) {
-  // Prevent dumb input from returning trimmed tree.
+  // Prevent invalid input from returning a trimmed tree.
   if ($depth_limit < 1) { return; }
 
   // Examine each element at this level to find any possible children.
