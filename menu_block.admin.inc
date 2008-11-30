@@ -113,7 +113,7 @@ function _menu_block_block_list() {
  *   string The title of the block
  */
 function _menu_block_format_title($delta) {
-  list($menu_name, $menu_item) = split(':', variable_get("menu_block_{$delta}_parent", ':0'));
+  list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", ':0'));
   $menus = menu_block_get_all_menus();
   if (empty($menu_name) || empty($menus[$menu_name])) {
     $title = t('Unconfigured menu block');
@@ -124,9 +124,9 @@ function _menu_block_format_title($delta) {
     $expanded = variable_get("menu_block_{$delta}_expanded", 0);
     // Show the configured levels in the block info
     $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
-    if ($menu_item) {
-      $menu_item = menu_link_load($menu_item);
-      $replacements['@menu_name'] = $menu_item['title'];
+    if ($parent_mlid) {
+      $parent_item = menu_link_load($parent_mlid);
+      $replacements['@menu_name'] = $parent_item['title'];
     }
     if ($depth == 1) {
       $title = t('@menu_name (level @level1)', $replacements);

@@ -67,6 +67,7 @@ function menu_block_theme() {
  */
 function template_preprocess_menu_block_wrapper(&$variables) {
   $variables['classes_array'][] = 'menu-name-' . $variables['settings']['menu_name'];
+  $variables['classes_array'][] = 'parent-mlid-' . $variables['settings']['parent_mlid'];
   $variables['classes_array'][] = 'menu-level-' . $variables['settings']['level'];
   $variables['classes_array'][] = 'menu-depth-' . $variables['settings']['depth'];
   if ($variables['settings']['expanded']) {
@@ -133,7 +134,7 @@ function _menu_block_block_view($delta) {
   $data = array();
 
   // Get the block configuration options.
-  list($menu_name, $menu_item) = split(':', variable_get("menu_block_{$delta}_parent", 'navigation:0'));
+  list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", 'navigation:0'));
   $level = variable_get("menu_block_{$delta}_level", 1);
   $depth = variable_get("menu_block_{$delta}_depth", 0);
   $expanded = variable_get("menu_block_{$delta}_expanded", 0);
@@ -142,12 +143,10 @@ function _menu_block_block_view($delta) {
   $menu_names = menu_block_get_all_menus();
   $data['subject'] = $menu_names[$menu_name];
 
-  // Optionally load the specified menu item.
-  if ($menu_item) {
-    $menu_item = menu_link_load($menu_item);
-  }
+  // Optionally load the specified parent menu item.
+  $parent_item = $parent_mlid ? menu_link_load($parent_mlid) : NULL;
 
-  if ($expanded || $menu_item) {
+  if ($expanded || $parent_mlid) {
     // Get the full, un-pruned tree.
     $tree = menu_tree_all_data($menu_name);
     // And add the active trail data back to the full tree.
@@ -159,12 +158,12 @@ function _menu_block_block_view($delta) {
   }
 
   // Prune the tree along the active trail to the specified level.
-  if ($level > 1 || $menu_item) {
-    $data['subject'] = menu_tree_prune_tree($tree, $level, $menu_item);
+  if ($level > 1 || $parent_mlid) {
+    $data['subject'] = menu_tree_prune_tree($tree, $level, $parent_item);
   }
 
   // If the menu-item-based tree is not "expanded", trim the tree to the active path.
-  if ($menu_item && !$expanded) {
+  if ($parent_mlid && !$expanded) {
     menu_tree_trim_active_path($tree);
   }
 
@@ -183,6 +182,7 @@ function _menu_block_block_view($delta) {
   if ($data['content']) {
     $settings = array(
       'menu_name' => $menu_name,
+      'parent_mlid' => $parent_mlid,
       'level' => $level,
       'depth' => $depth,
       'expanded' => $expanded,
@@ -272,16 +272,16 @@ function menu_tree_trim_active_path(&$tree) {
  *   array The menu tree to prune.
  * @param $level
  *   int The level of the original tree that will start the pruned tree.
- * @param $menu_item
+ * @param $parent_item
  *   array The menu item that should be used as the root of the tree.
  * @return
  *   string Returns the title of the pruned tree.
  */
-function menu_tree_prune_tree(&$tree, $level, $menu_item = FALSE) {
+function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
   // Get the default menu title.
-  if (!empty($menu_item)) {
+  if (!empty($parent_item)) {
     // Use the title of the menu item.
-    $menu_title = $menu_item['title'];
+    $menu_title = $parent_item['title'];
   }
   elseif ($level == 1) {
     $menu_names = menu_block_get_all_menus();
@@ -294,10 +294,10 @@ function menu_tree_prune_tree(&$tree, $level, $menu_item = FALSE) {
     $menu_title = '';
   }
 
-  if (!empty($menu_item)) {
+  if (!empty($parent_item)) {
     // Prune the tree along the path to the menu item.
-    for ($i=1; $i <= MENU_MAX_DEPTH && $menu_item["p$i"] != '0'; $i++) {
-      $plid = $menu_item["p$i"];
+    for ($i=1; $i <= MENU_MAX_DEPTH && $parent_item["p$i"] != '0'; $i++) {
+      $plid = $parent_item["p$i"];
       $found_active_trail = FALSE;
       // Examine each element at this level for the ancestor.
       foreach (array_keys($tree) AS $key) {
