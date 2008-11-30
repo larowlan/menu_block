@@ -209,7 +209,6 @@ function _menu_block_block_configure($delta) {
       '7'  => t('7th level'),
       '8'  => t('8th level'),
       '9'  => t('9th level'),
-      '10' => t('10th level'),
     ),
     '#description' => t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.'),
   );
@@ -227,8 +226,7 @@ function _menu_block_block_configure($delta) {
       '7'  => '7',
       '8'  => '8',
       '9'  => '9',
-      '10' => '10',
-      '0'  => 'Unlimited',
+      '0'  => t('Unlimited'),
     ),
     '#description' => t('From the starting level, specify the maximum depth of the tree.'),
   );
