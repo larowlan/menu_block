@@ -1,5 +1,5 @@
 Menu Block 6.x-2.x-dev
-  #328238 gorbeia: Add support for i18n menu translation.
+  #328238 by gorbeia: Add support for i18n menu translation.
   #331934: Add option to select parent item of menu tree.
   #330978: Add hook_get_menus() and implement Book module integration.
   #331935: Replace admin/by-module hack with README.txt.
