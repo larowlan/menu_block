@@ -35,8 +35,8 @@ function _menu_block_help($path, $arg) {
       . '<dt><strong>' . t('Block title') . '</strong></dt>'
       . '<dd>' . t('For menu trees that start with the 1st level, the default block title will be the menu name. For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level.')
       . '<p>' . t('For example, if the active menu trail for the Navigation menu is: Administer › Site building › Menus › Primary links, then a menu block configured to start with the 1st level of the Navigation will display a block title of “Navigation”. And a menu block configured to start with the 3rd level of the Navigation menu will display a block title of “Site building”.') . '</p></dd>'
-      . '<dt><strong>' . t('Menu') . '</strong></dt>'
-      . '<dd>' . t('The tree of links will be taken from this menu.') . '</dd>'
+      . '<dt><strong>' . t('Parent item') . '</strong></dt>'
+      . '<dd>' . t('First select the menu. Then select the parent item from that menu. The tree of links will only contain children of the selected parent item.') . '</dd>'
       . '<dt><strong>' . t('Starting level of menu tree') . '</strong></dt>'
       . '<dd>' . t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.') . '</dd>'
       . '<dt><strong>' . t('Maximum depth of menu tree') . '</strong></dt>'

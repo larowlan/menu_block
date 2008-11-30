@@ -23,8 +23,9 @@ CONFIGURING MENU BLOCKS
         the 3rd level of the Navigation menu will display a block title of
         "Site building".
 
-    Menu
-        The tree of links will be taken from this menu.
+    Parent item
+        First select the menu. Then select the parent item from that menu. The
+        tree of links will only contain children of the selected parent item.
 
     Starting level of menu tree
         Blocks that start with the 1st level will always be visible. Blocks that

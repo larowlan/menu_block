@@ -77,7 +77,7 @@ function menu_block_delete_submit($form, &$form_state) {
   unset($block_ids[array_search($delta, $block_ids)]);
   sort($block_ids);
   variable_set('menu_block_ids', $block_ids);
-  variable_del("menu_block_{$delta}_menu_name");
+  variable_del("menu_block_{$delta}_parent");
   variable_del("menu_block_{$delta}_level");
   variable_del("menu_block_{$delta}_depth");
   variable_del("menu_block_{$delta}_expanded");
@@ -113,7 +113,7 @@ function _menu_block_block_list() {
  *   string The title of the block
  */
 function _menu_block_format_title($delta) {
-  $menu_name = variable_get("menu_block_{$delta}_menu_name", NULL);
+  list($menu_name, $menu_item) = split(':', variable_get("menu_block_{$delta}_parent", ':0'));
   $menus = menu_block_get_all_menus();
   if (empty($menu_name) || empty($menus[$menu_name])) {
     $title = t('Unconfigured menu block');
@@ -124,6 +124,10 @@ function _menu_block_format_title($delta) {
     $expanded = variable_get("menu_block_{$delta}_expanded", 0);
     // Show the configured levels in the block info
     $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
+    if ($menu_item) {
+      $menu_item = menu_link_load($menu_item);
+      $replacements['@menu_name'] = $menu_item['title'];
+    }
     if ($depth == 1) {
       $title = t('@menu_name (level @level1)', $replacements);
     }
@@ -151,12 +155,45 @@ function _menu_block_format_title($delta) {
  * Returns the 'configure' $op info for hook_block().
  */
 function _menu_block_block_configure($delta) {
-  $form['menu_name'] = array(
+  // Get the list of menus.
+  $menus = menu_block_get_all_menus();
+  // Get the parent item defaults.
+  $parent_default = variable_get("menu_block_{$delta}_parent", 'navigation:0');
+  list($menus_default, ) = split(':', $parent_default);
+
+  // Build the standard and jquery versions of the parent item options.
+  $parent_options = $parent_options_js = array();
+  foreach ($menus AS $menu_name => $title) {
+    // Retrieve the entire tree of each menu.
+    $options = menu_parent_options(array($menu_name => $title), array('mlid' => 0));
+    $parent_options += $options;
+    // Render the options as <option> elements.
+    $options[$menu_name . ':0'] = '<' . t('root of @menu_name', array('@menu_name' => $title)) . '>';
+    $parent_options_js[$menu_name] = form_select_options(array('#value' => NULL), $options);
+  }
+  // Load the javascript data.
+  $settings = array(
+    'menu_block' => array(
+      'menus' => t('Menu') . ': '
+        . '<select name="parent_menu" id="edit-parent-menu">'
+        . form_select_options(array('#value' => $menus_default, '#options' => $menus))
+        . '</select> '
+        . t('Item') . ': ',
+      'menus_default' => $menus_default,
+      'parent_options' => $parent_options_js,
+      'parent_default' => $parent_default,
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+  drupal_add_js(drupal_get_path('module', 'menu_block') . '/menu-block.js');
+
+  // Build the standard form.
+  $form['parent'] = array(
     '#type' => 'select',
-    '#title' => t('Menu'),
-    '#default_value' => variable_get("menu_block_{$delta}_menu_name", 'navigation'),
-    '#options' => menu_block_get_all_menus(),
-    '#description' => t('The tree (or list) of links will be taken from this menu.'),
+    '#title' => t('Parent item'),
+    '#default_value' => $parent_default,
+    '#options' => $parent_options,
+    '#description' => t('The tree of links will only contain children of the selected parent item.'),
   );
   $form['level'] = array(
     '#type' => 'select',
@@ -208,7 +245,7 @@ function _menu_block_block_configure($delta) {
  * Returns the 'save' $op info for hook_block().
  */
 function _menu_block_block_save($delta, $edit) {
-  variable_set("menu_block_{$delta}_menu_name", $edit['menu_name']);
+  variable_set("menu_block_{$delta}_parent", $edit['parent']);
   variable_set("menu_block_{$delta}_level", $edit['level']);
   variable_set("menu_block_{$delta}_depth", $edit['depth']);
   variable_set("menu_block_{$delta}_expanded", $edit['expanded']);

@@ -133,7 +133,7 @@ function _menu_block_block_view($delta) {
   $data = array();
 
   // Get the block configuration options.
-  $menu_name = variable_get("menu_block_{$delta}_menu_name", 'navigation');
+  list($menu_name, $menu_item) = split(':', variable_get("menu_block_{$delta}_parent", 'navigation:0'));
   $level = variable_get("menu_block_{$delta}_level", 1);
   $depth = variable_get("menu_block_{$delta}_depth", 0);
   $expanded = variable_get("menu_block_{$delta}_expanded", 0);
@@ -142,7 +142,12 @@ function _menu_block_block_view($delta) {
   $menu_names = menu_block_get_all_menus();
   $data['subject'] = $menu_names[$menu_name];
 
-  if ($expanded) {
+  // Optionally load the specified menu item.
+  if ($menu_item) {
+    $menu_item = menu_link_load($menu_item);
+  }
+
+  if ($expanded || $menu_item) {
     // Get the full, un-pruned tree.
     $tree = menu_tree_all_data($menu_name);
     // And add the active trail data back to the full tree.
@@ -154,8 +159,13 @@ function _menu_block_block_view($delta) {
   }
 
   // Prune the tree along the active trail to the specified level.
-  if ($level > 1) {
-    $data['subject'] = menu_tree_prune_tree($tree, $level);
+  if ($level > 1 || $menu_item) {
+    $data['subject'] = menu_tree_prune_tree($tree, $level, $menu_item);
+  }
+
+  // If the menu-item-based tree is not "expanded", trim the tree to the active path.
+  if ($menu_item && !$expanded) {
+    menu_tree_trim_active_path($tree);
   }
 
   // Trim the branches that extend beyond the specified depth.
@@ -218,6 +228,37 @@ function menu_tree_add_active_path(&$tree) {
 }
 
 /**
+ * Trim everything but the active trail in the tree.
+ *
+ * @param $tree
+ *   array The menu tree to trim.
+ * @return
+ *   void
+ */
+function menu_tree_trim_active_path(&$tree) {
+  // To traverse the original tree down the active trail, we use a pointer.
+  $current_level =& $tree;
+
+  // Traverse the tree along the active trail.
+  do {
+    $next_level = FALSE;
+    foreach (array_keys($current_level) AS $key) {
+      if ($current_level[$key]['link']['in_active_trail'] && $current_level[$key]['below']) {
+        // Continue in the subtree, if it exists.
+        $next_level = $key;
+      }
+      else {
+        // Trim anything not along the active trail.
+        $current_level[$key]['below'] = FALSE;
+      }
+    }
+    if ($next_level) {
+      $current_level =& $current_level[$next_level]['below'];
+    }
+  } while ($next_level);
+}
+
+/**
  * Prune a tree so that it begins at the specified level.
  *
  * This function will follow the active menu trail to the specified level.
@@ -226,12 +267,18 @@ function menu_tree_add_active_path(&$tree) {
  *   array The menu tree to prune.
  * @param $level
  *   int The level of the original tree that will start the pruned tree.
+ * @param $menu_item
+ *   array The menu item that should be used as the root of the tree.
  * @return
  *   string Returns the title of the pruned tree.
  */
-function menu_tree_prune_tree(&$tree, $level) {
+function menu_tree_prune_tree(&$tree, $level, $menu_item = FALSE) {
   // Get the default menu title.
-  if ($level == 1) {
+  if (!empty($menu_item)) {
+    // Use the title of the menu item.
+    $menu_title = $menu_item['title'];
+  }
+  elseif ($level == 1) {
     $menu_names = menu_block_get_all_menus();
     // Grab any menu item to find the menu_name for this tree.
     $menu_item = current($tree);
@@ -240,6 +287,28 @@ function menu_tree_prune_tree(&$tree, $level) {
   else {
     // We won't know the title until we've pruned the tree.
     $menu_title = '';
+  }
+
+  if (!empty($menu_item)) {
+    // Prune the tree along the path to the menu item.
+    for ($i=1; $i <= MENU_MAX_DEPTH && $menu_item["p$i"] != '0'; $i++) {
+      $plid = $menu_item["p$i"];
+      $found_active_trail = FALSE;
+      // Examine each element at this level for the ancestor.
+      foreach (array_keys($tree) AS $key) {
+        if ($tree[$key]['link']['mlid'] == $plid) {
+          // Prune the tree to the children of this ancestor.
+          $tree = $tree[$key]['below'] ? $tree[$key]['below'] : array();
+          $found_active_trail = TRUE;
+          break;
+        }
+      }
+      // If we don't find the ancestor, bail out.
+      if (!$found_active_trail) {
+        $tree = array();
+        break;
+      }
+    }
   }
 
   // Trim the upper levels down to the one desired.
