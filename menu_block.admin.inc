@@ -187,7 +187,7 @@ function _menu_block_block_configure($delta) {
     '#size' => 1,
     '#required' => FALSE,
     '#multiple' => FALSE,
-    '#parents' => array(NULL),
+    '#parents' => array('parent_menu'),
   ));
   // Load the javascript data.
   $settings = array(
