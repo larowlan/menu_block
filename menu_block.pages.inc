@@ -44,11 +44,14 @@ function _menu_block_help($path, $arg) {
       . '<dt><strong>' . t('Expand all children') . '</strong></dt>'
       . '<dd>' . t('All sub-menus of this menu will be expanded.') . '</dd>'
       . '</dl>'
+      . '<dt><strong>' . t('Sort active trail') . '</strong></dt>'
+      . '<dd>' . t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.') . '</dd>'
+      . '</dl>'
       . '<h3>' . t('Styling menu blocks') . '</h3>'
       . '<p>' . t('Themers should look at the myriad of classes added to the %div, %li and %a elements.', array('%div' => '<div>', '%li' => '<li>', '%a' => '<a>')) . '</p>'
       . '<dl>'
       . '<dt>' . theme('placeholder', '<div>') . '</dt>'
-      . '<dd>' . t('The %div wrapped around the menu tree has a class for each of the configurable options of the block: %class.', array('%div' => '<div>', '%class' => 'menu-name-NAME parent-mlid-MLID menu-level-LEVEL menu-depth-DEPTH menu-expanded')) . '</dd>'
+      . '<dd>' . t('The %div wrapped around the menu tree has a class for each of the configurable options of the block: %class.', array('%div' => '<div>', '%class' => 'menu-name-NAME parent-mlid-MLID menu-level-LEVEL menu-depth-DEPTH menu-expanded menu-sorted')) . '</dd>'
       . '<dt>' . theme('placeholder', '<li>') . '</dt>'
       . '<dd>' . t('The %li elements of the menu tree can have an extended list of classes (compared to standard menu trees): %class.', array('%li' => '<li>', '%class' => 'first last menu-mlid-MLID active active-trail')) . '</dd>'
       . '<dt>' . theme('placeholder', '<a>') . '</dt>'
@@ -56,7 +59,7 @@ function _menu_block_help($path, $arg) {
       . '</dl>'
       . '<p>' . t('In addition, the wrapper %div for the block is generated using the %template_default template. And Menu block provides template suggestions of the form %template_suggestion. For example, a file in your theme called %template_example can be used to override the %div for just the primary-links menu blocks.', array('%div' => '<div>', '%template_default' => 'menu-block-wrapper.tpl.php', '%template_suggestion' => 'menu-block-wrapper-MENUNAME.tpl.php', '%template_example' => 'menu-block-wrapper-primary-links.tpl.php')) . '</p>'
       . '<h3>' . t('Menu block API') . '</h3>'
-      . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>';
+      . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>'
       . '<p>' . t('In addition, Menu block implements HOOK_get_menus() to retrieve menu names and titles of menus created by a module. See book_get_menus() in menu_block.book.inc for an example of this hook.') . '</p>';
       break;
   }

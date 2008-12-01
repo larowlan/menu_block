@@ -40,6 +40,11 @@ CONFIGURING MENU BLOCKS
     Expand all children
         All sub-menus of this menu will be expanded.
 
+    Sort active trail
+        Sort each item in the active trail to the top of its level. When used on
+        a deep or wide menu tree, the active menu item's children will be easier
+        to see when the page is reloaded.
+
 
 STYLING MENU BLOCKS
 
@@ -49,7 +54,7 @@ STYLING MENU BLOCKS
     <div>
         The <div> wrapped around the menu tree has a class for each of the
         configurable options of the block: menu-name-NAME parent-mlid-MLID
-        menu-level-LEVEL menu-depth-DEPTH menu-expanded
+        menu-level-LEVEL menu-depth-DEPTH menu-expanded menu-sorted
 
     <li>
         The <li> elements of the menu tree can have an extended list of classes

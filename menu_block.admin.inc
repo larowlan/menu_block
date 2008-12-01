@@ -81,6 +81,7 @@ function menu_block_delete_submit($form, &$form_state) {
   variable_del("menu_block_{$delta}_level");
   variable_del("menu_block_{$delta}_depth");
   variable_del("menu_block_{$delta}_expanded");
+  variable_del("menu_block_{$delta}_sort");
 
   db_query("DELETE FROM {blocks} WHERE module = 'menu_block' AND delta = %d", $delta);
   db_query("DELETE FROM {blocks_roles} WHERE module = 'menu_block' AND delta = %d", $delta);
@@ -236,6 +237,12 @@ function _menu_block_block_configure($delta) {
     '#default_value' => variable_get("menu_block_{$delta}_expanded", 0),
     '#description' => t('All sub-menus of this menu will be expanded.'),
   );
+  $form['sort'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Sort active trail'),
+    '#default_value' => variable_get("menu_block_{$delta}_sort", 0),
+    '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
+  );
   return $form;
 }
 
@@ -247,4 +254,5 @@ function _menu_block_block_save($delta, $edit) {
   variable_set("menu_block_{$delta}_level", $edit['level']);
   variable_set("menu_block_{$delta}_depth", $edit['depth']);
   variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
+  variable_set("menu_block_{$delta}_sort", $edit['sort']);
 }
