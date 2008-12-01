@@ -39,6 +39,10 @@ function menu_block_menu() {
  */
 function menu_block_help($path, $arg) {
   switch ($path) {
+    case 'admin/build/block/configure':
+      if ($arg[4] != 'menu_block') {
+        break;
+      }
     case 'admin/help#menu_block':
     case 'admin/build/block':
     case 'admin/build/block/add-menu-block':

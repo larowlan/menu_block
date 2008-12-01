@@ -19,6 +19,7 @@ function _menu_block_help($path, $arg) {
       }
       break;
 
+    case 'admin/build/block/configure':
     case 'admin/build/block/add-menu-block':
       if (module_exists('help')) {
         $output = '<p>' . t('To learn more about configuring menu blocks, see <a href="@url">menu block’s detailed help</a>.', array('@url' => url('admin/help/menu_block'))) . '</p>';
