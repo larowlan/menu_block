@@ -71,3 +71,7 @@ MENU BLOCK API
     Developers can use the API of this module to create their own menu trees
     outside the confines of blocks. All of the publicly available API functions
     are documented in the menu_block.module file.
+
+    In addition, Menu block implements HOOK_get_menus() to retrieve menu names
+    and titles of menus created by a module. See book_get_menus() in
+    menu_block.book.inc for an example of this hook.

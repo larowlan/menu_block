@@ -57,6 +57,7 @@ function _menu_block_help($path, $arg) {
       . '<p>' . t('In addition, the wrapper %div for the block is generated using the %template_default template. And Menu block provides template suggestions of the form %template_suggestion. For example, a file in your theme called %template_example can be used to override the %div for just the primary-links menu blocks.', array('%div' => '<div>', '%template_default' => 'menu-block-wrapper.tpl.php', '%template_suggestion' => 'menu-block-wrapper-MENUNAME.tpl.php', '%template_example' => 'menu-block-wrapper-primary-links.tpl.php')) . '</p>'
       . '<h3>' . t('Menu block API') . '</h3>'
       . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>';
+      . '<p>' . t('In addition, Menu block implements HOOK_get_menus() to retrieve menu names and titles of menus created by a module. See book_get_menus() in menu_block.book.inc for an example of this hook.') . '</p>';
       break;
   }
   return $output;
