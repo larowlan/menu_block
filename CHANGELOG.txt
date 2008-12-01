@@ -1,4 +1,4 @@
-Menu Block 6.x-2.x-dev
+Menu Block 6.x-2.1
   #300086: Add option to make starting level follow active menu item.
   #340868: Clean up display of block configuration options.
   #300094: Add option to sort active trail to top of menu tree.
