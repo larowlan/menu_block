@@ -73,13 +73,6 @@ function template_preprocess_menu_block_wrapper(&$variables) {
   $variables['classes_array'][] = 'menu-name-' . $variables['settings']['menu_name'];
   $variables['classes_array'][] = 'parent-mlid-' . $variables['settings']['parent_mlid'];
   $variables['classes_array'][] = 'menu-level-' . $variables['settings']['level'];
-  $variables['classes_array'][] = 'menu-depth-' . $variables['settings']['depth'];
-  if ($variables['settings']['expanded']) {
-    $variables['classes_array'][] = 'menu-expanded';
-  }
-  if ($variables['settings']['sort']) {
-    $variables['classes_array'][] = 'menu-sorted';
-  }
   $variables['classes'] = check_plain(implode(' ', $variables['classes_array']));
   $variables['template_files'][] = 'menu-block-wrapper-' . $variables['settings']['menu_name'];
 }
