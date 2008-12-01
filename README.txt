@@ -48,8 +48,8 @@ STYLING MENU BLOCKS
 
     <div>
         The <div> wrapped around the menu tree has a class for each of the
-        configurable options of the block: menu-name-NAME menu-level-LEVEL
-        menu-depth-DEPTH menu-expanded
+        configurable options of the block: menu-name-NAME parent-mlid-MLID
+        menu-level-LEVEL menu-depth-DEPTH menu-expanded
 
     <li>
         The <li> elements of the menu tree can have an extended list of classes
@@ -64,6 +64,7 @@ STYLING MENU BLOCKS
     suggestions of the form menu-block-wrapper-MENUNAME.tpl.php. For example, a
     file in your theme called menu-block-wrapper-primary-links.tpl.php can be
     used to override the <div> for just the primary-links menu blocks.
+
 
 MENU BLOCK API
 
