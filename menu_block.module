@@ -316,7 +316,7 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
 
   if (!empty($parent_item)) {
     // Prune the tree along the path to the menu item.
-    for ($i=1; $i <= MENU_MAX_DEPTH && $parent_item["p$i"] != '0'; $i++) {
+    for ($i = 1; $i <= MENU_MAX_DEPTH && $parent_item["p$i"] != '0'; $i++) {
       $plid = $parent_item["p$i"];
       $found_active_trail = FALSE;
       // Examine each element at this level for the ancestor.
@@ -337,7 +337,7 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
   }
 
   // Trim the upper levels down to the one desired.
-  for ($i=$level; $i > 1; $i--) {
+  for ($i = 1; $i < $level; $i++) {
     $found_active_trail = FALSE;
     // Examine each element at this level for the active trail.
     foreach (array_keys($tree) AS $key) {
