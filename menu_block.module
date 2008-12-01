@@ -136,6 +136,7 @@ function _menu_block_block_view($delta) {
   // Get the block configuration options.
   list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", 'navigation:0'));
   $level = variable_get("menu_block_{$delta}_level", 1);
+  $follow = variable_get("menu_block_{$delta}_follow", 0);
   $depth = variable_get("menu_block_{$delta}_depth", 0);
   $expanded = variable_get("menu_block_{$delta}_expanded", 0);
   $sort = variable_get("menu_block_{$delta}_sort", 0);
@@ -161,6 +162,11 @@ function _menu_block_block_view($delta) {
   // Prune the tree along the active trail to the specified level.
   if ($level > 1 || $parent_mlid) {
     $data['subject'] = menu_tree_prune_tree($tree, $level, $parent_item);
+  }
+
+  // Prune the tree to the active menu item.
+  if ($follow && $new_title = menu_tree_prune_active_tree($tree, $follow)) {
+    $data['subject'] = $new_title;
   }
 
   // If the menu-item-based tree is not "expanded", trim the tree to the active path.
@@ -190,6 +196,7 @@ function _menu_block_block_view($delta) {
       'menu_name' => $menu_name,
       'parent_mlid' => $parent_mlid,
       'level' => $level,
+      'follow' => $follow,
       'depth' => $depth,
       'expanded' => $expanded,
       'sort' => $sort,
@@ -358,6 +365,21 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
   }
 
   return $menu_title;
+}
+
+/**
+ * Prune a tree so that it begins at the active menu item.
+ *
+ * @param $tree
+ *   array The menu tree to prune.
+ * @param $level
+ *   string The level which the tree will be pruned to: 'active' or 'child'.
+ * @return
+ *   string Returns the title of the pruned tree.
+ */
+function menu_tree_prune_active_tree(&$tree, $level) {
+  module_load_include('inc', 'menu_block', 'menu_block.follow');
+  return _menu_tree_prune_active_tree($tree, $level);
 }
 
 /**

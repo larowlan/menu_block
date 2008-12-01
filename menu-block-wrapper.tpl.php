@@ -13,7 +13,7 @@
  *
  * The following variables are provided for contextual information.
  * - $settings: An array of the block's settings. Includes menu_name,
- *   parent_mlid, level, depth, expanded, and sort.
+ *   parent_mlid, level, follow, depth, expanded, and sort.
  *
  * @see template_preprocess_menu_block_wrapper()
  * @see theme_menu_block_wrapper()

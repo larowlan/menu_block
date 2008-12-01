@@ -23,7 +23,8 @@
 
 #menu-block-settings .form-item label.option,
 .form-item #edit-parent-menu-wrapper label,
-.form-item label#item-label
+.form-item label#item-label,
+#edit-follow-parent-wrapper.form-item label
 {
   float: none;
   width: auto;
@@ -44,6 +45,12 @@
   _display: block; /* IE6 is dumb. */
   font-weight: normal;
   font-style: italic;
+}
+
+#edit-follow-parent-wrapper.form-item label
+{
+  display: inline;
+  font-weight: normal;
 }
 
 #expanded-wrapper strong,

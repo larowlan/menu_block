@@ -10,4 +10,15 @@ $(document).ready( function() {
       .html(Drupal.settings.menu_block.parent_options[$('#edit-parent-menu').val()])
       .val(Drupal.settings.menu_block.parent_default);
   } );
+  $('#edit-follow').change( function() {
+    if ($('#edit-follow:checked').length) {
+      $('#edit-follow-parent-wrapper').slideDown('slow');
+    }
+    else {
+      $('#edit-follow-parent-wrapper').slideUp('slow');
+    }
+  } );
+  if (!$('#edit-follow:checked').length) {
+    $('#edit-follow-parent-wrapper').css('display', 'none');
+  }
 } );

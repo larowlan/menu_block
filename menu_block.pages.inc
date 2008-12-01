@@ -40,6 +40,8 @@ function _menu_block_help($path, $arg) {
       . '<dd>' . t('First select the menu. Then select the parent item from that menu. The tree of links will only contain children of the selected parent item.') . '</dd>'
       . '<dt><strong>' . t('Starting level') . '</strong></dt>'
       . '<dd>' . t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.') . '</dd>'
+      . '<dt><strong>' . t('Make the starting level follow the active menu item') . '</strong></dt>'
+      . '<dd>' . t('If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed.') . '</dd>'
       . '<dt><strong>' . t('Maximum depth') . '</strong></dt>'
       . '<dd>' . t('From the starting level, specify the maximum depth of the tree. Blocks with a maximum depth of 1 will just be a single un-nested list of links with none of those links’ children displayed.') . '</dd>'
       . '<dt><strong>' . t('Expand children') . '</strong></dt>'

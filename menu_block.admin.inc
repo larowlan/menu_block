@@ -79,6 +79,7 @@ function menu_block_delete_submit($form, &$form_state) {
   variable_set('menu_block_ids', $block_ids);
   variable_del("menu_block_{$delta}_parent");
   variable_del("menu_block_{$delta}_level");
+  variable_del("menu_block_{$delta}_follow");
   variable_del("menu_block_{$delta}_depth");
   variable_del("menu_block_{$delta}_expanded");
   variable_del("menu_block_{$delta}_sort");
@@ -121,6 +122,7 @@ function _menu_block_format_title($delta) {
   }
   else {
     $level = variable_get("menu_block_{$delta}_level", 1);
+    $follow = variable_get("menu_block_{$delta}_follow", 0);
     $depth = variable_get("menu_block_{$delta}_depth", 0);
     $expanded = variable_get("menu_block_{$delta}_expanded", 0);
     // Show the configured levels in the block info
@@ -129,7 +131,10 @@ function _menu_block_format_title($delta) {
       $parent_item = menu_link_load($parent_mlid);
       $replacements['@menu_name'] = $parent_item['title'];
     }
-    if ($depth == 1) {
+    if ($follow) {
+      $title = t('@menu_name (active menu item)', $replacements);
+    }
+    elseif ($depth == 1) {
       $title = t('@menu_name (level @level1)', $replacements);
     }
     elseif ($depth) {
@@ -223,6 +228,29 @@ function _menu_block_block_configure($delta) {
     ),
     '#description' => t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.'),
   );
+  if ($follow = variable_get("menu_block_{$delta}_follow", 0)) {
+    $follow_parent = $follow;
+    $follow = 1;
+  }
+  else {
+    $follow_parent = 'active';
+  }
+  $form['follow'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Make the starting level follow the active menu item.'),
+    '#default_value' => $follow,
+    '#description' => t('If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed.'),
+  );
+  $form['follow_parent'] = array(
+    '#type' => 'select',
+    '#title' => t('Starting level will be'),
+    '#default_value' => $follow_parent,
+    '#options' => array(
+      'active' => t('Active menu item'),
+      'child' => t('Children of active menu item'),
+    ),
+    '#description' => t('When following the active menu item, specify if the starting level should be the active menu item or its children.'),
+  );
   $form['depth'] = array(
     '#type' => 'select',
     '#title' => t('Maximum depth'),
@@ -264,8 +292,12 @@ function _menu_block_block_configure($delta) {
  * Returns the 'save' $op info for hook_block().
  */
 function _menu_block_block_save($delta, $edit) {
+  if ($edit['follow'] && !empty($edit['follow_parent'])) {
+    $edit['follow'] = $edit['follow_parent'];
+  }
   variable_set("menu_block_{$delta}_parent", $edit['parent']);
   variable_set("menu_block_{$delta}_level", $edit['level']);
+  variable_set("menu_block_{$delta}_follow", $edit['follow']);
   variable_set("menu_block_{$delta}_depth", $edit['depth']);
   variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
   variable_set("menu_block_{$delta}_sort", $edit['sort']);

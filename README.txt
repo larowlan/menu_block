@@ -32,6 +32,11 @@ CONFIGURING MENU BLOCKS
         start with the 2nd level or deeper will only be visible when the trail
         to the active menu item is in the block's tree.
 
+    Make the starting level follow the active menu item
+        If the active menu item is deeper than the level specified above, the
+        starting level will follow the active menu item. Otherwise, the starting
+        level of the tree will remain fixed.
+
     Maximum depth
         From the starting level, specify the maximum depth of the tree. Blocks
         with a maximum depth of 1 will just be a single un-nested list of links
