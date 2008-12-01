@@ -1,4 +1,5 @@
 Menu Block 6.x-2.x-dev
+  #340868: Clean up display of block configuration options.
   #300094: Add option to sort active trail to top of menu tree.
   #328238 by gorbeia: Add support for i18n menu translation.
   #331934: Add option to select parent item of menu tree.
@@ -15,7 +16,7 @@ Menu Block 6.x-2.0
   * Added extended classes to menu trees.
   * Menu block's administrative interface now matches the block module's
     standard add, configure, and delete interface.
-  #266230: Port Menu block to D6
+  #266230: Port Menu block to D6.
 
 Menu Block 5.x-2.0
   #304675: Port 6.x admin interface to 5.x.

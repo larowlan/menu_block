@@ -172,14 +172,22 @@ function _menu_block_block_configure($delta) {
     $options[$menu_name . ':0'] = '<' . t('root of @menu_name', array('@menu_name' => $title)) . '>';
     $parent_options_js[$menu_name] = form_select_options(array('#value' => NULL), $options);
   }
+  // Build a select element that is only needed for the jquery version.
+  $menus_select = theme('select', array(
+    '#title' => t('Menu'),
+    '#value' => $menus_default,
+    '#options' => $menus,
+    '#name' => 'parent_menu',
+    '#id' => 'edit-parent-menu',
+    '#size' => 1,
+    '#required' => FALSE,
+    '#multiple' => FALSE,
+    '#parents' => array(NULL),
+  ));
   // Load the javascript data.
   $settings = array(
     'menu_block' => array(
-      'menus' => t('Menu') . ': '
-        . '<select name="parent_menu" id="edit-parent-menu">'
-        . form_select_options(array('#value' => $menus_default, '#options' => $menus))
-        . '</select> '
-        . t('Item') . ': ',
+      'menus' => $menus_select . '<label id="item-label">' . t('Item') . ':</label>',
       'menus_default' => $menus_default,
       'parent_options' => $parent_options_js,
       'parent_default' => $parent_default,
@@ -189,6 +197,8 @@ function _menu_block_block_configure($delta) {
   drupal_add_js(drupal_get_path('module', 'menu_block') . '/menu-block.js');
 
   // Build the standard form.
+  drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
+  $form['wrapper-start'] = array('#value' => '<div id="menu-block-settings">');
   $form['parent'] = array(
     '#type' => 'select',
     '#title' => t('Parent item'),
@@ -198,7 +208,7 @@ function _menu_block_block_configure($delta) {
   );
   $form['level'] = array(
     '#type' => 'select',
-    '#title' => t('Starting level of menu tree'),
+    '#title' => t('Starting level'),
     '#default_value' => variable_get("menu_block_{$delta}_level", 1),
     '#options' => array(
       '1'  => t('1st level (primary)'),
@@ -215,7 +225,7 @@ function _menu_block_block_configure($delta) {
   );
   $form['depth'] = array(
     '#type' => 'select',
-    '#title' => t('Maximum depth of menu tree'),
+    '#title' => t('Maximum depth'),
     '#default_value' => variable_get("menu_block_{$delta}_depth", 0),
     '#options' => array(
       '1'  => '1',
@@ -229,20 +239,24 @@ function _menu_block_block_configure($delta) {
       '9'  => '9',
       '0'  => t('Unlimited'),
     ),
-    '#description' => t('From the starting level, specify the maximum depth of the tree.'),
+    '#description' => t('From the starting level, specify the maximum depth of the menu tree.'),
   );
   $form['expanded'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Expand all children'),
+    '#prefix' => '<div id="expanded-wrapper"><strong>' . t('Expand children') . ':</strong>',
+    '#suffix' => '</div>',
+    '#title' => t('Expand all the sub-menus of this tree.'),
     '#default_value' => variable_get("menu_block_{$delta}_expanded", 0),
-    '#description' => t('All sub-menus of this menu will be expanded.'),
   );
   $form['sort'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Sort active trail'),
+    '#prefix' => '<div id="sort-wrapper"><strong>' . t('Sort') . ':</strong>',
+    '#suffix' => '</div>',
+    '#title' => t('Sort menu tree by the active menu item’s trail.'),
     '#default_value' => variable_get("menu_block_{$delta}_sort", 0),
     '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
   );
+  $form['wrapper-close'] = array('#value' => '</div>');
   return $form;
 }
 
