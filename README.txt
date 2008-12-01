@@ -27,20 +27,20 @@ CONFIGURING MENU BLOCKS
         First select the menu. Then select the parent item from that menu. The
         tree of links will only contain children of the selected parent item.
 
-    Starting level of menu tree
+    Starting level
         Blocks that start with the 1st level will always be visible. Blocks that
         start with the 2nd level or deeper will only be visible when the trail
         to the active menu item is in the block's tree.
 
-    Maximum depth of menu tree
+    Maximum depth
         From the starting level, specify the maximum depth of the tree. Blocks
-        with a maximum dpeth of 1 will just be a single un-nested list of links
+        with a maximum depth of 1 will just be a single un-nested list of links
         with none of those links' children displayed.
 
-    Expand all children
+    Expand children
         All sub-menus of this menu will be expanded.
 
-    Sort active trail
+    Sort
         Sort each item in the active trail to the top of its level. When used on
         a deep or wide menu tree, the active menu item's children will be easier
         to see when the page is reloaded.
@@ -52,9 +52,9 @@ STYLING MENU BLOCKS
     <a> elements.
 
     <div>
-        The <div> wrapped around the menu tree has a class for each of the
+        The <div> wrapped around the menu tree has a class for several of the
         configurable options of the block: menu-name-NAME parent-mlid-MLID
-        menu-level-LEVEL menu-depth-DEPTH menu-expanded menu-sorted
+        menu-level-LEVEL
 
     <li>
         The <li> elements of the menu tree can have an extended list of classes
