@@ -63,8 +63,8 @@ STYLING MENU BLOCKS
 
     <li>
         The <li> elements of the menu tree can have an extended list of classes
-        (compared to standard menu trees): first last menu-mlid-MLID active
-        active-trail
+        (compared to standard menu trees): first last menu-mlid-MLID
+        has-children active active-trail
 
     <a>
         The <a> elements of the menu tree can have: active active-trail

@@ -410,6 +410,7 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
     if ($depth_limit == 1 && $tree[$key]['link']['has_children']) {
       // Turn off the menu styling that shows there were children.
       $tree[$key]['link']['has_children'] = FALSE;
+      $tree[$key]['link']['leaf_has_children'] = TRUE;
     }
   }
 }
@@ -465,6 +466,9 @@ function menu_block_tree_output(&$tree) {
       $extra_class[] = 'last';
     }
     $extra_class[] = 'menu-mlid-' . $items[$key]['link']['mlid'];
+    if (!empty($items[$key]['link']['leaf_has_children'])) {
+      $extra_class[] = 'has-children';
+    }
     if ($items[$key]['link']['href'] == $_GET['q'] || ($items[$key]['link']['href'] == '<front>' && drupal_is_front_page())) {
       $extra_class[] = 'active';
     }

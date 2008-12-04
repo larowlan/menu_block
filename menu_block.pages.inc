@@ -55,7 +55,7 @@ function _menu_block_help($path, $arg) {
       . '<dt>' . theme('placeholder', '<div>') . '</dt>'
       . '<dd>' . t('The %div wrapped around the menu tree has a class for several of the configurable options of the block: %class.', array('%div' => '<div>', '%class' => 'menu-name-NAME parent-mlid-MLID menu-level-LEVEL')) . '</dd>'
       . '<dt>' . theme('placeholder', '<li>') . '</dt>'
-      . '<dd>' . t('The %li elements of the menu tree can have an extended list of classes (compared to standard menu trees): %class.', array('%li' => '<li>', '%class' => 'first last menu-mlid-MLID active active-trail')) . '</dd>'
+      . '<dd>' . t('The %li elements of the menu tree can have an extended list of classes (compared to standard menu trees): %class.', array('%li' => '<li>', '%class' => 'first last menu-mlid-MLID has-children active active-trail')) . '</dd>'
       . '<dt>' . theme('placeholder', '<a>') . '</dt>'
       . '<dd>' . t('The %a elements of the menu tree can have: %class.', array('%a' => '<a>', '%class' => 'active active-trail')) . '</dd>'
       . '</dl>'
