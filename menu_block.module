@@ -405,9 +405,11 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
       else {
         // Remove the children items.
         $tree[$key]['below'] = FALSE;
-        // Turn off the menu styling that shows there were children.
-        $tree[$key]['link']['has_children'] = FALSE;
       }
+    }
+    if ($depth_limit == 1 && $tree[$key]['link']['has_children']) {
+      // Turn off the menu styling that shows there were children.
+      $tree[$key]['link']['has_children'] = FALSE;
     }
   }
 }
