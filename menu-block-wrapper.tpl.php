@@ -8,7 +8,7 @@
  * Available variables:
  * - $content: The unordered list containing the menu.
  * - $classes: A string containing the CSS classes for the DIV tag. Includes:
- *   menu-name-NAME, parent-mlid-MLID, and menu-level-LEVEL.
+ *   menu-block-DELTA, menu-name-NAME, parent-mlid-MLID, and menu-level-LEVEL.
  * - $classes_array: An array containing each of the CSS classes.
  *
  * The following variables are provided for contextual information.

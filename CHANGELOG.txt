@@ -1,3 +1,6 @@
+Menu Block 6.x-2.x-dev
+  #347805: Add delta to variables and classes in menu-block-wrapper.tpl.
+
 Menu Block 6.x-2.2
   #342498: Give unique class to depth-limited leaves that have children.
   #341436: Depth-limited leaves that have children get "collapsed" icon.

@@ -58,8 +58,8 @@ STYLING MENU BLOCKS
 
     <div>
         The <div> wrapped around the menu tree has a class for several of the
-        configurable options of the block: menu-name-NAME parent-mlid-MLID
-        menu-level-LEVEL
+        configurable options of the block: menu-block-DELTA menu-name-NAME
+        parent-mlid-MLID menu-level-LEVEL
 
     <li>
         The <li> elements of the menu tree can have an extended list of classes

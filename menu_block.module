@@ -58,7 +58,7 @@ function menu_block_theme() {
   return array(
     'menu_block_wrapper' => array(
       'template' => 'menu-block-wrapper',
-      'arguments' => array('content' => NULL, 'settings' => NULL),
+      'arguments' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
     ),
   );
 }
@@ -70,6 +70,7 @@ function menu_block_theme() {
  * @see theme_menu_block_wrapper()
  */
 function template_preprocess_menu_block_wrapper(&$variables) {
+  $variables['classes_array'][] = 'menu-block-' . $variables['delta'];
   $variables['classes_array'][] = 'menu-name-' . $variables['settings']['menu_name'];
   $variables['classes_array'][] = 'parent-mlid-' . $variables['settings']['parent_mlid'];
   $variables['classes_array'][] = 'menu-level-' . $variables['settings']['level'];
@@ -201,7 +202,7 @@ function _menu_block_block_view($delta) {
       'expanded' => $expanded,
       'sort' => $sort,
     );
-    $data['content'] = theme('menu_block_wrapper', $data['content'], $settings);
+    $data['content'] = theme('menu_block_wrapper', $data['content'], $settings, $delta);
   }
 
   return $data;
