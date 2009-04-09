@@ -1,8 +1,10 @@
 /* $Id$ */
 
-#menu-block-settings .form-item
+#menu-block-settings .form-item,
+#edit-title-wrapper
 {
-  padding-left: 200px;
+  margin: 1em 0;
+  padding-left: 160px;
 }
 
 #menu-block-settings .form-checkboxes .form-item,
@@ -11,13 +13,13 @@
   padding-left: 0;
 }
 
-#menu-block-settings .form-item label
+#menu-block-settings .form-item label,
+#edit-title-wrapper label
 {
   float: left;
-  width: 190px;
-  margin-left: -200px;
+  width: 150px;
+  margin-left: -160px;
   margin-right: 10px;
-  text-align: right;
   _display: inline-block; /* IE6 is dumb. */
 }
 
@@ -30,7 +32,6 @@
   width: auto;
   margin-left: 0;
   margin-right: 0;
-  text-align: left;
 }
 
 .form-item #edit-parent-menu-wrapper
@@ -57,10 +58,9 @@
 #sort-wrapper strong
 {
   float: left;
-  width: 190px;
+  width: 150px;
   margin-left: 0;
   margin-right: 10px;
-  text-align: right;
 }
 
 #expanded-wrapper fieldset .form-item,
@@ -75,5 +75,5 @@
 #sort-wrapper fieldset .form-item .description
 {
   display: block;
-  margin-left: 200px;
+  margin-left: 160px;
 }

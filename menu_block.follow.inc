@@ -14,11 +14,9 @@
  * @param $level
  *   string The level which the tree will be pruned to: 'active' or 'child'.
  * @return
- *   string Returns the new title if tree has been pruned.
+ *   void
  */
 function _menu_tree_prune_active_tree(&$tree, $level) {
-  $menu_title = FALSE;
-
   do {
     $found_active_trail = FALSE;
     // Examine each element at this level for the active trail.
@@ -33,7 +31,7 @@ function _menu_tree_prune_active_tree(&$tree, $level) {
             foreach (array_keys($tree[$key]['below']) AS $child_key) {
               if ($tree[$key]['below'][$child_key]['link']['in_active_trail']) {
                 // Get the title for the pruned tree.
-                $menu_title = $tree[$key]['link']['title'];
+                menu_block_set_title($tree[$key]['link']);
                 $tree = $tree[$key]['below'];
                 // Continue in the pruned tree.
                 break 2;
@@ -43,7 +41,7 @@ function _menu_tree_prune_active_tree(&$tree, $level) {
             break 2;
           }
           // Get the title for the pruned tree.
-          $menu_title = $tree[$key]['link']['title'];
+          menu_block_set_title($tree[$key]['link']);
           // If we are pruning to the children of the active menu item, just
           // prune the tree to the children of the item in the active trail.
           $tree = $tree[$key]['below'];
@@ -57,6 +55,4 @@ function _menu_tree_prune_active_tree(&$tree, $level) {
       }
     }
   } while ($found_active_trail);
-
-  return $menu_title;
 }

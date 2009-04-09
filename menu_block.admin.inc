@@ -202,8 +202,14 @@ function _menu_block_block_configure($delta) {
   drupal_add_js(drupal_get_path('module', 'menu_block') . '/menu-block.js');
 
   // Build the standard form.
-  drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
   $form['wrapper-start'] = array('#value' => '<div id="menu-block-settings">');
+  drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
+  $form['title_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Block title as link'),
+    '#default_value' => variable_get("menu_block_{$delta}_title_link", 0),
+    '#description' => t('Make the default block title a link to that menu item. An overridden block title will not be a link.'),
+  );
   $form['parent'] = array(
     '#type' => 'select',
     '#title' => t('Parent item'),
@@ -295,6 +301,7 @@ function _menu_block_block_save($delta, $edit) {
   if ($edit['follow'] && !empty($edit['follow_parent'])) {
     $edit['follow'] = $edit['follow_parent'];
   }
+  variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
   variable_set("menu_block_{$delta}_parent", $edit['parent']);
   variable_set("menu_block_{$delta}_level", $edit['level']);
   variable_set("menu_block_{$delta}_follow", $edit['follow']);
