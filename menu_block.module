@@ -157,6 +157,9 @@ function _menu_block_block_view($delta) {
     $tree = menu_tree_page_data($menu_name);
   }
 
+  // Allow other modules to alter the tree before we begin operations on it.
+  drupal_alter('menu_block_tree', $tree);
+
   // Localize the tree.
   if (module_exists('i18nmenu')) {
     i18nmenu_localize_tree($tree);

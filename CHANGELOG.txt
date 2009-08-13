@@ -2,6 +2,7 @@
 
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- Added HOOK_menu_block_tree_alter() to allow direct tree manipulation
 - Make default menu be "Primary links" instead of "Navigation"
 - #378206 by sbordage: Added French translation
 - #345419: Add option for menu title as link
