@@ -1,4 +1,5 @@
 Menu Block 6.x-2.x-dev
+  * Make default menu be "Primary links" instead of "Navigation".
   #378206 by sbordage: Added French translation.
   #345419: Add option for menu title as link.
   #347805: Add delta to variables and classes in menu-block-wrapper.tpl.

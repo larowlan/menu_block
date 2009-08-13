@@ -164,7 +164,7 @@ function _menu_block_block_configure($delta) {
   // Get the list of menus.
   $menus = menu_block_get_all_menus();
   // Get the parent item defaults.
-  $parent_default = variable_get("menu_block_{$delta}_parent", 'navigation:0');
+  $parent_default = variable_get("menu_block_{$delta}_parent", 'primary-links:0');
   list($menus_default, ) = split(':', $parent_default);
 
   // Build the standard and jquery versions of the parent item options.

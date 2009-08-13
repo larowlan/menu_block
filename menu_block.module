@@ -135,7 +135,7 @@ function _menu_block_block_view($delta) {
   $data = array();
 
   // Get the block configuration options.
-  list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", 'navigation:0'));
+  list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
   $level = variable_get("menu_block_{$delta}_level", 1);
   $follow = variable_get("menu_block_{$delta}_follow", 0);
   $depth = variable_get("menu_block_{$delta}_depth", 0);
