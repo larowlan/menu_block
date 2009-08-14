@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file menu-block-wrapper.tpl.php
+ * @file
  * Default theme implementation to wrap menu blocks.
  *
  * Available variables:
@@ -12,8 +12,8 @@
  * - $classes_array: An array containing each of the CSS classes.
  *
  * The following variables are provided for contextual information.
- * - $settings: An array of the block's settings. Includes menu_name,
- *   parent_mlid, level, follow, depth, expanded, and sort.
+ * - $settings: An array of the block's configuration settings. Includes
+ *   menu_name, parent_mlid, level, follow, depth, expanded, and sort.
  *
  * @see template_preprocess_menu_block_wrapper()
  * @see theme_menu_block_wrapper()
