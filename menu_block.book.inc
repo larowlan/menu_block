@@ -7,10 +7,7 @@
  */
 
 /**
- * Returns a list of book menus.
- *
- * @return
- *   array The list of book menus.
+ * Implements hook_get_menus().
  */
 function book_get_menus() {
   $menus = array();
