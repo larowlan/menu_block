@@ -137,6 +137,7 @@ function _menu_block_block_view($delta) {
     'delta'       => $delta,
     'menu_name'   => 'primary-links',
     'parent_mlid' => 0,
+    'title_link'  => variable_get("menu_block_{$delta}_title_link", 0),
     'level'       => variable_get("menu_block_{$delta}_level", 1),
     'follow'      => variable_get("menu_block_{$delta}_follow", 0),
     'depth'       => variable_get("menu_block_{$delta}_depth", 0),
@@ -147,7 +148,7 @@ function _menu_block_block_view($delta) {
 
   // Get the default block name
   $menu_names = menu_block_get_all_menus();
-  menu_block_set_title(t($menu_names[$config['menu_name']]), $config['delta']);
+  menu_block_set_title(t($menu_names[$config['menu_name']]), $config['title_link']);
 
   if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
@@ -215,22 +216,22 @@ function _menu_block_block_view($delta) {
 }
 
 /**
- * Sets the menu item to use for the block title.
+ * Sets the menu item to use for the tree's title.
  */
 function menu_block_get_title() {
   return menu_block_set_title();
 }
 
 /**
- * Sets the menu item to use for the block title.
+ * Sets the menu item to use for the tree's title.
  */
-function menu_block_set_title($item = NULL, $delta = NULL) {
-  static $block_delta;
+function menu_block_set_title($item = NULL, $is_title_link = NULL) {
+  static $title_is_link;
   static $menu_item;
 
-  // Save block delta so we can render the title later.
-  if (!is_null($delta)) {
-    $block_delta = $delta;
+  // Store the title link setting so we can render the title later.
+  if (!is_null($is_title_link)) {
+    $title_is_link = $is_title_link;
     $menu_item = $item;
     return;
   }
@@ -241,12 +242,12 @@ function menu_block_set_title($item = NULL, $delta = NULL) {
     return;
   }
 
-  // The block title is a menu title, a normal string.
+  // The tree's title is a menu title, a normal string.
   if (is_string($menu_item)) {
     $title = check_plain($menu_item);
   }
-  // The block title is a menu item with a link.
-  elseif (variable_get("menu_block_{$block_delta}_title_link", 0)) {
+  // The tree's title is a menu item with a link.
+  elseif ($title_is_link) {
     if (!empty($menu_item['localized_options']['attributes']['class'])) {
       $menu_item['localized_options']['attributes']['class'] .= ' active-trail';
     }
@@ -255,7 +256,7 @@ function menu_block_set_title($item = NULL, $delta = NULL) {
     }
     $title = theme('menu_item_link', $menu_item);
   }
-  // The block title is a menu item.
+  // The tree's title is a menu item.
   else {
     $title = check_plain($menu_item['title']);
   }
