@@ -341,26 +341,16 @@ function menu_tree_add_active_path(&$tree) {
  *   void
  */
 function menu_tree_trim_active_path(&$tree) {
-  // To traverse the original tree down the active trail, we use a pointer.
-  $current_level =& $tree;
-
-  // Traverse the tree along the active trail.
-  do {
-    $next_level = FALSE;
-    foreach (array_keys($current_level) AS $key) {
-      if ($current_level[$key]['link']['in_active_trail'] && $current_level[$key]['below']) {
-        // Continue in the subtree, if it exists.
-        $next_level = $key;
-      }
-      else {
-        // Trim anything not along the active trail.
-        $current_level[$key]['below'] = FALSE;
-      }
+  foreach (array_keys($tree) AS $key) {
+    if (($tree[$key]['link']['in_active_trail'] || $tree[$key]['link']['expanded']) && $tree[$key]['below']) {
+      // Continue in the subtree, if it exists.
+      menu_tree_trim_active_path($tree[$key]['below']);
     }
-    if ($next_level) {
-      $current_level =& $current_level[$next_level]['below'];
+    else {
+      // Trim anything not expanded or along the active trail.
+      $tree[$key]['below'] = FALSE;
     }
-  } while ($next_level);
+  }
 }
 
 /**
