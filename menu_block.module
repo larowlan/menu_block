@@ -148,7 +148,7 @@ function _menu_block_block_view($delta) {
 
   // Get the default block name
   $menu_names = menu_block_get_all_menus();
-  menu_block_set_title(t($menu_names[$config['menu_name']]), $config['title_link']);
+  menu_block_set_title(t($menu_names[$config['menu_name']]));
 
   if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
@@ -206,7 +206,7 @@ function _menu_block_block_view($delta) {
 
   // Render the tree.
   $data = array();
-  $data['subject'] = menu_block_get_title();
+  $data['subject'] = menu_block_get_title($config['title_link']);
   $data['content'] = menu_block_tree_output($tree);
   if ($data['content']) {
     $data['content'] = theme('menu_block_wrapper', $data['content'], $config, $config['delta']);
@@ -216,38 +216,23 @@ function _menu_block_block_view($delta) {
 }
 
 /**
- * Sets the menu item to use for the tree's title.
+ * Retrieves the menu item to use for the tree's title.
+ *
+ * @param $render_title_as_link
+ *   A boolean that says whether to render the title as a link or a simple
+ *   string.
+ * @return
+ *   The tree's title rendered as a string.
  */
-function menu_block_get_title() {
-  return menu_block_set_title();
-}
-
-/**
- * Sets the menu item to use for the tree's title.
- */
-function menu_block_set_title($item = NULL, $is_title_link = NULL) {
-  static $title_is_link;
-  static $menu_item;
-
-  // Store the title link setting so we can render the title later.
-  if (!is_null($is_title_link)) {
-    $title_is_link = $is_title_link;
-    $menu_item = $item;
-    return;
-  }
-
-  // Save the menu item and immediately return.
-  if (!is_null($item)) {
-    $menu_item = $item;
-    return;
-  }
+function menu_block_get_title($render_title_as_link = TRUE) {
+  $menu_item = menu_block_set_title();
 
   // The tree's title is a menu title, a normal string.
   if (is_string($menu_item)) {
     $title = check_plain($menu_item);
   }
   // The tree's title is a menu item with a link.
-  elseif ($title_is_link) {
+  elseif ($render_title_as_link) {
     if (!empty($menu_item['localized_options']['attributes']['class'])) {
       $menu_item['localized_options']['attributes']['class'] .= ' active-trail';
     }
@@ -261,6 +246,23 @@ function menu_block_set_title($item = NULL, $is_title_link = NULL) {
     $title = check_plain($menu_item['title']);
   }
   return $title;
+}
+
+/**
+ * Sets the menu item to use for the tree's title.
+ *
+ * @param $item
+ *   The menu item (an array) or the menu item's title as a string.
+ */
+function menu_block_set_title($item = NULL) {
+  static $menu_item;
+
+  // Save the menu item.
+  if (!is_null($item)) {
+    $menu_item = $item;
+  }
+
+  return $menu_item;
 }
 
 /**
