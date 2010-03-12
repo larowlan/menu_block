@@ -2,6 +2,7 @@
 
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #703968 by hefox and JohnAlbin: Add menu_tree_build() to allow reuse of tree building code outside of blocks
 - Refactored API for menu_block_get_title() and menu_block_set_title()
 - Added HOOK_menu_block_tree_alter() to allow direct tree manipulation
 - by Denes Szabo and Zoltan Balogh: Added Hungarian translation
