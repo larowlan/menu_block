@@ -36,6 +36,8 @@ function _menu_block_help($path, $arg) {
       . '<dt><strong>' . t('Block title') . '</strong></dt>'
       . '<dd>' . t('For menu trees that start with the 1st level, the default block title will be the menu name. For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level.')
       . '<p>' . t('For example, if the active menu trail for the Navigation menu is: Administer › Site building › Menus › Primary links, then a menu block configured to start with the 1st level of the Navigation will display a block title of “Navigation”. And a menu block configured to start with the 3rd level of the Navigation menu will display a block title of “Site building”.') . '</p></dd>'
+      . '<dt><strong>' . t('Block title as link') . '</strong></dt>'
+      . '<dd>' . t('For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level. If this option is checked, the block title will be a link to that menu item.') . '</dd>'
       . '<dt><strong>' . t('Parent item') . '</strong></dt>'
       . '<dd>' . t('First select the menu. Then select the parent item from that menu. The tree of links will only contain children of the selected parent item.') . '</dd>'
       . '<dt><strong>' . t('Starting level') . '</strong></dt>'
@@ -62,7 +64,7 @@ function _menu_block_help($path, $arg) {
       . '<p>' . t('In addition, the wrapper %div for the block is generated using the %template_default template. And Menu block provides template suggestions of the form %template_suggestion. For example, a file in your theme called %template_example can be used to override the %div for just the primary-links menu blocks.', array('%div' => '<div>', '%template_default' => 'menu-block-wrapper.tpl.php', '%template_suggestion' => 'menu-block-wrapper-MENUNAME.tpl.php', '%template_example' => 'menu-block-wrapper-primary-links.tpl.php')) . '</p>'
       . '<h3>' . t('Menu block API') . '</h3>'
       . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>'
-      . '<p>' . t('In addition, Menu block implements HOOK_get_menus() to retrieve menu names and titles of menus created by a module. See book_get_menus() in menu_block.book.inc for an example of this hook.') . '</p>';
+      . '<p>' . t('In addition, Menu block implements HOOK_get_menus() and HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation.') . '</p>';
       break;
   }
   return $output;

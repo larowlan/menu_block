@@ -23,6 +23,12 @@ CONFIGURING MENU BLOCKS
         the 3rd level of the Navigation menu will display a block title of
         "Site building".
 
+    Block title as link
+        For menu trees that start with the 2nd level or deeper, the default
+        block title will be the title for the parent menu item of the specified
+        level. If this option is checked, the block title will be a link to that
+        menu item.
+
     Parent item
         First select the menu. Then select the parent item from that menu. The
         tree of links will only contain children of the selected parent item.
@@ -82,6 +88,5 @@ MENU BLOCK API
     outside the confines of blocks. All of the publicly available API functions
     are documented in the menu_block.module file.
 
-    In addition, Menu block implements HOOK_get_menus() to retrieve menu names
-    and titles of menus created by a module. See book_get_menus() in
-    menu_block.book.inc for an example of this hook.
+    In addition, Menu block implements HOOK_get_menus() and
+    HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation.
