@@ -12,12 +12,12 @@
  */
 
 /**
- * Alter the menu tree and its configuration before the block is rendered.
+ * Alter the menu tree and its configuration before the tree is rendered.
  *
  * @param $tree
- *   
+ *   An array containing the unrendered menu tree.
  * @param $config
- *   An array containing the configuration of the block.
+ *   An array containing the configuration of the tree.
  */
 function hook_menu_block_tree_alter(&$tree, &$config) {
 }
