@@ -40,7 +40,7 @@ function _menu_tree_prune_active_tree(&$tree, $level) {
             // If we've found the active item, we're done.
             break 2;
           }
-          // Get the title for the pruned tree.
+          // Set the title for the pruned tree.
           menu_block_set_title($tree[$key]['link']);
           // If we are pruning to the children of the active menu item, just
           // prune the tree to the children of the item in the active trail.

@@ -146,7 +146,7 @@ function _menu_block_block_view($delta) {
   );
   list($config['menu_name'], $config['parent_mlid']) = split(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
 
-  // Get the default block name
+  // Get the default block name.
   $menu_names = menu_block_get_all_menus();
   menu_block_set_title(t($menu_names[$config['menu_name']]));
 
