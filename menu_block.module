@@ -132,43 +132,39 @@ function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
  *   string The name of the block to render.
  */
 function _menu_block_block_view($delta) {
-  $data = array();
-
   // Get the block configuration options.
-  list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
-  $level = variable_get("menu_block_{$delta}_level", 1);
-  $follow = variable_get("menu_block_{$delta}_follow", 0);
-  $depth = variable_get("menu_block_{$delta}_depth", 0);
-  $expanded = variable_get("menu_block_{$delta}_expanded", 0);
-  $sort = variable_get("menu_block_{$delta}_sort", 0);
-  $context = array(
-    'delta' => $delta,
-    'menu_name' => $menu_name,
-    'parent_mlid' => $parent_mlid,
-    'level' => $level,
-    'follow' => $follow,
-    'depth' => $depth,
-    'expanded' => $expanded,
-    'sort' => $sort,
+  $config = array(
+    'delta'       => $delta,
+    'menu_name'   => 'primary-links',
+    'parent_mlid' => 0,
+    'level'       => variable_get("menu_block_{$delta}_level", 1),
+    'follow'      => variable_get("menu_block_{$delta}_follow", 0),
+    'depth'       => variable_get("menu_block_{$delta}_depth", 0),
+    'expanded'    => variable_get("menu_block_{$delta}_expanded", 0),
+    'sort'        => variable_get("menu_block_{$delta}_sort", 0),
   );
+  list($config['menu_name'], $config['parent_mlid']) = split(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
 
   // Get the default block name
   $menu_names = menu_block_get_all_menus();
-  menu_block_set_title(t($menu_names[$menu_name]), $delta);
+  menu_block_set_title(t($menu_names[$config['menu_name']]), $config['delta']);
 
-  if ($expanded || $parent_mlid) {
+  if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
-    $tree = menu_tree_all_data($menu_name);
+    $tree = menu_tree_all_data($config['menu_name']);
     // And add the active trail data back to the full tree.
     menu_tree_add_active_path($tree);
   }
   else {
     // Get the tree pruned for just the active trail.
-    $tree = menu_tree_page_data($menu_name);
+    $tree = menu_tree_page_data($config['menu_name']);
   }
 
   // Allow other modules to alter the tree before we begin operations on it.
-  drupal_alter('menu_block_tree', $tree, $context);
+  $alter_data = &$tree;
+  // Also allow modules to alter the config.
+  $alter_data['__drupal_alter_by_ref'] = array(&$config);
+  drupal_alter('menu_block_tree', $alter_data);
 
   // Localize the tree.
   if (module_exists('i18nmenu')) {
@@ -176,42 +172,43 @@ function _menu_block_block_view($delta) {
   }
 
   // Prune the tree along the active trail to the specified level.
-  if ($level > 1 || $parent_mlid) {
-    if ($parent_mlid) {
-      $parent_item = menu_link_load($parent_mlid);
+  if ($config['level'] > 1 || $config['parent_mlid']) {
+    if ($config['parent_mlid']) {
+      $parent_item = menu_link_load($config['parent_mlid']);
       menu_block_set_title($parent_item);
-      menu_tree_prune_tree($tree, $level, $parent_item);
+      menu_tree_prune_tree($tree, $config['level'], $parent_item);
     }
     else {
-      menu_tree_prune_tree($tree, $level);
+      menu_tree_prune_tree($tree, $config['level']);
     }
   }
 
   // Prune the tree to the active menu item.
-  if ($follow) {
-    menu_tree_prune_active_tree($tree, $follow);
+  if ($config['follow']) {
+    menu_tree_prune_active_tree($tree, $config['follow']);
   }
 
   // If the menu-item-based tree is not "expanded", trim the tree to the active path.
-  if ($parent_mlid && !$expanded) {
+  if ($config['parent_mlid'] && !$config['expanded']) {
     menu_tree_trim_active_path($tree);
   }
 
   // Trim the branches that extend beyond the specified depth.
-  if ($depth > 0) {
-    menu_tree_depth_trim($tree, $depth);
+  if ($config['depth'] > 0) {
+    menu_tree_depth_trim($tree, $config['depth']);
   }
 
   // Sort the active path to the top of the tree.
-  if ($sort) {
+  if ($config['sort']) {
     menu_tree_sort_active_path($tree);
   }
 
   // Render the tree.
+  $data = array();
   $data['subject'] = menu_block_get_title();
   $data['content'] = menu_block_tree_output($tree);
   if ($data['content']) {
-    $data['content'] = theme('menu_block_wrapper', $data['content'], $context, $delta);
+    $data['content'] = theme('menu_block_wrapper', $data['content'], $config, $config['delta']);
   }
 
   return $data;
@@ -246,7 +243,7 @@ function menu_block_set_title($item = NULL, $delta = NULL) {
 
   // The block title is a menu title, a normal string.
   if (is_string($menu_item)) {
-    $title = $menu_item;
+    $title = check_plain($menu_item);
   }
   // The block title is a menu item with a link.
   elseif (variable_get("menu_block_{$block_delta}_title_link", 0)) {
@@ -260,7 +257,7 @@ function menu_block_set_title($item = NULL, $delta = NULL) {
   }
   // The block title is a menu item.
   else {
-    $title = $menu_item['title'];
+    $title = check_plain($menu_item['title']);
   }
   return $title;
 }
