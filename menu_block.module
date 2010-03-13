@@ -144,7 +144,7 @@ function _menu_block_block_view($delta) {
     'expanded'    => variable_get("menu_block_{$delta}_expanded", 0),
     'sort'        => variable_get("menu_block_{$delta}_sort", 0),
   );
-  list($config['menu_name'], $config['parent_mlid']) = split(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
+  list($config['menu_name'], $config['parent_mlid']) = explode(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
 
   return menu_tree_build($config);
 }

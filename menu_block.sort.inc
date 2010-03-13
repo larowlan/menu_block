@@ -30,9 +30,9 @@ function _menu_tree_sort_active_path(&$tree) {
         // Don't re-sort if its already sorted.
         if ($key != $first_key) {
           // Create a new key that will come before the first key.
-          list($first_key, ) = split(' ', $first_key);
+          list($first_key, ) = explode(' ', $first_key);
           $first_key--;
-          list(, $new_key) = split(' ', $key, 2);
+          list(, $new_key) = explode(' ', $key, 2);
           $new_key = "$first_key $new_key";
           // Move the item to the new key.
           $current_level[$new_key] = $current_level[$key];

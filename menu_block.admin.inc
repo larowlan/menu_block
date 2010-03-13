@@ -115,7 +115,7 @@ function _menu_block_block_list() {
  *   string The title of the block
  */
 function _menu_block_format_title($delta) {
-  list($menu_name, $parent_mlid) = split(':', variable_get("menu_block_{$delta}_parent", ':0'));
+  list($menu_name, $parent_mlid) = explode(':', variable_get("menu_block_{$delta}_parent", ':0'));
   $menus = menu_block_get_all_menus();
   if (empty($menu_name) || empty($menus[$menu_name])) {
     $title = t('Unconfigured menu block');
@@ -165,7 +165,7 @@ function _menu_block_block_configure($delta) {
   $menus = menu_block_get_all_menus();
   // Get the parent item defaults.
   $parent_default = variable_get("menu_block_{$delta}_parent", 'primary-links:0');
-  list($menus_default, ) = split(':', $parent_default);
+  list($menus_default, ) = explode(':', $parent_default);
 
   // Build the standard and jquery versions of the parent item options.
   $parent_options = $parent_options_js = array();
