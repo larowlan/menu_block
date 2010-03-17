@@ -175,8 +175,12 @@ function _menu_block_block_configure($delta) {
  *   array The form in Form API format.
  */
 function menu_block_configure_form(&$form_state) {
+  $config = array();
   // Get the config from the form state.
-  $config = !empty($form_state['values']) ? $form_state['values'] : array();
+  if (!empty($form_state['values'])) {
+    $config = $form_state['values'];
+    list($config['menu_name'], $config['parent_mlid']) = explode(':', $config['parent']);
+  }
   // Merge in the default configuration.
   $config += menu_block_get_config();
 
@@ -232,6 +236,7 @@ function menu_block_configure_form(&$form_state) {
     '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
     '#options' => $parent_options,
     '#description' => t('The tree of links will only contain children of the selected parent item.'),
+    '#element_validate' => array('menu_block_configure_form_parent_validate'),
   );
   $form['level'] = array(
     '#type' => 'select',
@@ -312,6 +317,15 @@ function menu_block_configure_form(&$form_state) {
   $form['wrapper-close'] = array('#value' => '</div>');
 
   return $form;
+}
+
+/**
+ * Validates the parent element of the block configuration form.
+ */
+function menu_block_configure_form_parent_validate($element, &$form_state) {
+  // The "Menu block" config has the "parent" value split into "menu_name" and
+  // "parent_mlid" values. The value of "parent" stored in the database/config array is either FALSE
+  list($form_state['values']['menu_name'], $form_state['values']['parent_mlid']) = explode(':', $form_state['values']['parent']);
 }
 
 /**
