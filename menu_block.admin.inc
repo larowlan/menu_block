@@ -10,7 +10,7 @@
  * Menu callback: display the menu block addition form.
  */
 function menu_block_add_block_form(&$form_state) {
-  module_load_include('block', 'block.admin', 'inc');
+  module_load_include('inc', 'block', 'block.admin');
   return block_admin_configure($form_state, 'menu_block', NULL);
 }
 
