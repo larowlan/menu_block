@@ -67,7 +67,6 @@ function menu_block_theme() {
  * Process variables for menu-block-wrapper.tpl.php.
  *
  * @see menu-block-wrapper.tpl.php
- * @see theme_menu_block_wrapper()
  */
 function template_preprocess_menu_block_wrapper(&$variables) {
   $variables['classes_array'][] = 'menu-block-' . $variables['delta'];
@@ -153,8 +152,8 @@ function _menu_block_block_view($delta) {
  * Build a menu tree based on the provided configuration.
  *
  * @param $config
- *   An array of configuration options that specifies how to build the menu tree
- *   and its title.
+ *   array An array of configuration options that specifies how to build the
+ *   menu tree and its title.
  *   - delta: (string) The menu_block's block delta.
  *   - menu_name: (string) The machine name of the requested menu.
  *   - parent_mlid: (int) The mlid of the item that should root the tree. Use 0
@@ -170,8 +169,8 @@ function _menu_block_block_view($delta) {
  *   - sort: (boolean) Specifies if the tree should be sorted with the active
  *     trail at the top of the tree.
  * @return
- *   An array containing the rendered tree in the 'content' key and the rendered
- *   title in the 'subject' key.
+ *   array An array containing the rendered tree in the 'content' key and the
+ *   rendered title in the 'subject' key.
  */
 function menu_tree_build($config) {
   // Get the default block name.
@@ -247,10 +246,10 @@ function menu_tree_build($config) {
  * Retrieves the menu item to use for the tree's title.
  *
  * @param $render_title_as_link
- *   A boolean that says whether to render the title as a link or a simple
- *   string.
+ *   boolean A boolean that says whether to render the title as a link or a
+ *   simple string.
  * @return
- *   The tree's title rendered as a string.
+ *   string The tree's title rendered as a string.
  */
 function menu_block_get_title($render_title_as_link = TRUE) {
   $menu_item = menu_block_set_title();
@@ -280,7 +279,7 @@ function menu_block_get_title($render_title_as_link = TRUE) {
  * Sets the menu item to use for the tree's title.
  *
  * @param $item
- *   The menu item (an array) or the menu item's title as a string.
+ *   array The menu item (an array) or the menu item's title as a string.
  */
 function menu_block_set_title($item = NULL) {
   static $menu_item;
