@@ -161,11 +161,27 @@ function _menu_block_format_title($delta) {
  * Returns the 'configure' $op info for hook_block().
  */
 function _menu_block_block_configure($delta) {
+  // Create a pseudo form state.
+  $form_state = array('values' => menu_block_get_config($delta));
+  return menu_block_configure_form($form_state);
+}
+
+/**
+ * Returns the configuration form for a menu tree.
+ *
+ * @param $form_state
+ *   array An associated array of configuration options.
+ * @return
+ *   array The form in Form API format.
+ */
+function menu_block_configure_form(&$form_state) {
+  // Get the config from the form state.
+  $config = !empty($form_state['values']) ? $form_state['values'] : array();
+  // Merge in the default configuration.
+  $config += menu_block_get_config();
+
   // Get the list of menus.
   $menus = menu_block_get_all_menus();
-  // Get the parent item defaults.
-  $parent_default = variable_get("menu_block_{$delta}_parent", 'primary-links:0');
-  list($menus_default, ) = explode(':', $parent_default);
 
   // Build the standard and jquery versions of the parent item options.
   $parent_options = $parent_options_js = array();
@@ -180,7 +196,7 @@ function _menu_block_block_configure($delta) {
   // Build a select element that is only needed for the jquery version.
   $menus_select = theme('select', array(
     '#title' => t('Menu'),
-    '#value' => $menus_default,
+    '#value' => $config['menu_name'],
     '#options' => $menus,
     '#name' => 'parent_menu',
     '#id' => 'edit-parent-menu',
@@ -193,9 +209,9 @@ function _menu_block_block_configure($delta) {
   $settings = array(
     'menu_block' => array(
       'menus' => $menus_select . '<label id="item-label">' . t('Item') . ':</label>',
-      'menus_default' => $menus_default,
+      'menus_default' => $config['menu_name'],
       'parent_options' => $parent_options_js,
-      'parent_default' => $parent_default,
+      'parent_default' => $config['menu_name'] . ':' . $config['parent_mlid'],
     ),
   );
   drupal_add_js($settings, 'setting');
@@ -207,20 +223,20 @@ function _menu_block_block_configure($delta) {
   $form['title_link'] = array(
     '#type' => 'checkbox',
     '#title' => t('Block title as link'),
-    '#default_value' => variable_get("menu_block_{$delta}_title_link", 0),
+    '#default_value' => $config['title_link'],
     '#description' => t('Make the default block title a link to that menu item. An overridden block title will not be a link.'),
   );
   $form['parent'] = array(
     '#type' => 'select',
     '#title' => t('Parent item'),
-    '#default_value' => $parent_default,
+    '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
     '#options' => $parent_options,
     '#description' => t('The tree of links will only contain children of the selected parent item.'),
   );
   $form['level'] = array(
     '#type' => 'select',
     '#title' => t('Starting level'),
-    '#default_value' => variable_get("menu_block_{$delta}_level", 1),
+    '#default_value' => $config['level'],
     '#options' => array(
       '1'  => t('1st level (primary)'),
       '2'  => t('2nd level (secondary)'),
@@ -234,7 +250,9 @@ function _menu_block_block_configure($delta) {
     ),
     '#description' => t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.'),
   );
-  if ($follow = variable_get("menu_block_{$delta}_follow", 0)) {
+  // The value of "follow" in the database/config array is either FALSE or the
+  // value of the "follow_parent" form element.
+  if ($follow = $config['follow']) {
     $follow_parent = $follow;
     $follow = 1;
   }
@@ -246,6 +264,7 @@ function _menu_block_block_configure($delta) {
     '#title' => t('Make the starting level follow the active menu item.'),
     '#default_value' => $follow,
     '#description' => t('If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed.'),
+    '#element_validate' => array('menu_block_configure_form_follow_validate'),
   );
   $form['follow_parent'] = array(
     '#type' => 'select',
@@ -260,7 +279,7 @@ function _menu_block_block_configure($delta) {
   $form['depth'] = array(
     '#type' => 'select',
     '#title' => t('Maximum depth'),
-    '#default_value' => variable_get("menu_block_{$delta}_depth", 0),
+    '#default_value' => $config['depth'],
     '#options' => array(
       '1'  => '1',
       '2'  => '2',
@@ -280,27 +299,36 @@ function _menu_block_block_configure($delta) {
     '#prefix' => '<div id="expanded-wrapper"><strong>' . t('Expand children') . ':</strong>',
     '#suffix' => '</div>',
     '#title' => t('Expand all the sub-menus of this tree.'),
-    '#default_value' => variable_get("menu_block_{$delta}_expanded", 0),
+    '#default_value' => $config['expanded'],
   );
   $form['sort'] = array(
     '#type' => 'checkbox',
     '#prefix' => '<div id="sort-wrapper"><strong>' . t('Sort') . ':</strong>',
     '#suffix' => '</div>',
     '#title' => t('Sort menu tree by the active menu item’s trail.'),
-    '#default_value' => variable_get("menu_block_{$delta}_sort", 0),
+    '#default_value' => $config['sort'],
     '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
   );
   $form['wrapper-close'] = array('#value' => '</div>');
+
   return $form;
+}
+
+/**
+ * Validates the follow element of the block configuration form.
+ */
+function menu_block_configure_form_follow_validate($element, &$form_state) {
+  // The value of "follow" stored in the database/config array is either FALSE
+  // or the value of the "follow_parent" form element.
+  if ($form_state['values']['follow'] && !empty($form_state['values']['follow_parent'])) {
+    $form_state['values']['follow'] = $form_state['values']['follow_parent'];
+  }
 }
 
 /**
  * Returns the 'save' $op info for hook_block().
  */
 function _menu_block_block_save($delta, $edit) {
-  if ($edit['follow'] && !empty($edit['follow_parent'])) {
-    $edit['follow'] = $edit['follow_parent'];
-  }
   variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
   variable_set("menu_block_{$delta}_parent", $edit['parent']);
   variable_set("menu_block_{$delta}_level", $edit['level']);

@@ -2,9 +2,13 @@
 
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #741284 by JohnAlbin and hefox: Add menu_block_get_config() and
+  menu_block_configure_form() to make the configuration form reusable by
+  separating it from the Block API functions.
 - #553842 by apodran and JohnAlbin: split() is deprecated in PHP 5.3
 - #398888: "exanded" elements of a menu-item-rooted tree aren't expanded
-- #703968 by hefox and JohnAlbin: Add menu_tree_build() to allow reuse of tree building code outside of blocks
+- #703968 by hefox and JohnAlbin: Add menu_tree_build() to allow reuse of tree
+  building code outside of blocks
 - Refactored API for menu_block_get_title() and menu_block_set_title()
 - Added HOOK_menu_block_tree_alter() to allow direct tree manipulation
 - by Denes Szabo and Zoltan Balogh: Added Hungarian translation

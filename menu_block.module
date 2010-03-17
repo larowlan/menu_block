@@ -125,27 +125,49 @@ function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
 }
 
 /**
+ * Returns the configuration for the requested block delta.
+ *
+ * @param $delta
+ *   string The delta that uniquely identifies the block in the block system. If
+ *   not specified, the default configuration will be returned.
+ * @return
+ *   array An associated array of configuration options.
+ */
+function menu_block_get_config($delta = NULL) {
+  $config = array(
+    'delta'       => $delta,
+    'menu_name'   => 'primary-links',
+    'parent_mlid' => 0,
+    'title_link'  => 0,
+    'level'       => 1,
+    'follow'      => 0,
+    'depth'       => 0,
+    'expanded'    => 0,
+    'sort'        => 0,
+  );
+
+  // Get the block configuration options.
+  if ($delta) {
+    $config['title_link'] = variable_get("menu_block_{$delta}_title_link", 0);
+    $config['level']      = variable_get("menu_block_{$delta}_level", 1);
+    $config['follow']     = variable_get("menu_block_{$delta}_follow", 0);
+    $config['depth']      = variable_get("menu_block_{$delta}_depth", 0);
+    $config['expanded']   = variable_get("menu_block_{$delta}_expanded", 0);
+    $config['sort']       = variable_get("menu_block_{$delta}_sort", 0);
+    list($config['menu_name'], $config['parent_mlid']) = explode(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
+  }
+
+  return $config;
+}
+
+/**
  * Returns the 'view' $op info for hook_block().
  *
  * @param $delta
  *   string The name of the block to render.
  */
 function _menu_block_block_view($delta) {
-  // Get the block configuration options.
-  $config = array(
-    'delta'       => $delta,
-    'menu_name'   => 'primary-links',
-    'parent_mlid' => 0,
-    'title_link'  => variable_get("menu_block_{$delta}_title_link", 0),
-    'level'       => variable_get("menu_block_{$delta}_level", 1),
-    'follow'      => variable_get("menu_block_{$delta}_follow", 0),
-    'depth'       => variable_get("menu_block_{$delta}_depth", 0),
-    'expanded'    => variable_get("menu_block_{$delta}_expanded", 0),
-    'sort'        => variable_get("menu_block_{$delta}_sort", 0),
-  );
-  list($config['menu_name'], $config['parent_mlid']) = explode(':', variable_get("menu_block_{$delta}_parent", 'primary-links:0'));
-
-  return menu_tree_build($config);
+  return menu_tree_build(menu_block_get_config($delta));
 }
 
 /**
