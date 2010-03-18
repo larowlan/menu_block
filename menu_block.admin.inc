@@ -60,7 +60,7 @@ function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
  * Menu callback: confirm deletion of menu blocks.
  */
 function menu_block_delete(&$form_state, $delta = 0) {
-  $title = _menu_block_format_title($delta);
+  $title = _menu_block_format_title(menu_block_get_config($delta));
   $form['block_title'] = array('#type' => 'hidden', '#value' => $title);
   $form['delta'] = array('#type' => 'hidden', '#value' => $delta);
 
@@ -98,7 +98,7 @@ function menu_block_delete_submit($form, &$form_state) {
 function _menu_block_block_list() {
   $blocks = array();
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    $blocks[$delta]['info'] = _menu_block_format_title($delta);
+    $blocks[$delta]['info'] = _menu_block_format_title(menu_block_get_config($delta));
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
     $blocks[$delta]['cache'] = BLOCK_NO_CACHE;
@@ -109,36 +109,35 @@ function _menu_block_block_list() {
 /**
  * Return the title of the block.
  *
- * @param $delta
- *   int The delta of the menu block
+ * @param $config
+ *   array The configuration of the menu block.
  * @return
- *   string The title of the block
+ *   string The title of the block.
  */
-function _menu_block_format_title($delta) {
-  list($menu_name, $parent_mlid) = explode(':', variable_get("menu_block_{$delta}_parent", ':0'));
+function _menu_block_format_title($config) {
   $menus = menu_block_get_all_menus();
-  if (empty($menu_name) || empty($menus[$menu_name])) {
+  if (empty($config['menu_name']) || empty($menus[$config['menu_name']])) {
     $title = t('Unconfigured menu block');
   }
   else {
-    $level = variable_get("menu_block_{$delta}_level", 1);
-    $follow = variable_get("menu_block_{$delta}_follow", 0);
-    $depth = variable_get("menu_block_{$delta}_depth", 0);
-    $expanded = variable_get("menu_block_{$delta}_expanded", 0);
     // Show the configured levels in the block info
-    $replacements = array('@menu_name' => $menus[$menu_name], '@level1' => $level, '@level2' => $level + $depth - 1);
-    if ($parent_mlid) {
-      $parent_item = menu_link_load($parent_mlid);
+    $replacements = array(
+      '@menu_name' => $menus[$config['menu_name']],
+      '@level1' => $config['level'],
+      '@level2' => $config['level'] + $config['depth'] - 1,
+    );
+    if ($config['parent_mlid']) {
+      $parent_item = menu_link_load($config['parent_mlid']);
       $replacements['@menu_name'] = $parent_item['title'];
     }
-    if ($follow) {
+    if ($config['follow']) {
       $title = t('@menu_name (active menu item)', $replacements);
     }
-    elseif ($depth == 1) {
+    elseif ($config['depth'] == 1) {
       $title = t('@menu_name (level @level1)', $replacements);
     }
-    elseif ($depth) {
-      if ($expanded) {
+    elseif ($config['depth']) {
+      if ($config['expanded']) {
         $title = t('@menu_name (expanded levels @level1-@level2)', $replacements);
       }
       else {
@@ -146,7 +145,7 @@ function _menu_block_format_title($delta) {
       }
     }
     else {
-      if ($expanded) {
+      if ($config['expanded']) {
         $title = t('@menu_name (expanded levels @level1+)', $replacements);
       }
       else {
