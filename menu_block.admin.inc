@@ -179,7 +179,9 @@ function menu_block_configure_form(&$form_state) {
   // Get the config from the form state.
   if (!empty($form_state['values'])) {
     $config = $form_state['values'];
-    list($config['menu_name'], $config['parent_mlid']) = explode(':', $config['parent']);
+    if (!empty($config['parent'])) {
+      list($config['menu_name'], $config['parent_mlid']) = explode(':', $config['parent']);
+    }
   }
   // Merge in the default configuration.
   $config += menu_block_get_config();
