@@ -323,7 +323,7 @@ function menu_block_set_title($item = NULL) {
  * helper function that adds it back in.
  *
  * @param $tree
- *   array The menu tree to prune.
+ *   array The menu tree.
  * @return
  *   void
  */
