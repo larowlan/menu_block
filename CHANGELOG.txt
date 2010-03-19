@@ -2,6 +2,8 @@
 
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #741284 by JohnAlbin, sdboyer, and hefox: Add "menu tree" content types to
+  Chaos Tools/Panels.
 - #741284 by JohnAlbin and hefox: Add menu_block_get_config() and
   menu_block_configure_form() to make the configuration form reusable by
   separating it from the Block API functions.

@@ -64,6 +64,15 @@ function menu_block_theme() {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function menu_block_ctools_plugin_directory($module, $plugin) {
+  if ($plugin == 'content_types') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
  * Process variables for menu-block-wrapper.tpl.php.
  *
  * @see menu-block-wrapper.tpl.php

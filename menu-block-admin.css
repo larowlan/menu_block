@@ -1,10 +1,14 @@
 /* $Id$ */
 
 #menu-block-settings .form-item,
-#edit-title-wrapper
-{
+#edit-title-wrapper,
+#menu-block-menu-tree-content-type-edit-form .option-text-aligner {
   margin: 1em 0;
   padding-left: 160px;
+}
+
+#menu-block-menu-tree-content-type-edit-form .option-text-aligner {
+  width: auto;
 }
 
 #menu-block-settings .form-checkboxes .form-item,
@@ -14,7 +18,8 @@
 }
 
 #menu-block-settings .form-item label,
-#edit-title-wrapper label
+#edit-title-wrapper label,
+#menu-block-menu-tree-content-type-edit-form #override-title-checkbox-wrapper
 {
   float: left;
   width: 150px;
@@ -32,6 +37,14 @@
   width: auto;
   margin-left: 0;
   margin-right: 0;
+}
+
+#menu-block-menu-tree-content-type-edit-form #override-title-checkbox-wrapper {
+  padding: 0;
+}
+
+#menu-block-menu-tree-content-type-edit-form .option-text-aligner+div+.description {
+  margin-left: 160px;
 }
 
 .form-item #edit-parent-menu-wrapper
