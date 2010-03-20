@@ -54,11 +54,21 @@ function menu_block_help($path, $arg) {
 /**
  * Implements hook_theme().
  */
-function menu_block_theme() {
+function menu_block_theme(&$existing, $type, $theme, $path) {
+  // Add theme hook suggestion patterns for the core theme functions used in
+  // this module. We can't add them during hook_theme_registry_alter() because
+  // we will already have missed the opportunity for the theme engine's
+  // theme_hook() to process the pattern. And we can't run the pattern ourselves
+  // because we aren't given the type, theme and path in that hook.
+  $existing['menu_tree']['pattern'] = 'menu_tree__';
+  $existing['menu_item']['pattern'] = 'menu_item__';
+  $existing['menu_item_link']['pattern'] = 'menu_item_link__';
+
   return array(
     'menu_block_wrapper' => array(
       'template' => 'menu-block-wrapper',
       'arguments' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
+      'pattern' => 'menu_block_wrapper__',
     ),
   );
 }
@@ -265,9 +275,13 @@ function menu_tree_build($config) {
   // Render the tree.
   $data = array();
   $data['subject'] = menu_block_get_title($config['title_link']);
-  $data['content'] = menu_block_tree_output($tree);
+  $data['content'] = menu_block_tree_output($tree, $config);
   if ($data['content']) {
-    $data['content'] = theme('menu_block_wrapper', $data['content'], $config, $config['delta']);
+    $hooks = array();
+    $hooks[] = 'menu_block_wrapper__' . $config['delta'];
+    $hooks[] = 'menu_block_wrapper__' . str_replace('-', '_', $config['menu_name']);
+    $hooks[] = 'menu_block_wrapper';
+    $data['content'] = theme($hooks, $data['content'], $config, $config['delta']);
   }
 
   return $data;
@@ -297,7 +311,11 @@ function menu_block_get_title($render_title_as_link = TRUE) {
     else {
       $menu_item['localized_options']['attributes']['class'] = 'active-trail';
     }
-    $title = theme('menu_item_link', $menu_item);
+    $hooks = array();
+    $hooks[] = 'menu_item_link__menu_block__' . str_replace('-', '_', $menu_item['menu_name']);
+    $hooks[] = 'menu_item_link__menu_block';
+    $hooks[] = 'menu_item_link';
+    $title = theme($hooks, $menu_item);
   }
   // The tree's title is a menu item.
   else {
@@ -514,9 +532,19 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
  * @return
  *   string The rendered HTML of that data structure.
  */
-function menu_block_tree_output(&$tree) {
+function menu_block_tree_output(&$tree, $config = array()) {
   $output = '';
   $items = array();
+
+  // Create context if no config was provided.
+  if (empty($config)) {
+    $config['delta'] = 0;
+    // Grab any menu item to find the menu_name for this tree.
+    $menu_item = current($tree);
+    $config['menu_name'] = $menu_item['link']['menu_name'];
+  }
+  $hook_delta = $config['delta'];
+  $hook_menu_name = str_replace('-', '_', $config['menu_name']);
 
   // Pull out just the menu items we are going to render so that we
   // get an accurate count for the first/last classes.
@@ -525,7 +553,7 @@ function menu_block_tree_output(&$tree) {
       $items[$key] = array(
         'link' => $tree[$key]['link'],
         // To prevent copying the entire child array, we render it first.
-        'below' => !empty($tree[$key]['below']) ? menu_block_tree_output($tree[$key]['below']) : '',
+        'below' => !empty($tree[$key]['below']) ? menu_block_tree_output($tree[$key]['below'], $config) : '',
       );
     }
   }
@@ -544,7 +572,12 @@ function menu_block_tree_output(&$tree) {
     if (!empty($link_class)) {
       $items[$key]['link']['localized_options']['attributes']['class'] = implode(' ', $link_class);
     }
-    $link = theme('menu_item_link', $items[$key]['link']);
+    $hooks = array();
+    $hooks[] = 'menu_item_link__menu_block__' . $hook_delta;
+    $hooks[] = 'menu_item_link__menu_block__' . $hook_menu_name;
+    $hooks[] = 'menu_item_link__menu_block';
+    $hooks[] = 'menu_item_link';
+    $link = theme($hooks, $items[$key]['link']);
     // Render the menu item.
     $extra_class = array();
     if ($i == 1) {
@@ -561,8 +594,18 @@ function menu_block_tree_output(&$tree) {
       $extra_class[] = 'active';
     }
     $extra_class = !empty($extra_class) ? implode(' ', $extra_class) : NULL;
-    $output .= theme('menu_item', $link, $items[$key]['link']['has_children'], $items[$key]['below'], $items[$key]['link']['in_active_trail'], $extra_class);
+    $hooks = array();
+    $hooks[] = 'menu_item__menu_block__' . $hook_delta;
+    $hooks[] = 'menu_item__menu_block__' . $hook_menu_name;
+    $hooks[] = 'menu_item__menu_block';
+    $hooks[] = 'menu_item';
+    $output .= theme($hooks, $link, $items[$key]['link']['has_children'], $items[$key]['below'], $items[$key]['link']['in_active_trail'], $extra_class);
     $i++;
   }
-  return $output ? theme('menu_tree', $output) : '';
+  $hooks = array();
+  $hooks[] = 'menu_tree__menu_block__' . $hook_delta;
+  $hooks[] = 'menu_tree__menu_block__' . $hook_menu_name;
+  $hooks[] = 'menu_tree__menu_block';
+  $hooks[] = 'menu_tree';
+  return $output ? theme($hooks, $output) : '';
 }

@@ -62,27 +62,62 @@ Sort
 STYLING MENU BLOCKS
 -------------------
 
+Classes:
+
 Themers should look at the myriad of classes added to the <div>, <li> and <a>
 elements.
 
 <div>
   The <div> wrapped around the menu tree has a class for several of the
-  configurable options of the block: menu-block-DELTA menu-name-NAME
-  parent-mlid-MLID menu-level-LEVEL
+  configurable options of the block: menu-block-[block id number]
+  menu-name-[menu name] parent-mlid-[menu link ID] menu-level-[level number]
 
 <li>
   The <li> elements of the menu tree can have an extended list of classes
-  (compared to standard menu trees): first last menu-mlid-MLID has-children
-  active active-trail
+  (compared to standard menu trees): first last menu-mlid-[menu link ID]
+  has-children active active-trail
 
 <a>
   The <a> elements of the menu tree can have: active active-trail
 
+Templates:
+
 In addition, the wrapper <div> for the block is generated using the
-menu-block-wrapper.tpl.php template. And Menu block provides template
-suggestions of the form menu-block-wrapper-MENUNAME.tpl.php. For example, a file
-in your theme called menu-block-wrapper-primary-links.tpl.php can be used to
-override the <div> for just the primary-links menu blocks.
+menu-block-wrapper.tpl.php template. And Menu block provides several theme hook
+suggestions for that template:
+- menu-block-wrapper--[block id number].tpl.php
+- menu-block-wrapper--[menu name].tpl.php
+
+For example, a file in your theme called
+menu-block-wrapper--primary-links.tpl.php can be used to override the <div> for
+just the "Primary links" menu blocks.
+
+Theme functions:
+
+Menu block uses Drupal core's menu theme functions. However, it also provides
+theme hook suggestions that can be used to override any of the theme functions
+called by it.
+
+- theme_menu_tree() can be overridden by creating one of:
+  - [theme]_menu_tree__menu_block()
+  - [theme]_menu_tree__menu_block__[menu name]()
+  - [theme]_menu_tree__menu_block__[block id number]()
+
+- theme_menu_item() can be overridden by creating one of:
+  - [theme]_menu_item__menu_block()
+  - [theme]_menu_item__menu_block__[menu name]()
+  - [theme]_menu_item__menu_block__[block id number]()
+
+- theme_menu_item_link() can be overridden by creating one of:
+  - [theme]_menu_item_link__menu_block()
+  - [theme]_menu_item_link__menu_block__[menu name]()
+  - [theme]_menu_item_link__menu_block__[block id number]()
+
+For example, if you created a garland_menu_tree__menu_block() function, it would
+override theme_menu_block() any time it was used by this module, but not when
+used by any other module. Similarly, a garland_menu_item__menu_block__1()
+function would override theme_menu_item(), but only for the first menu block in
+your system (the menu block with an ID of 1).
 
 
 MENU BLOCK API

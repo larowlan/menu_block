@@ -29,7 +29,7 @@ function _menu_block_help($path, $arg) {
     case 'admin/help#menu_block':
       $output =
         '<h3>' . t('Adding menu blocks') . '</h3>'
-      . '<p>' . t('To add new menu blocks, use the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('@url' => url('admin/build/block'))) . '</p>'
+      . '<p>' . t('To add new menu blocks, use the "<a href="@add-url">Add menu block</a>" tab (or button) on the <a href="@block-url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('@add-url' => url('admin/build/block/add-menu-block'), '@block-url' => url('admin/build/block'))) . '</p>'
       . '<h3>' . t('Configuring menu blocks') . '</h3>'
       . '<p>' . t('When adding or configuring a menu block, several configuration options are available:') . '</p>'
       . '<dl>'
@@ -52,16 +52,7 @@ function _menu_block_help($path, $arg) {
       . '<dd>' . t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.') . '</dd>'
       . '</dl>'
       . '<h3>' . t('Styling menu blocks') . '</h3>'
-      . '<p>' . t('Themers should look at the myriad of classes added to the %div, %li and %a elements.', array('%div' => '<div>', '%li' => '<li>', '%a' => '<a>')) . '</p>'
-      . '<dl>'
-      . '<dt>' . theme('placeholder', '<div>') . '</dt>'
-      . '<dd>' . t('The %div wrapped around the menu tree has a class for several of the configurable options of the block: %class.', array('%div' => '<div>', '%class' => 'menu-block-DELTA menu-name-NAME parent-mlid-MLID menu-level-LEVEL')) . '</dd>'
-      . '<dt>' . theme('placeholder', '<li>') . '</dt>'
-      . '<dd>' . t('The %li elements of the menu tree can have an extended list of classes (compared to standard menu trees): %class.', array('%li' => '<li>', '%class' => 'first last menu-mlid-MLID has-children active active-trail')) . '</dd>'
-      . '<dt>' . theme('placeholder', '<a>') . '</dt>'
-      . '<dd>' . t('The %a elements of the menu tree can have: %class.', array('%a' => '<a>', '%class' => 'active active-trail')) . '</dd>'
-      . '</dl>'
-      . '<p>' . t('In addition, the wrapper %div for the block is generated using the %template_default template. And Menu block provides template suggestions of the form %template_suggestion. For example, a file in your theme called %template_example can be used to override the %div for just the primary-links menu blocks.', array('%div' => '<div>', '%template_default' => 'menu-block-wrapper.tpl.php', '%template_suggestion' => 'menu-block-wrapper-MENUNAME.tpl.php', '%template_example' => 'menu-block-wrapper-primary-links.tpl.php')) . '</p>'
+      . '<p>' . t('Themers should be aware of the myriad of classes, templates and theme functions available to them. See the <a href="@url">online documentation</a> or the README.txt file for detailed information about each of them.', array('@url' => url('http://drupal.org/node/748022'))) . '</p>'
       . '<h3>' . t('Menu block API') . '</h3>'
       . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>'
       . '<p>' . t('In addition, Menu block implements HOOK_get_menus() and HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation.') . '</p>';
