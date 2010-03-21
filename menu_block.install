@@ -12,6 +12,7 @@
 function menu_block_uninstall() {
   // Delete menu block variables.
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
+    variable_del("menu_block_{$delta}_title_link");
     variable_del("menu_block_{$delta}_parent");
     variable_del("menu_block_{$delta}_level");
     variable_del("menu_block_{$delta}_follow");
