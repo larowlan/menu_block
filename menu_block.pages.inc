@@ -38,6 +38,8 @@ function _menu_block_help($path, $arg) {
       . '<p>' . t('For example, if the active menu trail for the Navigation menu is: Administer › Site building › Menus › Primary links, then a menu block configured to start with the 1st level of the Navigation will display a block title of “Navigation”. And a menu block configured to start with the 3rd level of the Navigation menu will display a block title of “Site building”.') . '</p></dd>'
       . '<dt><strong>' . t('Block title as link') . '</strong></dt>'
       . '<dd>' . t('For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level. If this option is checked, the block title will be a link to that menu item.') . '</dd>'
+      . '<dt><strong>' . t('Administrative title') . '</strong></dt>'
+      . '<dd>' . t('To help identify the block on the administer blocks page, you can specify a unique title to be used on that page. If blank, the regular title will be used.') . '</dd>'
       . '<dt><strong>' . t('Parent item') . '</strong></dt>'
       . '<dd>' . t('First select the menu. Then select the parent item from that menu. The tree of links will only contain children of the selected parent item.') . '</dd>'
       . '<dt><strong>' . t('Starting level') . '</strong></dt>'

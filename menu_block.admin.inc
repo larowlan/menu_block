@@ -115,6 +115,10 @@ function _menu_block_block_list() {
  *   string The title of the block.
  */
 function _menu_block_format_title($config) {
+  // If an administrative title is specified, use it.
+  if (!empty($config['admin_title'])) {
+    return check_plain($config['admin_title']);
+  }
   $menus = menu_block_get_all_menus();
   if (empty($config['menu_name']) || empty($menus[$config['menu_name']])) {
     $title = t('Unconfigured menu block');
@@ -231,6 +235,12 @@ function menu_block_configure_form(&$form_state) {
     '#default_value' => $config['title_link'],
     '#description' => t('Make the default block title a link to that menu item. An overridden block title will not be a link.'),
   );
+  $form['admin_title'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $config['admin_title'],
+    '#title' => t('Administrative title'),
+    '#description' => t('This title will be used administratively to identify this block. If blank, the regular title will be used.'),
+  );
   $form['parent'] = array(
     '#type' => 'select',
     '#title' => t('Parent item'),
@@ -345,6 +355,7 @@ function menu_block_configure_form_follow_validate($element, &$form_state) {
  */
 function _menu_block_block_save($delta, $edit) {
   variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
+  variable_set("menu_block_{$delta}_admin_title", $edit['admin_title']);
   variable_set("menu_block_{$delta}_parent", $edit['parent']);
   variable_set("menu_block_{$delta}_level", $edit['level']);
   variable_set("menu_block_{$delta}_follow", $edit['follow']);

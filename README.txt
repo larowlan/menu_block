@@ -31,6 +31,11 @@ Block title as link
   title will be the title for the parent menu item of the specified level. If
   this option is checked, the block title will be a link to that menu item.
 
+Administrative title
+  To help identify the block on the administer blocks page, you can specify a
+  unique title to be used on that page. If blank, the regular title will be
+  used.
+
 Parent item
   First select the menu. Then select the parent item from that menu. The tree of
   links will only contain children of the selected parent item.
