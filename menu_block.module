@@ -287,7 +287,6 @@ function menu_tree_build($config) {
   if ($config['level'] > 1 || $config['parent_mlid']) {
     if ($config['parent_mlid']) {
       $parent_item = menu_link_load($config['parent_mlid']);
-      menu_block_set_title($parent_item);
       menu_tree_prune_tree($tree, $config['level'], $parent_item);
     }
     else {
@@ -317,7 +316,7 @@ function menu_tree_build($config) {
 
   // Render the tree.
   $data = array();
-  $data['subject'] = menu_block_get_title($config['title_link']);
+  $data['subject'] = menu_block_get_title($config['title_link'], $config);
   $data['content'] = menu_block_tree_output($tree, $config);
   if ($data['content']) {
     $hooks = array();
@@ -339,7 +338,7 @@ function menu_tree_build($config) {
  * @return
  *   string The tree's title rendered as a string.
  */
-function menu_block_get_title($render_title_as_link = TRUE) {
+function menu_block_get_title($render_title_as_link = TRUE, $config = array()) {
   $menu_item = menu_block_set_title();
 
   // The tree's title is a menu title, a normal string.
@@ -348,13 +347,18 @@ function menu_block_get_title($render_title_as_link = TRUE) {
   }
   // The tree's title is a menu item with a link.
   elseif ($render_title_as_link) {
-    if (!empty($menu_item['localized_options']['attributes']['class'])) {
-      $menu_item['localized_options']['attributes']['class'] .= ' active-trail';
-    }
-    else {
-      $menu_item['localized_options']['attributes']['class'] = 'active-trail';
+    if (!empty($menu_item['in_active_trail'])) {
+      if (!empty($menu_item['localized_options']['attributes']['class'])) {
+        $menu_item['localized_options']['attributes']['class'] .= ' active-trail';
+      }
+      else {
+        $menu_item['localized_options']['attributes']['class'] = 'active-trail';
+      }
     }
     $hooks = array();
+    if (!empty($config['delta'])) {
+      $hooks[] = 'menu_item_link__menu_block__' . $config['delta'];
+    }
     $hooks[] = 'menu_item_link__menu_block__' . str_replace('-', '_', $menu_item['menu_name']);
     $hooks[] = 'menu_item_link__menu_block';
     $hooks[] = 'menu_item_link';
@@ -480,6 +484,7 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
       // Examine each element at this level for the ancestor.
       foreach (array_keys($tree) AS $key) {
         if ($tree[$key]['link']['mlid'] == $plid) {
+          menu_block_set_title($tree[$key]['link']);
           // Prune the tree to the children of this ancestor.
           $tree = $tree[$key]['below'] ? $tree[$key]['below'] : array();
           $found_active_trail = TRUE;
