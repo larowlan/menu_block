@@ -213,7 +213,8 @@ function _menu_block_block_view($delta) {
  *   array An array of configuration options that specifies how to build the
  *   menu tree and its title.
  *   - delta: (string) The menu_block's block delta.
- *   - menu_name: (string) The machine name of the requested menu.
+ *   - menu_name: (string) The machine name of the requested menu. Can also be
+ *     set to '_active' to use "the menu selected by the page" option.
  *   - parent_mlid: (int) The mlid of the item that should root the tree. Use 0
  *     to use the menu's root.
  *   - title_link: (boolean) Specifies if the title should be rendered as a link
