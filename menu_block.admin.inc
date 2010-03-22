@@ -323,7 +323,7 @@ function menu_block_configure_form(&$form_state) {
     '#type' => 'checkbox',
     '#prefix' => '<div id="expanded-wrapper"><strong>' . t('Expand children') . ':</strong>',
     '#suffix' => '</div>',
-    '#title' => t('Expand all the sub-menus of this tree.'),
+    '#title' => t('Expand all children of this tree.'),
     '#default_value' => $config['expanded'],
   );
   $form['sort'] = array(

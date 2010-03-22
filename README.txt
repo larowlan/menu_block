@@ -55,8 +55,8 @@ Maximum depth
   maximum depth of 1 will just be a single un-nested list of links with none of
   those links' children displayed.
 
-Expand children
-  All sub-menus of this menu will be expanded.
+Expand
+  All children of this menu will be expanded.
 
 Sort
   Sort each item in the active trail to the top of its level. When used on a
