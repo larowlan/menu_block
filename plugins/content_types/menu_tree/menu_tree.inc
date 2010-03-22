@@ -124,14 +124,14 @@ function menu_block_menu_tree_content_type_edit_form_submit(&$form, &$form_state
  * Return the tree's title with an admin-sensitive prefix.
  */
 function menu_block_menu_tree_content_type_admin_title($subtype, $conf, $context = NULL) {
-  /*if (!empty($conf['admin_title'])) {
+  if (!empty($conf['admin_title'])) {
     $output = filter_xss_admin($conf['admin_title']);
   }
-  else {*/
-
-  // Build the menu tree.
-  module_load_include('inc', 'menu_block', 'menu_block.admin');
-  $output = _menu_block_format_title($conf);
+  else {
+    // Build the menu tree.
+    module_load_include('inc', 'menu_block', 'menu_block.admin');
+    $output = _menu_block_format_title($conf);
+  }
   return $output;
 }
 

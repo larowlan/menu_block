@@ -11,7 +11,7 @@
  */
 function menu_block_add_block_form(&$form_state) {
   module_load_include('inc', 'block', 'block.admin');
-  return block_admin_configure($form_state, 'menu_block', NULL);
+  return block_admin_configure($form, $form_state, 'menu_block', NULL);
 }
 
 /**
@@ -52,7 +52,7 @@ function menu_block_add_block_form_submit($form, &$form_state) {
  */
 function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    $form['menu_block_' . $delta]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete-menu-block/'. $delta));
+    $form['menu_block_' . $delta]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete-menu-block/' . $delta));
   }
 }
 

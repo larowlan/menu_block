@@ -91,7 +91,7 @@ function menu_block_ctools_plugin_directory($module, $plugin) {
     return 'plugins/' . $plugin;
   }
 }
-*/
+ */
 
 /**
  * Process variables for menu-block-wrapper.tpl.php.
@@ -545,7 +545,9 @@ function menu_tree_prune_active_tree(&$tree, $level) {
  */
 function menu_tree_depth_trim(&$tree, $depth_limit) {
   // Prevent invalid input from returning a trimmed tree.
-  if ($depth_limit < 1) { return; }
+  if ($depth_limit < 1) {
+    return;
+  }
 
   // Examine each element at this level to find any possible children.
   foreach ($tree AS $key => &$value) {
