@@ -50,6 +50,9 @@ function _menu_tree_prune_active_tree(&$tree, $level) {
         }
         // If the active menu item has no children, we're done.
         else {
+          if ($level == 'child') {
+            $tree = array();
+          }
           break 2;
         }
       }
