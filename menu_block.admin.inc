@@ -120,6 +120,7 @@ function _menu_block_format_title($config) {
     return check_plain($config['admin_title']);
   }
   $menus = menu_block_get_all_menus();
+  $menus['_active'] = t('Current menu');
   if (empty($config['menu_name']) || empty($menus[$config['menu_name']])) {
     $title = t('Unconfigured menu block');
   }
@@ -195,11 +196,19 @@ function menu_block_configure_form(&$form_state) {
   // Build the standard and jquery versions of the parent item options.
   $parent_options = $parent_options_js = array();
   foreach ($menus AS $menu_name => $title) {
-    // Retrieve the entire tree of each menu.
-    $options = menu_parent_options(array($menu_name => $title), array('mlid' => 0));
-    $parent_options += $options;
+    if ($menu_name == '_active') {
+      $options = array($menu_name . ':0' => $title);
+      $parent_options += $options;
+      // For the js options, replace the root item option with better help text.
+      $options[$menu_name . ':0'] = '<' . t('root of menu') . '>';
+    }
+    else {
+      // Retrieve the entire tree of each menu.
+      $options = menu_parent_options(array($menu_name => $title), array('mlid' => 0));
+      $parent_options += $options;
+      $options[$menu_name . ':0'] = '<' . t('root of @menu_name', array('@menu_name' => $title)) . '>';
+    }
     // Render the options as <option> elements.
-    $options[$menu_name . ':0'] = '<' . t('root of @menu_name', array('@menu_name' => $title)) . '>';
     $parent_options_js[$menu_name] = form_select_options(array('#value' => NULL), $options);
   }
   // Build a select element that is only needed for the jquery version.
@@ -246,7 +255,7 @@ function menu_block_configure_form(&$form_state) {
     '#title' => t('Parent item'),
     '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
     '#options' => $parent_options,
-    '#description' => t('The tree of links will only contain children of the selected parent item.'),
+    '#description' => t('The tree of links will only contain children of the selected parent item. Using <em>&lt;the menu selected by the page&gt;</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/settings/menu_block'))),
     '#element_validate' => array('menu_block_configure_form_parent_validate'),
   );
   $form['level'] = array(
@@ -362,4 +371,113 @@ function _menu_block_block_save($delta, $edit) {
   variable_set("menu_block_{$delta}_depth", $edit['depth']);
   variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
   variable_set("menu_block_{$delta}_sort", $edit['sort']);
+}
+
+/**
+ * Menu block admin settings form.
+ *
+ * @return
+ *   The settings form used by Menu block.
+ */
+function menu_block_admin_settings_form($form_state) {
+  // Grab all the menus.
+  $menus = menu_block_get_all_menus();
+  unset($menus['_active']);
+  $total_menus = count($menus);
+
+  // Load stored configuration.
+  $menu_order = variable_get('menu_block_menu_order', array('primary-links' => '', 'secondary-links' => ''));
+
+  // Merge the saved configuration with any un-configured menus.
+  $all_menus = $menu_order + $menus;
+
+  $form['heading'] = array(
+    '#value' => '<p>' . t('If a block is configured to use <em>"the menu selected by the page"</em>, the block will be generated from the first "available" menu that contains a link to the page.') . '</p>',
+  );
+
+  // Orderable list of menu selections.
+  $form['menu_order'] = array(
+    '#tree' => TRUE,
+    '#theme' => 'menu_block_menu_order',
+  );
+
+  $order = 0;
+  foreach (array_keys($all_menus) as $menu_name) {
+    $form['menu_order'][$menu_name] = array(
+      'title' => array(
+        '#value' => check_plain($menus[$menu_name]),
+      ),
+      'available' => array(
+        '#type' => 'checkbox',
+        '#attributes' => array('title' => t('Select from the @menu_name menu', array('@menu_name' => $menus[$menu_name]))),
+        '#default_value' => isset($menu_order[$menu_name]),
+      ),
+      'weight' => array(
+        '#type' => 'weight',
+        '#default_value' => $order - $total_menus,
+        '#delta' => $total_menus,
+        '#id' => 'edit-menu-block-menus-' . $menu_name,
+      ),
+    );
+    $order++;
+  }
+
+  $form['footer_note'] = array(
+    '#value' => '<p>' . t('The above list will <em>not</em> affect menu blocks that are configured to use a specific menu.') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submission handler.
+ */
+function menu_block_admin_settings_form_submit($form, &$form_state) {
+  $menu_order = array();
+  foreach ($form_state['values']['menu_order'] AS $menu_name => $row) {
+    if ($row['available']) {
+      // Add available menu and its weight to list.
+      $menu_order[$menu_name] = (int) $row['weight'];
+    }
+  }
+  // Sort the keys by the weight stored in the value.
+  asort($menu_order);
+  foreach ($menu_order AS $menu_name => $weight) {
+    // Now that the array is sorted, the weight is redundant data.
+    $menu_order[$menu_name] = '';
+  }
+  variable_set('menu_block_menu_order', $menu_order);
+}
+
+/**
+ * Theme a drag-to-reorder table of menu selection checkboxes.
+ */
+function theme_menu_block_menu_order($element) {
+  drupal_add_tabledrag('menu-block-menus', 'order', 'sibling', 'menu-weight');
+
+  $header = array(
+    t('Menu'),
+    t('Available'),
+    t('Weight'),
+  );
+
+  // Generate table of draggable menu names.
+  $rows = array();
+  foreach (element_children($element) as $menu_name) {
+    $element[$menu_name]['weight']['#attributes']['class'] = 'menu-weight';
+    $rows[] = array(
+      'data' => array(
+        drupal_render($element[$menu_name]['title']),
+        drupal_render($element[$menu_name]['available']),
+        drupal_render($element[$menu_name]['weight']),
+      ),
+      'class' => 'draggable',
+    );
+  }
+  return theme('table', $header, $rows, array('id' => 'menu-block-menus'));
 }

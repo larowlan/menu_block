@@ -31,6 +31,15 @@ function menu_block_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'menu_block.admin.inc',
   );
+  $items['admin/settings/menu_block'] = array(
+    'title' => 'Menu block',
+    'description' => 'Configure menu block.',
+    'access arguments' => array('administer blocks'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_block_admin_settings_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'menu_block.admin.inc',
+  );
   return $items;
 }
 
@@ -69,6 +78,10 @@ function menu_block_theme(&$existing, $type, $theme, $path) {
       'template' => 'menu-block-wrapper',
       'arguments' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
       'pattern' => 'menu_block_wrapper__',
+    ),
+    'menu_block_menu_order' => array(
+      'arguments' => array('element' => NULL),
+      'file' => 'menu_block.admin.inc',
     ),
   );
 }
@@ -121,6 +134,8 @@ function menu_block_get_all_menus() {
     // We're generalizing menu's menu_get_menus() by making it into a hook.
     // Retrieve all the menu names provided by hook_get_menus().
     $all_menus = module_invoke_all('get_menus');
+    // Add an option to use the menu for the active menu item.
+    $all_menus['_active'] = '<' . t('the menu selected by the page') . '>';
     asort($all_menus);
   }
   return $all_menus;
@@ -218,6 +233,30 @@ function _menu_block_block_view($delta) {
  *   rendered title in the 'subject' key.
  */
 function menu_tree_build($config) {
+  // Retrieve the active menu item from the database.
+  if ($config['menu_name'] == '_active') {
+    // Retrieve the list of available menus.
+    $menu_order = variable_get('menu_block_menu_order', array('primary-links' => '', 'secondary-links' => ''));
+
+    // Retrieve all the menus containing a link to the current page.
+    $result = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = '%s'", $_GET['q'] ? $_GET['q'] : '<front>');
+    while ($item = db_fetch_array($result)) {
+      // Check if the menu is in the list of available menus.
+      if (isset($menu_order[$item['menu_name']])) {
+        // Mark the menu.
+        $menu_order[$item['menu_name']] = '_active';
+      }
+    }
+    // Find the first marked menu.
+    $config['menu_name'] = array_search('_active', $menu_order);
+    $config['parent_mlid'] = 0;
+
+    // If no menu link was found, don't display the block.
+    if (empty($config['menu_name'])) {
+      return array();
+    }
+  }
+
   // Get the default block name.
   $menu_names = menu_block_get_all_menus();
   menu_block_set_title(t($menu_names[$config['menu_name']]));

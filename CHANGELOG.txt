@@ -2,6 +2,7 @@
 
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #540842 by JohnAlbin and agentrickard: Add option to use current page's selected menu
 - #580348: Add administrative title to config form to help organize blocks
 - #350029: Add theme hook suggestions for all theme function calls
 - #741284 by JohnAlbin, sdboyer, and hefox: Add "menu tree" content types to

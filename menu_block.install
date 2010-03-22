@@ -22,6 +22,7 @@ function menu_block_uninstall() {
     variable_del("menu_block_{$delta}_sort");
   }
   variable_del('menu_block_ids');
+  variable_del('menu_block_menu_order');
   // Remove block configurations.
   db_query("DELETE FROM {blocks} WHERE module = 'menu_block'");
   db_query("DELETE FROM {blocks_roles} WHERE module = 'menu_block'");
