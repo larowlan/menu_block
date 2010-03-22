@@ -1,5 +1,9 @@
 // $Id$
 
+Menu Block 7.x-3.x-dev, xxxx-xx-xx (development release)
+------------------------------
+- #749838: Port to Drupal 7 (NOT YET COMPLETE)
+
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
 - #343061 by sun and JohnAlbin: CSS styling breaks form layout

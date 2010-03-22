@@ -3,6 +3,6 @@
 name = "Menu Block"
 description = "Provides configurable blocks of menu items."
 
-core = 6.x
+core = 7.x
 dependencies[] = block
 dependencies[] = menu

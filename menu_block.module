@@ -6,10 +6,6 @@
  * Provides configurable blocks of menu items.
  */
 
-// @TODO: For PHP 4 compatibility we use foreach (array_keys($array) AS $key).
-// When PHP 5 becomes required (Drupal 7.x), use the following faster
-// implementation: foreach ($array AS $key => &$value) {}
-
 /**
  * Implements hook_menu().
  */
@@ -76,11 +72,11 @@ function menu_block_theme(&$existing, $type, $theme, $path) {
   return array(
     'menu_block_wrapper' => array(
       'template' => 'menu-block-wrapper',
-      'arguments' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
+      'variables' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
       'pattern' => 'menu_block_wrapper__',
     ),
     'menu_block_menu_order' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
       'file' => 'menu_block.admin.inc',
     ),
   );
@@ -89,11 +85,13 @@ function menu_block_theme(&$existing, $type, $theme, $path) {
 /**
  * Implements hook_ctools_plugin_directory().
  */
+/* -- temporarily remove until ctools is ported to D7.
 function menu_block_ctools_plugin_directory($module, $plugin) {
   if ($plugin == 'content_types') {
     return 'plugins/' . $plugin;
   }
 }
+*/
 
 /**
  * Process variables for menu-block-wrapper.tpl.php.
@@ -105,8 +103,6 @@ function template_preprocess_menu_block_wrapper(&$variables) {
   $variables['classes_array'][] = 'menu-name-' . $variables['settings']['menu_name'];
   $variables['classes_array'][] = 'parent-mlid-' . $variables['settings']['parent_mlid'];
   $variables['classes_array'][] = 'menu-level-' . $variables['settings']['level'];
-  $variables['classes'] = check_plain(implode(' ', $variables['classes_array']));
-  $variables['template_files'][] = 'menu-block-wrapper-' . $variables['settings']['menu_name'];
 }
 
 /**
@@ -124,7 +120,7 @@ function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
  *   array A list of menu names and titles.
  */
 function menu_block_get_all_menus() {
-  static $all_menus;
+  $all_menus = &drupal_static(__FUNCTION__);
 
   if (!$all_menus) {
     // Include book support.
@@ -379,7 +375,7 @@ function menu_block_get_title($render_title_as_link = TRUE, $config = array()) {
  *   array The menu item (an array) or the menu item's title as a string.
  */
 function menu_block_set_title($item = NULL) {
-  static $menu_item;
+  $menu_item = &drupal_static(__FUNCTION__);
 
   // Save the menu item.
   if (!is_null($item)) {
@@ -412,7 +408,7 @@ function menu_tree_add_active_path(&$tree) {
 
   // Find each key in the active trail.
   while ($tree_with_trail) {
-    foreach (array_keys($tree_with_trail) AS $key) {
+    foreach ($tree_with_trail AS $key => &$value) {
       if ($tree_with_trail[$key]['link']['in_active_trail']) {
         // Set the active trail info in the original tree.
         $subtree_pointer[$key]['link']['in_active_trail'] = TRUE;
@@ -437,7 +433,7 @@ function menu_tree_add_active_path(&$tree) {
  *   void
  */
 function menu_tree_trim_active_path(&$tree) {
-  foreach (array_keys($tree) AS $key) {
+  foreach ($tree AS $key => &$value) {
     if (($tree[$key]['link']['in_active_trail'] || $tree[$key]['link']['expanded']) && $tree[$key]['below']) {
       // Continue in the subtree, if it exists.
       menu_tree_trim_active_path($tree[$key]['below']);
@@ -483,7 +479,7 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
       $plid = $parent_item["p$i"];
       $found_active_trail = FALSE;
       // Examine each element at this level for the ancestor.
-      foreach (array_keys($tree) AS $key) {
+      foreach ($tree AS $key => &$value) {
         if ($tree[$key]['link']['mlid'] == $plid) {
           menu_block_set_title($tree[$key]['link']);
           // Prune the tree to the children of this ancestor.
@@ -504,7 +500,7 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
   for ($i = 1; $i < $level; $i++) {
     $found_active_trail = FALSE;
     // Examine each element at this level for the active trail.
-    foreach (array_keys($tree) AS $key) {
+    foreach ($tree AS $key => &$value) {
       if ($tree[$key]['link']['in_active_trail']) {
         // Get the title for the pruned tree.
         menu_block_set_title($tree[$key]['link']);
@@ -552,7 +548,7 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
   if ($depth_limit < 1) { return; }
 
   // Examine each element at this level to find any possible children.
-  foreach (array_keys($tree) AS $key) {
+  foreach ($tree AS $key => &$value) {
     if ($tree[$key]['below']) {
       if ($depth_limit > 1) {
         menu_tree_depth_trim($tree[$key]['below'], $depth_limit-1);
@@ -597,7 +593,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
 
   // Pull out just the menu items we are going to render so that we
   // get an accurate count for the first/last classes.
-  foreach (array_keys($tree) as $key) {
+  foreach ($tree as $key => &$value) {
     if (!$tree[$key]['link']['hidden']) {
       $items[$key] = array(
         'link' => $tree[$key]['link'],
@@ -609,7 +605,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
 
   $num_items = count($items);
   $i = 1;
-  foreach (array_keys($items) as $key) {
+  foreach ($items as $key => &$value) {
     // Render the link.
     $link_class = array();
     if (!empty($items[$key]['link']['localized_options']['attributes']['class'])) {

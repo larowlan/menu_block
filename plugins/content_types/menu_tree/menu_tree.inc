@@ -75,7 +75,7 @@ function menu_block_menu_tree_content_type_content_types() {
  */
 function menu_block_menu_tree_content_type_render($subtype, $conf, $args, $context) {
   // Ensure the delta is unique.
-  static $ids = array();
+  $ids = &drupal_static(__FUNCTION__, array());
   if (empty($ids[$conf['menu_name']])) {
     $ids[$conf['menu_name']] = 0;
   }
@@ -140,7 +140,7 @@ function menu_block_menu_tree_content_type_admin_title($subtype, $conf, $context
  */
 function menu_block_menu_tree_content_type_admin_info($subtype, $conf, $context = NULL) {
   // Ensure the delta is unique.
-  static $ids = array();
+  $ids = &drupal_static(__FUNCTION__, array());
   if (empty($ids[$conf['menu_name']])) {
     $ids[$conf['menu_name']] = 0;
   }

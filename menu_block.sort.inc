@@ -21,7 +21,7 @@ function _menu_tree_sort_active_path(&$tree) {
   // Traverse the tree along the active trail.
   do {
     $next_level = $sort = $first_key = FALSE;
-    foreach (array_keys($current_level) AS $key) {
+    foreach ($current_level AS $key => &$value) {
       // Save the first key for later use.
       if (!$first_key) {
         $first_key = $key;
