@@ -321,16 +321,12 @@ function menu_block_configure_form(&$form_state) {
   );
   $form['expanded'] = array(
     '#type' => 'checkbox',
-    '#prefix' => '<div id="expanded-wrapper"><strong>' . t('Expand children') . ':</strong>',
-    '#suffix' => '</div>',
-    '#title' => t('Expand all children of this tree.'),
+    '#title' => t('<strong>Expand all children</strong> of this tree.'),
     '#default_value' => $config['expanded'],
   );
   $form['sort'] = array(
     '#type' => 'checkbox',
-    '#prefix' => '<div id="sort-wrapper"><strong>' . t('Sort') . ':</strong>',
-    '#suffix' => '</div>',
-    '#title' => t('Sort menu tree by the active menu item’s trail.'),
+    '#title' => t('<strong>Sort</strong> menu tree by the active menu item’s trail.'),
     '#default_value' => $config['sort'],
     '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
   );

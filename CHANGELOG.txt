@@ -2,6 +2,7 @@
 
 Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #343061 by sun and JohnAlbin: CSS styling breaks form layout
 - #345552 by Dmitriy.trt: Inconsistent display of starting level set to children
   of active item
 - #474784: Menu title as link is incorrectly always marked as in active trail
