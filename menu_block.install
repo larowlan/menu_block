@@ -33,7 +33,7 @@ function menu_block_uninstall() {
  * Implements hook_enable().
  */
 function menu_block_enable() {
-  drupal_set_message(t('To use menu blocks, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/build/block'))));
+  drupal_set_message(t('To use menu blocks, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block'))));
 }
 
 /**
@@ -108,7 +108,7 @@ function menu_block_update_5200() {
   variable_del('menu_block_enabled_blocks');
   cache_clear_all();
 
-  return array(0 => array('success' => TRUE, 'query' => t('A 5.x-1.x version of Menu block has been detected and an attempt was made to upgrade it. Unfortunately, you should have upgraded to Menu block 5.x-2.x before your upgrade to Drupal 6. You may need to re-configure all your menu blocks. To use menu blocks in Drupal 6, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/build/block')))));
+  return array(0 => array('success' => TRUE, 'query' => t('A 5.x-1.x version of Menu block has been detected and an attempt was made to upgrade it. Unfortunately, you should have upgraded to Menu block 5.x-2.x before your upgrade to Drupal 6. You may need to re-configure all your menu blocks. To use menu blocks in Drupal 6, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')))));
 }
 
 /**
@@ -128,7 +128,7 @@ function menu_block_update_6200() {
     variable_set("menu_block_{$delta}_menu_name", $menu_name);
     variable_del("menu_block_{$delta}_title");
   }
-  return array(0 => array('success' => TRUE, 'query' => t('The 5.x-2.x version of Menu block has been upgraded. To use menu blocks in Drupal 6, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/build/block')))));
+  return array(0 => array('success' => TRUE, 'query' => t('The 5.x-2.x version of Menu block has been upgraded. To use menu blocks in Drupal 6, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')))));
 }
 
 /**
@@ -142,5 +142,5 @@ function menu_block_update_6201() {
     variable_set("menu_block_{$delta}_parent", variable_get("menu_block_{$delta}_menu_name", 'navigation') . ':0');
     variable_del("menu_block_{$delta}_menu_name");
   }
-  return array(0 => array('success' => TRUE, 'query' => t('The 6.x-2.0 version of Menu block has been upgraded. To use menu blocks in Drupal 6, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/build/block')))));
+  return array(0 => array('success' => TRUE, 'query' => t('The 6.x-2.0 version of Menu block has been upgraded. To use menu blocks in Drupal 6, find the "Add menu block" tab (or button) on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')))));
 }

@@ -7,36 +7,20 @@
  */
 
 /**
- * Implements hook_menu().
+ * Implements hook_hook_info().
  */
-function menu_block_menu() {
-  $items['admin/build/block/add-menu-block'] = array(
-    'title' => 'Add menu block',
-    'description' => 'Add a new menu block.',
-    'access arguments' => array('administer blocks'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_block_add_block_form'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'menu_block.admin.inc',
+function menu_block_hook_info() {
+  $admin = array('group' => 'admin');
+  return array(
+    'menu'            => $admin,
+    'theme'           => $admin,
+    'block_info'      => $admin,
+    'block_configure' => $admin,
+    'block_save'      => $admin,
+
+    'form_block_admin_display_form_alter' => $admin,
+    'ctools_plugin_directory' => $admin,
   );
-  $items['admin/build/block/delete-menu-block'] = array(
-    'title' => 'Delete menu block',
-    'access arguments' => array('administer blocks'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_block_delete'),
-    'type' => MENU_CALLBACK,
-    'file' => 'menu_block.admin.inc',
-  );
-  $items['admin/settings/menu_block'] = array(
-    'title' => 'Menu block',
-    'description' => 'Configure menu block.',
-    'access arguments' => array('administer blocks'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_block_admin_settings_form'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'menu_block.admin.inc',
-  );
-  return $items;
 }
 
 /**
@@ -44,54 +28,24 @@ function menu_block_menu() {
  */
 function menu_block_help($path, $arg) {
   switch ($path) {
-    case 'admin/build/block/configure':
+    case 'admin/structure/block/configure':
       if ($arg[4] != 'menu_block') {
         break;
       }
     case 'admin/help#menu_block':
-    case 'admin/build/block':
-    case 'admin/build/block/add-menu-block':
+    case 'admin/structure/block':
+    case 'admin/structure/block/add-menu-block':
       module_load_include('inc', 'menu_block', 'menu_block.pages');
       return _menu_block_help($path, $arg);
   }
 }
 
 /**
- * Implements hook_theme().
+ * Implements hook_block_view().
  */
-function menu_block_theme(&$existing, $type, $theme, $path) {
-  // Add theme hook suggestion patterns for the core theme functions used in
-  // this module. We can't add them during hook_theme_registry_alter() because
-  // we will already have missed the opportunity for the theme engine's
-  // theme_hook() to process the pattern. And we can't run the pattern ourselves
-  // because we aren't given the type, theme and path in that hook.
-  $existing['menu_tree']['pattern'] = 'menu_tree__';
-  $existing['menu_item']['pattern'] = 'menu_item__';
-  $existing['menu_item_link']['pattern'] = 'menu_item_link__';
-
-  return array(
-    'menu_block_wrapper' => array(
-      'template' => 'menu-block-wrapper',
-      'variables' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
-      'pattern' => 'menu_block_wrapper__',
-    ),
-    'menu_block_menu_order' => array(
-      'render element' => 'element',
-      'file' => 'menu_block.admin.inc',
-    ),
-  );
+function menu_block_block_view($delta = '') {
+  return menu_tree_build(menu_block_get_config($delta));
 }
-
-/**
- * Implements hook_ctools_plugin_directory().
- */
-/* -- temporarily remove until ctools is ported to D7.
-function menu_block_ctools_plugin_directory($module, $plugin) {
-  if ($plugin == 'content_types') {
-    return 'plugins/' . $plugin;
-  }
-}
- */
 
 /**
  * Process variables for menu-block-wrapper.tpl.php.
@@ -103,14 +57,6 @@ function template_preprocess_menu_block_wrapper(&$variables) {
   $variables['classes_array'][] = 'menu-name-' . $variables['settings']['menu_name'];
   $variables['classes_array'][] = 'parent-mlid-' . $variables['settings']['parent_mlid'];
   $variables['classes_array'][] = 'menu-level-' . $variables['settings']['level'];
-}
-
-/**
- * Alters the block admin form to add delete links next to menu blocks.
- */
-function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
-  module_load_include('inc', 'menu_block', 'menu_block.admin');
-  _menu_block_form_block_admin_display_form_alter($form, $form_state);
 }
 
 /**
@@ -138,23 +84,6 @@ function menu_block_get_all_menus() {
 }
 
 /**
- * Implements hook_block().
- */
-function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
-  $function = '_menu_block_block_' . $op;
-  if (function_exists($function)) {
-    return $function($delta, $edit);
-  }
-  else {
-    // "op"s besides "view" are seldom used, so we store them in a separate file.
-    module_load_include('inc', 'menu_block', 'menu_block.admin');
-    if (function_exists($function)) {
-      return $function($delta, $edit);
-    }
-  }
-}
-
-/**
  * Returns the configuration for the requested block delta.
  *
  * @param $delta
@@ -166,7 +95,7 @@ function menu_block_block($op = 'list', $delta = NULL, $edit = NULL) {
 function menu_block_get_config($delta = NULL) {
   $config = array(
     'delta'       => $delta,
-    'menu_name'   => 'primary-links',
+    'menu_name'   => 'main-menu',
     'parent_mlid' => 0,
     'title_link'  => 0,
     'admin_title' => '',
@@ -190,16 +119,6 @@ function menu_block_get_config($delta = NULL) {
   }
 
   return $config;
-}
-
-/**
- * Returns the 'view' $op info for hook_block().
- *
- * @param $delta
- *   string The name of the block to render.
- */
-function _menu_block_block_view($delta) {
-  return menu_tree_build(menu_block_get_config($delta));
 }
 
 /**
@@ -233,7 +152,7 @@ function menu_tree_build($config) {
   // Retrieve the active menu item from the database.
   if ($config['menu_name'] == '_active') {
     // Retrieve the list of available menus.
-    $menu_order = variable_get('menu_block_menu_order', array('primary-links' => '', 'secondary-links' => ''));
+    $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'secondary-menu' => ''));
 
     // Retrieve all the menus containing a link to the current page.
     $result = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = '%s'", $_GET['q'] ? $_GET['q'] : '<front>');

@@ -46,12 +46,12 @@ function menu_block_menu_tree_content_type_content_types() {
     $items[$menu_name]['menu_title'] = $title;
     // Custom icons for some menus.
     switch ($menu_name) {
-      case 'primary-links':
-      case 'secondary-links':
-        $items[$menu_name]['icon'] = 'icon_contrib_primarylinks.png';
+      case 'main-menu':
+      case 'secondary-menu':
+        $items[$menu_name]['icon'] = 'icon_contrib_main_menu.png';
         break;
-      case 'navigation':
-        $items[$menu_name]['icon'] = 'icon_contrib_navigation.png';
+      case 'management':
+        $items[$menu_name]['icon'] = 'icon_contrib_management.png';
         break;
     }
     if (strpos($menu_name, 'book-toc-') === 0) {
@@ -102,7 +102,7 @@ function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
   // Create a pseudo form state.
   $sub_form_state = array('values' => $conf);
-  $form += menu_block_configure_form($sub_form_state);
+  $form += menu_block_configure_form($form, $sub_form_state);
 
   // Set the options to a simple list of menu links for the configured menu.
   $menus = menu_block_get_all_menus();

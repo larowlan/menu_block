@@ -12,15 +12,15 @@
 function _menu_block_help($path, $arg) {
   $output = '';
   switch ($path) {
-    case 'admin/build/block':
-      $output = '<p>' . t('Use the <a href="!url">add menu block page</a> to create a customizable menu block. You will then be able to configure your menu block before adding it.', array('!url' => url('admin/build/block/add-menu-block'))) . '</p>';
+    case 'admin/structure/block':
+      $output = '<p>' . t('Use the <a href="!url">add menu block page</a> to create a customizable menu block. You will then be able to configure your menu block before adding it.', array('!url' => url('admin/structure/block/add-menu-block'))) . '</p>';
       if (module_exists('help')) {
         $output .= theme('more_help_link', url('admin/help/menu_block'));
       }
       break;
 
-    case 'admin/build/block/configure':
-    case 'admin/build/block/add-menu-block':
+    case 'admin/structure/block/configure':
+    case 'admin/structure/block/add-menu-block':
       if (module_exists('help')) {
         $output = '<p>' . t('To learn more about configuring menu blocks, see <a href="!url">menu block’s detailed help</a>.', array('!url' => url('admin/help/menu_block'))) . '</p>';
       }
@@ -29,13 +29,13 @@ function _menu_block_help($path, $arg) {
     case 'admin/help#menu_block':
       $output =
         '<h3>' . t('Adding menu blocks') . '</h3>'
-      . '<p>' . t('To add new menu blocks, use the "<a href="!add-url">Add menu block</a>" tab (or button) on the <a href="!block-url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('!add-url' => url('admin/build/block/add-menu-block'), '!block-url' => url('admin/build/block'))) . '</p>'
+      . '<p>' . t('To add new menu blocks, use the "<a href="!add-url">Add menu block</a>" link on the <a href="!block-url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('!add-url' => url('admin/structure/block/add-menu-block'), '!block-url' => url('admin/structure/block'))) . '</p>'
       . '<h3>' . t('Configuring menu blocks') . '</h3>'
       . '<p>' . t('When adding or configuring a menu block, several configuration options are available:') . '</p>'
       . '<dl>'
       . '<dt><strong>' . t('Block title') . '</strong></dt>'
       . '<dd>' . t('For menu trees that start with the 1st level, the default block title will be the menu name. For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level.')
-      . '<p>' . t('For example, if the active menu trail for the Navigation menu is: Administer › Site building › Menus › Primary links, then a menu block configured to start with the 1st level of the Navigation will display a block title of “Navigation”. And a menu block configured to start with the 3rd level of the Navigation menu will display a block title of “Site building”.') . '</p></dd>'
+      . '<p>' . t('For example, if the active menu trail for the Mangement menu is: Administer › Structure › Menus › Main menu, then a menu block configured to start with the 1st level of the Management menu will display a block title of “Management”. And a menu block configured to start with the 3rd level of the Management menu will display a block title of “Structure”.') . '</p></dd>'
       . '<dt><strong>' . t('Block title as link') . '</strong></dt>'
       . '<dd>' . t('For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level. If this option is checked, the block title will be a link to that menu item.') . '</dd>'
       . '<dt><strong>' . t('Administrative title') . '</strong></dt>'

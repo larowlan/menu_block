@@ -3,13 +3,85 @@
 
 /**
  * @file
- * Provides infrequently used functions for menu_block.
+ * Provides infrequently used functions and hooks for menu_block.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function menu_block_menu() {
+  $items['admin/structure/block/add-menu-block'] = array(
+    'title' => 'Add menu block',
+    'description' => 'Add a new menu block.',
+    'access arguments' => array('administer blocks'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_block_add_block_form'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'menu_block.admin.inc',
+  );
+  $items['admin/structure/block/delete-menu-block'] = array(
+    'title' => 'Delete menu block',
+    'access arguments' => array('administer blocks'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_block_delete'),
+    'type' => MENU_CALLBACK,
+    'file' => 'menu_block.admin.inc',
+  );
+  $items['admin/config/user-interface/menu_block'] = array(
+    'title' => 'Menu block',
+    'description' => 'Configure menu block.',
+    'access arguments' => array('administer blocks'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_block_admin_settings_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'menu_block.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function menu_block_theme(&$existing, $type, $theme, $path) {
+  // Add theme hook suggestion patterns for the core theme functions used in
+  // this module. We can't add them during hook_theme_registry_alter() because
+  // we will already have missed the opportunity for the theme engine's
+  // theme_hook() to process the pattern. And we can't run the pattern ourselves
+  // because we aren't given the type, theme and path in that hook.
+  $existing['menu_tree']['pattern'] = 'menu_tree__';
+  $existing['menu_item']['pattern'] = 'menu_item__';
+  $existing['menu_item_link']['pattern'] = 'menu_item_link__';
+
+  return array(
+    'menu_block_wrapper' => array(
+      'template' => 'menu-block-wrapper',
+      'variables' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
+      'pattern' => 'menu_block_wrapper__',
+    ),
+    'menu_block_menu_order' => array(
+      'render element' => 'element',
+      'file' => 'menu_block.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+/* -- temporarily remove until ctools is ported to D7.
+function menu_block_ctools_plugin_directory($module, $plugin) {
+  if ($plugin == 'content_types') {
+    return 'plugins/' . $plugin;
+  }
+}
  */
 
 /**
  * Menu callback: display the menu block addition form.
+ *
+ * @see menu_block_add_block_form_submit()
  */
-function menu_block_add_block_form(&$form_state) {
+function menu_block_add_block_form($form, &$form_state) {
   module_load_include('inc', 'block', 'block.admin');
   return block_admin_configure($form, $form_state, 'menu_block', NULL);
 }
@@ -43,16 +115,16 @@ function menu_block_add_block_form_submit($form, &$form_state) {
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();
 
-  $form_state['redirect'] = 'admin/build/block';
+  $form_state['redirect'] = 'admin/structure/block';
   return;
 }
 
 /**
  * Alters the block admin form to add delete links next to menu blocks.
  */
-function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
+function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    $form['menu_block_' . $delta]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete-menu-block/' . $delta));
+    $form['menu_block_' . $delta]['delete'] = array('#markup' => l(t('delete'), 'admin/structure/block/delete-menu-block/' . $delta));
   }
 }
 
@@ -64,7 +136,7 @@ function menu_block_delete(&$form_state, $delta = 0) {
   $form['block_title'] = array('#type' => 'hidden', '#value' => $title);
   $form['delta'] = array('#type' => 'hidden', '#value' => $delta);
 
-  return confirm_form($form, t('Are you sure you want to delete the "%name" block?', array('%name' => $title)), 'admin/build/block', NULL, t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the "%name" block?', array('%name' => $title)), 'admin/structure/block', NULL, t('Delete'), t('Cancel'));
 }
 
 /**
@@ -88,20 +160,20 @@ function menu_block_delete_submit($form, &$form_state) {
   db_query("DELETE FROM {blocks_roles} WHERE module = 'menu_block' AND delta = %d", $delta);
   drupal_set_message(t('The "%name" block has been removed.', array('%name' => $form_state['values']['block_title'])));
   cache_clear_all();
-  $form_state['redirect'] = 'admin/build/block';
+  $form_state['redirect'] = 'admin/structure/block';
   return;
 }
 
 /**
- * Returns the 'list' $op info for hook_block().
+ * Implements hook_block_info().
  */
-function _menu_block_block_list() {
+function menu_block_block_info() {
   $blocks = array();
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
     $blocks[$delta]['info'] = _menu_block_format_title(menu_block_get_config($delta));
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
-    $blocks[$delta]['cache'] = BLOCK_NO_CACHE;
+    $blocks[$delta]['cache'] = DRUPAL_NO_CACHE;
   }
   return $blocks;
 }
@@ -162,23 +234,24 @@ function _menu_block_format_title($config) {
 }
 
 /**
- * Returns the 'configure' $op info for hook_block().
+ * Implements hook_block_configure().
  */
-function _menu_block_block_configure($delta) {
+function menu_block_block_configure($delta) {
   // Create a pseudo form state.
   $form_state = array('values' => menu_block_get_config($delta));
-  return menu_block_configure_form($form_state);
+  return menu_block_configure_form(array(), $form_state);
 }
 
 /**
  * Returns the configuration form for a menu tree.
  *
  * @param $form_state
- *   array An associated array of configuration options.
+ *   array An associated array of configuration options should be present in the
+ *   'values' key. If none are given, default configuration is assumed.
  * @return
  *   array The form in Form API format.
  */
-function menu_block_configure_form(&$form_state) {
+function menu_block_configure_form($form, &$form_state) {
   $config = array();
   // Get the config from the form state.
   if (!empty($form_state['values'])) {
@@ -236,7 +309,7 @@ function menu_block_configure_form(&$form_state) {
   drupal_add_js(drupal_get_path('module', 'menu_block') . '/menu-block.js');
 
   // Build the standard form.
-  $form['wrapper-start'] = array('#value' => '<div id="menu-block-settings">');
+  $form['wrapper-start'] = array('#markup' => '<div id="menu-block-settings">');
   drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
   $form['title_link'] = array(
     '#type' => 'checkbox',
@@ -330,7 +403,7 @@ function menu_block_configure_form(&$form_state) {
     '#default_value' => $config['sort'],
     '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
   );
-  $form['wrapper-close'] = array('#value' => '</div>');
+  $form['wrapper-close'] = array('#markup' => '</div>');
 
   return $form;
 }
@@ -356,39 +429,41 @@ function menu_block_configure_form_follow_validate($element, &$form_state) {
 }
 
 /**
- * Returns the 'save' $op info for hook_block().
+ * Implements hook_block_save().
  */
-function _menu_block_block_save($delta, $edit) {
-  variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
-  variable_set("menu_block_{$delta}_admin_title", $edit['admin_title']);
-  variable_set("menu_block_{$delta}_parent", $edit['parent']);
-  variable_set("menu_block_{$delta}_level", $edit['level']);
-  variable_set("menu_block_{$delta}_follow", $edit['follow']);
-  variable_set("menu_block_{$delta}_depth", $edit['depth']);
-  variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
-  variable_set("menu_block_{$delta}_sort", $edit['sort']);
+function menu_block_block_save($delta = '', $edit = array()) {
+  if (!empyt($delta)) {
+    variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
+    variable_set("menu_block_{$delta}_admin_title", $edit['admin_title']);
+    variable_set("menu_block_{$delta}_parent", $edit['parent']);
+    variable_set("menu_block_{$delta}_level", $edit['level']);
+    variable_set("menu_block_{$delta}_follow", $edit['follow']);
+    variable_set("menu_block_{$delta}_depth", $edit['depth']);
+    variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
+    variable_set("menu_block_{$delta}_sort", $edit['sort']);
+  }
 }
 
 /**
- * Menu block admin settings form.
+ * Menu callback: admin settings form.
  *
  * @return
  *   The settings form used by Menu block.
  */
-function menu_block_admin_settings_form($form_state) {
+function menu_block_admin_settings_form($form, &$form_state) {
   // Grab all the menus.
   $menus = menu_block_get_all_menus();
   unset($menus['_active']);
   $total_menus = count($menus);
 
   // Load stored configuration.
-  $menu_order = variable_get('menu_block_menu_order', array('primary-links' => '', 'secondary-links' => ''));
+  $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'secondary-menu' => ''));
 
   // Merge the saved configuration with any un-configured menus.
   $all_menus = $menu_order + $menus;
 
   $form['heading'] = array(
-    '#value' => '<p>' . t('If a block is configured to use <em>"the menu selected by the page"</em>, the block will be generated from the first "available" menu that contains a link to the page.') . '</p>',
+    '#markup' => '<p>' . t('If a block is configured to use <em>"the menu selected by the page"</em>, the block will be generated from the first "available" menu that contains a link to the page.') . '</p>',
   );
 
   // Orderable list of menu selections.
@@ -401,7 +476,7 @@ function menu_block_admin_settings_form($form_state) {
   foreach (array_keys($all_menus) as $menu_name) {
     $form['menu_order'][$menu_name] = array(
       'title' => array(
-        '#value' => check_plain($menus[$menu_name]),
+        '#markup' => check_plain($menus[$menu_name]),
       ),
       'available' => array(
         '#type' => 'checkbox',
@@ -419,7 +494,7 @@ function menu_block_admin_settings_form($form_state) {
   }
 
   $form['footer_note'] = array(
-    '#value' => '<p>' . t('The above list will <em>not</em> affect menu blocks that are configured to use a specific menu.') . '</p>',
+    '#markup' => '<p>' . t('The above list will <em>not</em> affect menu blocks that are configured to use a specific menu.') . '</p>',
   );
 
   $form['submit'] = array(
