@@ -11,58 +11,58 @@ Drupal.behaviors.menu_block = {
     $('#menu-block-settings', context).addClass('menu-block-processed');
 
     // Process the form if its in a Panel overlay.
-    if ($('#override-title-checkbox', context).size()) {
+    if ($('.menu-block-menu-tree-configure-form', context).size()) {
       // Toggle display of "title link" if "override title" is checked.
-      $('#override-title-checkbox', context).change( function() {
-        if ($('#override-title-checkbox:checked').length) {
-          $('#edit-title-link-wrapper').slideUp('fast');
+      $('.menu-block-override-title', context).change( function() {
+        if ($('.menu-block-override-title:checked').length) {
+          $('.menu-block-title-link').slideUp('fast');
         }
         else {
-          $('#edit-title-link-wrapper').slideDown('fast');
+          $('.menu-block-title-link').slideDown('fast');
         }
       } );
-      if ($('#override-title-checkbox:checked').length) {
-        $('#edit-title-link-wrapper').css('display', 'none');
+      if ($('.menu-block-override-title:checked').length) {
+        $('.menu-block-title-link').css('display', 'none');
       }
     }
     // Process the form if its on a block config page.
-    else {
+    else if ($('.menu-block-configure-form', context).size()) {
       // Toggle display of "title link" if "block title" has a value.
-      $('#edit-title', context).change( function() {
-        if ($('#edit-title').val()) {
-          $('#edit-title-link-wrapper').slideUp('fast');
+      $('input[name="title"]', context).change( function() {
+        if ($('input[name="title"]').val()) {
+          $('.menu-block-title-link').slideUp('fast');
         }
         else {
-          $('#edit-title-link-wrapper').slideDown('fast');
+          $('.menu-block-title-link').slideDown('fast');
         }
       } );
-      if ($('#edit-title', context).val()) {
-        $('#edit-title-link-wrapper').css('display', 'none');
+      if ($('input[name="title"]', context).val()) {
+        $('.menu-block-title-link').css('display', 'none');
       }
 
       // Split the un-wieldly "parent item" pull-down into two hierarchal pull-downs.
-      $('#edit-parent', context)
+      $('.menu-block-parent', context)
         .html(Drupal.settings.menu_block.parent_options[Drupal.settings.menu_block.menus_default])
         .val(Drupal.settings.menu_block.parent_default)
         .before(Drupal.settings.menu_block.menus);
-      $('#edit-parent-menu', context).change( function() {
-        $('#edit-parent')
-          .html(Drupal.settings.menu_block.parent_options[$('#edit-parent-menu').val()])
+      $('.menu-block-parent-menu', context).change( function() {
+        $('.menu-block-parent')
+          .html(Drupal.settings.menu_block.parent_options[$('.menu-block-parent-menu').val()])
           .val(Drupal.settings.menu_block.parent_default);
       } );
     }
 
     // Toggle display of "follow parent" if "follow" has been checked.
-    $('#edit-follow', context).change( function() {
-      if ($('#edit-follow:checked').length) {
-        $('#edit-follow-parent-wrapper').slideDown('fast');
+    $('.menu-block-follow', context).change( function() {
+      if ($('.menu-block-follow:checked').length) {
+        $('.menu-block-follow-parent').slideDown('fast');
       }
       else {
-        $('#edit-follow-parent-wrapper').slideUp('fast');
+        $('.menu-block-follow-parent').slideUp('fast');
       }
     } );
-    if (!$('#edit-follow:checked', context).length) {
-      $('#edit-follow-parent-wrapper', context).css('display', 'none');
+    if (!$('.menu-block-follow:checked', context).length) {
+      $('.menu-block-follow-parent', context).css('display', 'none');
     }
   }
 };

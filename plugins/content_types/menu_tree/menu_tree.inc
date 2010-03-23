@@ -44,8 +44,11 @@ function menu_block_menu_tree_content_type_content_types() {
     $items[$menu_name]['title'] = t('%menu menu tree', array('%menu' => $title));
     $items[$menu_name]['defaults']['menu_name'] = $menu_name;
     $items[$menu_name]['menu_title'] = $title;
-    // Custom icons for some menus.
+    // Custom icons/titles for some menus.
     switch ($menu_name) {
+      case '_active':
+        $items[$menu_name]['title'] = t('menu tree of %menu', array('%menu' => 'the menu selected by the page'));
+        break;
       case 'main-menu':
       case 'secondary-menu':
         $items[$menu_name]['icon'] = 'icon_contrib_main_menu.png';
@@ -107,6 +110,20 @@ function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
   // Set the options to a simple list of menu links for the configured menu.
   $menus = menu_block_get_all_menus();
   $form['parent']['#options'] = menu_parent_options(array($conf['menu_name'] => $menus[$conf['menu_name']]), array('mlid' => 0));
+  // Hide the Parent item option for the special "active" menu.
+  if ($conf['menu_name'] == '_active') {
+    $form['parent']['#type'] = 'hidden';
+    $form['admin_title']['#suffix'] = '<div id="edit-parent-wrapper"><strong>' . t('Parent item:') . '</strong><br />' . t('<em>The menu selected by the page</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/settings/menu_block'))) . '</div>';
+  }
+
+  // Add classes for jQuery script.
+  $form['menu-block-wrapper-start']['#value'] = '<div id="menu-block-settings" class="menu-block-menu-tree-configure-form">';
+  if (empty($form['override_title']['#attributes']['class'])) {
+    $form['override_title']['#attributes']['class'] = 'menu-block-override-title';
+  }
+  else {
+    $form['override_title']['#attributes']['class'] .= ' menu-block-override-title';
+  }
 }
 
 /**
