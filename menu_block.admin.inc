@@ -192,7 +192,7 @@ function _menu_block_format_title($config) {
     return check_plain($config['admin_title']);
   }
   $menus = menu_block_get_all_menus();
-  $menus['_active'] = t('Current menu');
+  $menus[MENU_TREE__CURRENT_PAGE_MENU] = t('Current menu');
   if (empty($config['menu_name']) || empty($menus[$config['menu_name']])) {
     $title = t('Unconfigured menu block');
   }
@@ -269,7 +269,7 @@ function menu_block_configure_form($form, &$form_state) {
   // Build the standard and jquery versions of the parent item options.
   $parent_options = $parent_options_js = array();
   foreach ($menus AS $menu_name => $title) {
-    if ($menu_name == '_active') {
+    if ($menu_name == MENU_TREE__CURRENT_PAGE_MENU) {
       $options = array($menu_name . ':0' => $title);
       $parent_options += $options;
       // For the js options, replace the root item option with better help text.
@@ -460,7 +460,7 @@ function menu_block_block_save($delta = '', $edit = array()) {
 function menu_block_admin_settings_form($form, &$form_state) {
   // Grab all the menus.
   $menus = menu_block_get_all_menus();
-  unset($menus['_active']);
+  unset($menus[MENU_TREE__CURRENT_PAGE_MENU]);
   $total_menus = count($menus);
 
   // Load stored configuration.

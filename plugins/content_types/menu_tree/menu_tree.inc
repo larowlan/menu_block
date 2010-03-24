@@ -46,7 +46,7 @@ function menu_block_menu_tree_content_type_content_types() {
     $items[$menu_name]['menu_title'] = $title;
     // Custom icons/titles for some menus.
     switch ($menu_name) {
-      case '_active':
+      case MENU_TREE__CURRENT_PAGE_MENU:
         $items[$menu_name]['title'] = t('menu tree of %menu', array('%menu' => 'the menu selected by the page'));
         break;
       case 'main-menu':
@@ -111,7 +111,7 @@ function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
   $menus = menu_block_get_all_menus();
   $form['parent']['#options'] = menu_parent_options(array($conf['menu_name'] => $menus[$conf['menu_name']]), array('mlid' => 0));
   // Hide the Parent item option for the special "active" menu.
-  if ($conf['menu_name'] == '_active') {
+  if ($conf['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
     $form['parent']['#type'] = 'hidden';
     $form['admin_title']['#suffix'] = '<div id="edit-parent-wrapper"><strong>' . t('Parent item:') . '</strong><br />' . t('<em>The menu selected by the page</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/settings/menu_block'))) . '</div>';
   }
