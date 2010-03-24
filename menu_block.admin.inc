@@ -535,27 +535,32 @@ function menu_block_admin_settings_form_submit($form, &$form_state) {
 /**
  * Theme a drag-to-reorder table of menu selection checkboxes.
  */
-function theme_menu_block_menu_order($element) {
+function theme_menu_block_menu_order($variables) {
+  $element = $variables['element'];
   drupal_add_tabledrag('menu-block-menus', 'order', 'sibling', 'menu-weight');
 
-  $header = array(
-    t('Menu'),
-    t('Available'),
-    t('Weight'),
+  $variables = array(
+    'header' => array(
+      t('Menu'),
+      t('Available'),
+      t('Weight'),
+    ),
+    'rows' => array(),
+    'attributes' => array('id' => 'menu-block-menus'),
   );
 
   // Generate table of draggable menu names.
-  $rows = array();
   foreach (element_children($element) as $menu_name) {
-    $element[$menu_name]['weight']['#attributes']['class'] = 'menu-weight';
-    $rows[] = array(
+    $element[$menu_name]['weight']['#attributes']['class'] = array('menu-weight');
+    $variables['rows'][] = array(
       'data' => array(
         drupal_render($element[$menu_name]['title']),
         drupal_render($element[$menu_name]['available']),
         drupal_render($element[$menu_name]['weight']),
       ),
-      'class' => 'draggable',
+      'class' => array('draggable'),
     );
   }
-  return theme('table', $header, $rows, array('id' => 'menu-block-menus'));
+
+  return theme('table', $variables);
 }
