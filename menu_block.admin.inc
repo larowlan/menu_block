@@ -328,23 +328,25 @@ function menu_block_configure_form($form, &$form_state) {
     )
   ));
   // Load the javascript data.
-  $settings = array(
-    'menu_block' => array(
-      'menus' => $menus_select . '<label id="item-label">' . t('Item') . ':</label>',
-      'menus_default' => $config['menu_name'],
-      'parent_options' => $parent_options_js,
-      'parent_default' => $config['menu_name'] . ':' . $config['parent_mlid'],
+  $form['#attached']['js'][] = array(
+    'data' => array(
+      'menu_block' => array(
+        'menus' => $menus_select . '<label id="item-label">' . t('Item') . ':</label>',
+        'menus_default' => $config['menu_name'],
+        'parent_options' => $parent_options_js,
+        'parent_default' => $config['menu_name'] . ':' . $config['parent_mlid'],
+      ),
     ),
+    'type' => 'setting',
   );
-  drupal_add_js($settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'menu_block') . '/menu-block.js');
+  $form['#attached']['js'][] = drupal_get_path('module', 'menu_block') . '/menu-block.js';
 
   // Build the standard form.
+  $form['#attached']['css'][] = drupal_get_path('module', 'menu_block') . '/menu-block-admin.css';
   $form['menu-block-wrapper-start'] = array(
     '#markup' => '<div id="menu-block-settings" class="menu-block-configure-form">',
     '#weight' => -20,
   );
-  drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
   $form['title_link'] = array(
     '#prefix' => '<div class="menu-block-title-link">',
     '#type' => 'checkbox',
