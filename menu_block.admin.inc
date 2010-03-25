@@ -99,24 +99,44 @@ function menu_block_add_block_form_submit($form, &$form_state) {
   variable_set('menu_block_ids', $block_ids);
 
   // Save the block configuration.
-  _menu_block_block_save($delta, $form_state['values']);
+  menu_block_block_save($delta, $form_state['values']);
 
   // Run the normal new block submission (borrowed from block_add_block_form_submit).
+  $query = db_insert('block')->fields(array('visibility', 'pages', 'custom', 'title', 'module', 'theme', 'region', 'status', 'weight', 'delta', 'cache'));
   foreach (list_themes() as $key => $theme) {
     if ($theme->status) {
-      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, %d, %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
+      $region = !empty($form_state['values']['regions'][$theme->name]) ? $form_state['values']['regions'][$theme->name] : BLOCK_REGION_NONE;
+      $query->values(array(
+        'visibility' => (int) $form_state['values']['visibility'],
+        'pages' => trim($form_state['values']['pages']),
+        'custom' => (int) $form_state['values']['custom'],
+        'title' => $form_state['values']['title'],
+        'module' => $form_state['values']['module'],
+        'theme' => $theme->name,
+        'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
+        'status' => 0,
+        'status' => (int) ($region != BLOCK_REGION_NONE),
+        'weight' => 0,
+        'delta' => $delta,
+        'cache' => DRUPAL_NO_CACHE,
+      ));
     }
   }
+  $query->execute();
 
+  $query = db_insert('block_role')->fields(array('rid', 'module', 'delta'));
   foreach (array_filter($form_state['values']['roles']) as $rid) {
-    db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $delta);
+    $query->values(array(
+      'rid' => $rid,
+      'module' => $form_state['values']['module'],
+      'delta' => $delta,
+    ));
   }
+  $query->execute();
 
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();
-
   $form_state['redirect'] = 'admin/structure/block';
-  return;
 }
 
 /**
@@ -124,14 +144,14 @@ function menu_block_add_block_form_submit($form, &$form_state) {
  */
 function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    $form['menu_block_' . $delta]['delete'] = array('#markup' => l(t('delete'), 'admin/structure/block/delete-menu-block/' . $delta));
+    $form['menu_block_' . $delta]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/block/delete-menu-block/' . $delta);
   }
 }
 
 /**
  * Menu callback: confirm deletion of menu blocks.
  */
-function menu_block_delete(&$form_state, $delta = 0) {
+function menu_block_delete($form, &$form_state, $delta = 0) {
   $title = _menu_block_format_title(menu_block_get_config($delta));
   $form['block_title'] = array('#type' => 'hidden', '#value' => $title);
   $form['delta'] = array('#type' => 'hidden', '#value' => $delta);
@@ -149,6 +169,8 @@ function menu_block_delete_submit($form, &$form_state) {
   unset($block_ids[array_search($delta, $block_ids)]);
   sort($block_ids);
   variable_set('menu_block_ids', $block_ids);
+  variable_del("menu_block_{$delta}_title_link");
+  variable_del("menu_block_{$delta}_admin_title");
   variable_del("menu_block_{$delta}_parent");
   variable_del("menu_block_{$delta}_level");
   variable_del("menu_block_{$delta}_follow");
@@ -156,9 +178,15 @@ function menu_block_delete_submit($form, &$form_state) {
   variable_del("menu_block_{$delta}_expanded");
   variable_del("menu_block_{$delta}_sort");
 
-  db_query("DELETE FROM {blocks} WHERE module = 'menu_block' AND delta = %d", $delta);
-  db_query("DELETE FROM {blocks_roles} WHERE module = 'menu_block' AND delta = %d", $delta);
-  drupal_set_message(t('The "%name" block has been removed.', array('%name' => $form_state['values']['block_title'])));
+  db_delete('block')
+    ->condition('module', 'menu_block')
+    ->condition('delta', $delta)
+    ->execute();
+  db_delete('block_role')
+    ->condition('module', 'menu_block')
+    ->condition('delta', $delta)
+    ->execute();
+  drupal_set_message(t('The block "%name" has been removed.', array('%name' => $form_state['values']['block_title'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/structure/block';
   return;
@@ -167,7 +195,7 @@ function menu_block_delete_submit($form, &$form_state) {
 /**
  * Implements hook_block_info().
  */
-function menu_block_block_info() {
+function _menu_block_block_info() {
   $blocks = array();
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
     $blocks[$delta]['info'] = _menu_block_format_title(menu_block_get_config($delta));
@@ -236,7 +264,7 @@ function _menu_block_format_title($config) {
 /**
  * Implements hook_block_configure().
  */
-function menu_block_block_configure($delta) {
+function _menu_block_block_configure($delta) {
   // Create a pseudo form state.
   $form_state = array('values' => menu_block_get_config($delta));
   return menu_block_configure_form(array(), $form_state);
@@ -286,16 +314,18 @@ function menu_block_configure_form($form, &$form_state) {
   }
   // Build a select element that is only needed for the jquery version.
   $menus_select = theme('select', array(
-    '#title' => t('Menu'),
-    '#value' => $config['menu_name'],
-    '#options' => $menus,
-    '#name' => 'parent_menu',
-    '#id' => 'edit-parent-menu',
-    '#attributes' => array('class' => 'menu-block-parent-menu'),
-    '#size' => 1,
-    '#required' => FALSE,
-    '#multiple' => FALSE,
-    '#parents' => array('parent_menu'),
+    'element' => array(
+      '#title' => t('Menu'),
+      '#value' => $config['menu_name'],
+      '#options' => $menus,
+      '#name' => 'parent_menu',
+      '#id' => 'edit-parent-menu',
+      '#attributes' => array('class' => array('menu-block-parent-menu')),
+      '#size' => 1,
+      '#required' => FALSE,
+      '#multiple' => FALSE,
+      '#parents' => array('parent_menu'),
+    )
   ));
   // Load the javascript data.
   $settings = array(
@@ -310,7 +340,10 @@ function menu_block_configure_form($form, &$form_state) {
   drupal_add_js(drupal_get_path('module', 'menu_block') . '/menu-block.js');
 
   // Build the standard form.
-  $form['menu-block-wrapper-start'] = array('#markup' => '<div id="menu-block-settings" class="menu-block-configure-form">');
+  $form['menu-block-wrapper-start'] = array(
+    '#markup' => '<div id="menu-block-settings" class="menu-block-configure-form">',
+    '#weight' => -20,
+  );
   drupal_add_css(drupal_get_path('module', 'menu_block') . '/menu-block-admin.css');
   $form['title_link'] = array(
     '#prefix' => '<div class="menu-block-title-link">',
@@ -332,7 +365,7 @@ function menu_block_configure_form($form, &$form_state) {
     '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
     '#options' => $parent_options,
     '#description' => t('The tree of links will only contain children of the selected parent item. Using <em>&lt;the menu selected by the page&gt;</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/settings/menu_block'))),
-    '#attributes' => array('class' => 'menu-block-parent'),
+    '#attributes' => array('class' => array('menu-block-parent')),
     '#element_validate' => array('menu_block_configure_form_parent_validate'),
   );
   $form['level'] = array(
@@ -367,7 +400,7 @@ function menu_block_configure_form($form, &$form_state) {
     '#default_value' => $follow,
     '#description' => t('If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed.'),
     '#element_validate' => array('menu_block_configure_form_follow_validate'),
-    '#attributes' => array('class' => 'menu-block-follow'),
+    '#attributes' => array('class' => array('menu-block-follow')),
   );
   $form['follow_parent'] = array(
     '#prefix' => '<div class="menu-block-follow-parent">',
@@ -438,8 +471,8 @@ function menu_block_configure_form_follow_validate($element, &$form_state) {
 /**
  * Implements hook_block_save().
  */
-function menu_block_block_save($delta = '', $edit = array()) {
-  if (!empyt($delta)) {
+function _menu_block_block_save($delta = '', $edit = array()) {
+  if (!empty($delta)) {
     variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
     variable_set("menu_block_{$delta}_admin_title", $edit['admin_title']);
     variable_set("menu_block_{$delta}_parent", $edit['parent']);

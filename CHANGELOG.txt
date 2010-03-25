@@ -4,8 +4,9 @@ Menu Block 7.x-3.x-dev, xxxx-xx-xx (development release)
 ------------------------------
 - #749838: Port to Drupal 7 (NOT YET COMPLETE)
 
-Menu Block 6.x-2.x-dev, xxxx-xx-xx (development release)
+Menu Block 6.x-2.3, 2010-03-24
 ------------------------------
+- #739282: Users with "administer menu" privileges can exploit XSS vulnerability
 - #343061 by sun and JohnAlbin: CSS styling breaks form layout
 - #345552 by Dmitriy.trt: Inconsistent display of starting level set to children
   of active item

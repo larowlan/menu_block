@@ -19,13 +19,28 @@ function menu_block_hook_info() {
   return array(
     'menu'            => $admin,
     'theme'           => $admin,
-    'block_info'      => $admin,
-    'block_configure' => $admin,
-    'block_save'      => $admin,
+//    'block_info'      => $admin,
+//    'block_configure' => $admin,
+//    'block_save'      => $admin,
 
     'form_block_admin_display_form_alter' => $admin,
     'ctools_plugin_directory' => $admin,
   );
+}
+
+// When #752226 is fixed and hook_hook_info() is no longer useless for block
+// hooks, fix the mess below.
+function menu_block_block_info() {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_block_info();
+}
+function menu_block_block_configure($delta) {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_block_configure($delta);
+}
+function menu_block_block_save($delta = '', $edit = array()) {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_block_save($delta, $edit);
 }
 
 /**
@@ -49,6 +64,8 @@ function menu_block_help($path, $arg) {
  * Implements hook_block_view().
  */
 function menu_block_block_view($delta = '') {
+  // short-circuit until menu_tree_build is fixored.
+  return;
   return menu_tree_build(menu_block_get_config($delta));
 }
 
