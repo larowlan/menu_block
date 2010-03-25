@@ -17,24 +17,25 @@ define('MENU_TREE__CURRENT_PAGE_MENU', '_active');
 function menu_block_hook_info() {
   $admin = array('group' => 'admin');
   return array(
-    'menu'            => $admin,
-    'theme'           => $admin,
-//    'block_info'      => $admin,
-//    'block_configure' => $admin,
-//    'block_save'      => $admin,
-
     'form_block_admin_display_form_alter' => $admin,
     'ctools_plugin_directory' => $admin,
   );
 }
 
-// When #752226 is fixed and hook_hook_info() is no longer useless for block
-// hooks, fix the mess below.
+// Off-load the following infrequently called hooks to another file.
+function menu_block_menu() {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_menu();
+}
+function menu_block_theme(&$existing, $type, $theme, $path) {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_theme($existing, $type, $theme, $path);
+}
 function menu_block_block_info() {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
   return _menu_block_block_info();
 }
-function menu_block_block_configure($delta) {
+function menu_block_block_configure($delta = '') {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
   return _menu_block_block_configure($delta);
 }
@@ -64,9 +65,20 @@ function menu_block_help($path, $arg) {
  * Implements hook_block_view().
  */
 function menu_block_block_view($delta = '') {
-  // short-circuit until menu_tree_build is fixored.
-  return;
-  return menu_tree_build(menu_block_get_config($delta));
+  $config = menu_block_get_config($delta);
+//$data = menu_tree_build($config);
+
+// short-circuit until menu_tree_build is fixored.
+// @todo DELETE ME!
+    module_load_include('inc', 'menu_block', 'menu_block.admin');
+    $data = array('subject' => _menu_block_format_title($config), 'content' => array('#markup' => 'hi!'));
+
+
+  // Add contextual links for this block.
+  if (!empty($data['content'])) {
+    $data['content']['#contextual_links']['menu_block'] = array('admin/structure/menu/manage', array($config['menu_name']));
+  }
+  return $data;
 }
 
 /**

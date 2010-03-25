@@ -9,7 +9,7 @@
 /**
  * Implements hook_menu().
  */
-function menu_block_menu() {
+function _menu_block_menu() {
   $items['admin/structure/block/add-menu-block'] = array(
     'title' => 'Add menu block',
     'description' => 'Add a new menu block.',
@@ -42,7 +42,7 @@ function menu_block_menu() {
 /**
  * Implements hook_theme().
  */
-function menu_block_theme(&$existing, $type, $theme, $path) {
+function _menu_block_theme(&$existing, $type, $theme, $path) {
   // Add theme hook suggestion patterns for the core theme functions used in
   // this module. We can't add them during hook_theme_registry_alter() because
   // we will already have missed the opportunity for the theme engine's
@@ -264,7 +264,7 @@ function _menu_block_format_title($config) {
 /**
  * Implements hook_block_configure().
  */
-function _menu_block_block_configure($delta) {
+function _menu_block_block_configure($delta = '') {
   // Create a pseudo form state.
   $form_state = array('values' => menu_block_get_config($delta));
   return menu_block_configure_form(array(), $form_state);
