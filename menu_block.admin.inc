@@ -49,13 +49,12 @@ function _menu_block_theme(&$existing, $type, $theme, $path) {
   // theme_hook() to process the pattern. And we can't run the pattern ourselves
   // because we aren't given the type, theme and path in that hook.
   $existing['menu_tree']['pattern'] = 'menu_tree__';
-  $existing['menu_item']['pattern'] = 'menu_item__';
-  $existing['menu_item_link']['pattern'] = 'menu_item_link__';
+  $existing['menu_link']['pattern'] = 'menu_link__';
 
   return array(
     'menu_block_wrapper' => array(
       'template' => 'menu-block-wrapper',
-      'variables' => array('content' => NULL, 'settings' => NULL, 'delta' => NULL),
+      'variables' => array('content' => array(), 'config' => array(), 'delta' => NULL),
       'pattern' => 'menu_block_wrapper__',
     ),
     'menu_block_menu_order' => array(

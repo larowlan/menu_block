@@ -1,8 +1,8 @@
 // $Id$
 
-Menu Block 7.x-3.x-dev, xxxx-xx-xx (development release)
-------------------------------
-- #749838: Port to Drupal 7 (NOT YET COMPLETE)
+Menu Block 7.x-2.0-beta1, 2010-03-27
+------------------------------------
+- #749838: Port to Drupal 7
 
 Menu Block 6.x-2.3, 2010-03-24
 ------------------------------

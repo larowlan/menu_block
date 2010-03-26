@@ -15,7 +15,7 @@ function _menu_block_help($path, $arg) {
     case 'admin/structure/block':
       $output = '<p>' . t('Use the <a href="!url">add menu block page</a> to create a customizable menu block. You will then be able to configure your menu block before adding it.', array('!url' => url('admin/structure/block/add-menu-block'))) . '</p>';
       if (module_exists('help')) {
-        $output .= theme('more_help_link', url('admin/help/menu_block'));
+        $output .= theme('more_help_link', array('url' => url('admin/help/menu_block')));
       }
       break;
 
