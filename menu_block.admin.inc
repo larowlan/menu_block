@@ -142,8 +142,11 @@ function menu_block_add_block_form_submit($form, &$form_state) {
  * Alters the block admin form to add delete links next to menu blocks.
  */
 function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
+  $blocks = module_invoke_all('menu_block_blocks');
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    $form['menu_block_' . $delta]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/block/delete-menu-block/' . $delta);
+    if (!empty($blocks[$delta])) {
+      $form['menu_block_' . $delta]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/block/delete-menu-block/' . $delta);
+    }
   }
 }
 
@@ -196,7 +199,9 @@ function menu_block_delete_submit($form, &$form_state) {
  */
 function _menu_block_block_info() {
   $blocks = array();
-  foreach (variable_get('menu_block_ids', array()) AS $delta) {
+  $deltas = variable_get('menu_block_ids', array());
+  $deltas += array_keys(module_invoke_all('menu_block_blocks'));
+  foreach ($deltas AS $delta) {
     $blocks[$delta]['info'] = _menu_block_format_title(menu_block_get_config($delta));
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
@@ -266,6 +271,9 @@ function _menu_block_format_title($config) {
 function _menu_block_block_configure($delta = '') {
   // Create a pseudo form state.
   $form_state = array('values' => menu_block_get_config($delta));
+  if (!empty($form_state['value']['exported_to_code'])) {
+    return array();
+  }
   return menu_block_configure_form(array(), $form_state);
 }
 
@@ -409,6 +417,7 @@ function menu_block_configure_form($form, &$form_state) {
     '#title' => t('Starting level will be'),
     '#default_value' => $follow_parent,
     '#options' => array(
+      'parent' => t('Parent of active menu item'),
       'active' => t('Active menu item'),
       'child' => t('Children of active menu item'),
     ),

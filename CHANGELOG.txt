@@ -2,6 +2,7 @@
 
 Menu Block 7.x-2.0-beta1, 2010-03-26
 ------------------------------------
+- #693302: Add API for exportable menu_blocks
 - #749838: Port to Drupal 7
 
 Menu Block 6.x-2.3, 2010-03-24

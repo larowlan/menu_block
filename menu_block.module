@@ -135,6 +135,19 @@ function menu_block_get_config($delta = NULL) {
 
   // Get the block configuration options.
   if ($delta) {
+    static $blocks;
+    if (!isset($blocks)) {
+      $blocks = module_invoke_all('menu_block_blocks');
+    }
+    if (!empty($blocks[$delta])) {
+      // Merge the default values.
+      $config = $blocks[$delta] + $config;
+      // Set the delta.
+      $config['delta'] = $delta;
+      // Flag the block as exported.
+      $config['exported_to_code'] = TRUE;
+    }
+
     $config['title_link']  = variable_get("menu_block_{$delta}_title_link",  $config['title_link']);
     $config['admin_title'] = variable_get("menu_block_{$delta}_admin_title", $config['admin_title']);
     $config['level']       = variable_get("menu_block_{$delta}_level",       $config['level']);
