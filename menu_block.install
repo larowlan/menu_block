@@ -48,11 +48,7 @@ function menu_block_install() {
 }
 
 /**
- * Implements hook_update_N().
- *
- * Pre-1.0 versions used a different naming convention for block names. Convert
- * the old names to the new format. An unfortunate side effect of this renaming
- * is that it disables all the previously enabled blocks.
+ * Converts pre-5.x-1.0 block names to the new format.
  */
 function menu_block_update_5100() {
   $delta = 0;
@@ -74,15 +70,11 @@ function menu_block_update_5100() {
   }
   variable_set('menu_block_enabled_blocks', $enabled_blocks);
 
-  return array(0 => array('success' => TRUE, 'query' => t('A pre-release version of Menu block has been detected. All menu blocks from the pre-release version have been given a new delta and are no longer placed in any block regions; their block placement should be re-configured immediately.')));
+  return t('A pre-release version of Menu block has been detected. All menu blocks from the pre-release version have been given a new delta and are no longer placed in any block regions; their block placement should be re-configured immediately.');
 }
 
 /**
- * Implements hook_update_N().
- *
- * Converts $menu_block_enabled_blocks to $menu_block_ids and
- * $menu_block_DELTA_mid to $menu_block_DELTA_menu_name. Also deletes un-enabled
- * menu blocks.
+ * Converts menu block-tracking data to new format.
  */
 function menu_block_update_5200() {
   $block_ids = array();
@@ -119,13 +111,11 @@ function menu_block_update_5200() {
   variable_del('menu_block_enabled_blocks');
   cache_clear_all();
 
-  return array(0 => array('success' => TRUE, 'query' => t('A 5.x-1.x version of Menu block has been detected and an attempt was made to upgrade it. Unfortunately, you should have upgraded to Menu block 5.x-2.x before your upgrade to Drupal 7. You may need to re-configure all your menu blocks. To use menu blocks in Drupal 7, find the "Add menu block" link on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')))));
+  return t('A 5.x-1.x version of Menu block has been detected and an attempt was made to upgrade it. Unfortunately, you should have upgraded to Menu block 5.x-2.x before your upgrade to Drupal 7. You may need to re-configure all your menu blocks.');
 }
 
 /**
- * Implements hook_update_N().
- *
- * Converts the mids to menu names using the D5-stored menu_title variable.
+ * Converts to Drupal 6 menu names.
  */
 function menu_block_update_6200() {
   $menus = menu_get_menus();
@@ -139,12 +129,10 @@ function menu_block_update_6200() {
     variable_set("menu_block_{$delta}_menu_name", $menu_name);
     variable_del("menu_block_{$delta}_title");
   }
-  return array(0 => array('success' => TRUE, 'query' => t('The 5.x-2.x version of Menu block has been upgraded. To use menu blocks in Drupal 7, find the "Add menu block" link on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')))));
+  return t('The 5.x-2.x version of Menu block has been upgraded to the 6.x-2.0 data storage format.');
 }
 
 /**
- * Implements hook_update_N().
- *
  * Converts the menu names to parent items.
  */
 function menu_block_update_6201() {
@@ -153,5 +141,30 @@ function menu_block_update_6201() {
     variable_set("menu_block_{$delta}_parent", variable_get("menu_block_{$delta}_menu_name", 'navigation') . ':0');
     variable_del("menu_block_{$delta}_menu_name");
   }
-  return array(0 => array('success' => TRUE, 'query' => t('The 6.x-2.0 version of Menu block has been upgraded. To use menu blocks in Drupal 7, find the "Add menu block" link on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')))));
+  return t('The 6.x-2.0 version of Menu block has been upgraded to the 6.x-2.1 data storage format.');
+}
+
+/**
+ * Converts to Drupal 7 menu names.
+ */
+function menu_block_update_7200() {
+  foreach (variable_get('menu_block_ids', array()) AS $delta) {
+    $menu_name = '';
+    list($old_menu_name, $parent_mlid) = explode(':', variable_get("menu_block_{$delta}_parent", ' : '));
+    switch ($old_menu_name) {
+      case 'primary-links':
+        $menu_name = 'main-menu';
+        break;
+      case 'secondary-links':
+        $menu_name = 'secondary-menu';
+        break;
+      case 'navigation':
+        $menu_name = 'management';
+        break;
+    }
+    if ($menu_name) {
+      variable_set("menu_block_{$delta}_parent", $menu_name . ':' . $parent_mlid);
+    }
+  }
+  return t('The 6.x-2.x version of Menu block has been upgraded to use the new menu names in Drupal 7. To use menu blocks in Drupal 7, find the "Add menu block" link on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')));
 }
