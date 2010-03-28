@@ -27,7 +27,7 @@ function _menu_block_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'menu_block.admin.inc',
   );
-  $items['admin/config/user-interface/menu_block'] = array(
+  $items['admin/config/user-interface/menu-block'] = array(
     'title' => 'Menu block',
     'description' => 'Configure menu block.',
     'access arguments' => array('administer blocks'),
