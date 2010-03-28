@@ -4,7 +4,6 @@ name = "Menu Block"
 description = "Provides configurable blocks of menu items."
 
 core = 7.x
-dependencies[] = block
 dependencies[] = menu
 
 files[] = menu_block.module
