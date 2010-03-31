@@ -1,5 +1,12 @@
 // $Id$
 
+Menu Block 7.x-2.x-dev, xxxx-xx-xx
+------------------------------
+- #693302: Add simple bulk export module
+- Fixed import of exportable menu_blocks
+- Fixed bug causing missing "delete" link for menu blocks
+- Fixed configure link on modules page
+
 Menu Block 7.x-2.0-beta1, 2010-03-26
 ------------------------------------
 - #693302: Add API for exportable menu_blocks
