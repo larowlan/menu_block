@@ -54,6 +54,7 @@ function hook_menu_block_blocks() {
       'level'       => 3,
       'depth'       => 3,
       // Any config options not specified will get the default value.
+    ),
   );
 }
 
