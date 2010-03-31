@@ -543,7 +543,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
     $menu_item = current($tree);
     $config['menu_name'] = $menu_item['link']['menu_name'];
   }
-  $hook_delta = $config['delta'];
+  $hook_delta = str_replace('-', '_', $config['delta']);
   $hook_menu_name = str_replace('-', '_', $config['menu_name']);
 
   // Pull out just the menu items we are going to render so that we
