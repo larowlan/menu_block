@@ -11,17 +11,6 @@
  */
 define('MENU_TREE__CURRENT_PAGE_MENU', '_active');
 
-/**
- * Implements hook_hook_info().
- */
-function menu_block_hook_info() {
-  $admin = array('group' => 'admin');
-  return array(
-    'form_block_admin_display_form_alter' => $admin,
-    'ctools_plugin_directory' => $admin,
-  );
-}
-
 // Off-load the following infrequently called hooks to another file.
 function menu_block_menu() {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
@@ -43,6 +32,17 @@ function menu_block_block_save($delta = '', $edit = array()) {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
   return _menu_block_block_save($delta, $edit);
 }
+function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_form_block_admin_display_form_alter($form, $form_state);
+}
+/* -- temporarily remove until ctools is ported to D7.
+function menu_block_ctools_plugin_directory($module, $plugin) {
+  module_load_include('inc', 'menu_block', 'menu_block.admin');
+  return _menu_block_ctools_plugin_directory($module, $plugin);
+}
+*/
+
 
 /**
  * Implements hook_help().

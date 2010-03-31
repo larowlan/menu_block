@@ -67,13 +67,11 @@ function _menu_block_theme(&$existing, $type, $theme, $path) {
 /**
  * Implements hook_ctools_plugin_directory().
  */
-/* -- temporarily remove until ctools is ported to D7.
-function menu_block_ctools_plugin_directory($module, $plugin) {
+function _menu_block_ctools_plugin_directory($module, $plugin) {
   if ($plugin == 'content_types') {
     return 'plugins/' . $plugin;
   }
 }
- */
 
 /**
  * Menu callback: display the menu block addition form.
@@ -141,7 +139,7 @@ function menu_block_add_block_form_submit($form, &$form_state) {
 /**
  * Alters the block admin form to add delete links next to menu blocks.
  */
-function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
+function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   $blocks = module_invoke_all('menu_block_blocks');
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
     if (!empty($blocks[$delta])) {
