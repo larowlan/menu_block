@@ -488,14 +488,18 @@ function menu_block_configure_form_follow_validate($element, &$form_state) {
  */
 function _menu_block_block_save($delta = '', $edit = array()) {
   if (!empty($delta)) {
-    variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
-    variable_set("menu_block_{$delta}_admin_title", $edit['admin_title']);
-    variable_set("menu_block_{$delta}_parent", $edit['parent']);
-    variable_set("menu_block_{$delta}_level", $edit['level']);
-    variable_set("menu_block_{$delta}_follow", $edit['follow']);
-    variable_set("menu_block_{$delta}_depth", $edit['depth']);
-    variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
-    variable_set("menu_block_{$delta}_sort", $edit['sort']);
+    // Don't save values for an exported block.
+    $config = menu_block_get_config($delta);
+    if (empty($config['exported_to_code'])) {
+      variable_set("menu_block_{$delta}_title_link", $edit['title_link']);
+      variable_set("menu_block_{$delta}_admin_title", $edit['admin_title']);
+      variable_set("menu_block_{$delta}_parent", $edit['parent']);
+      variable_set("menu_block_{$delta}_level", $edit['level']);
+      variable_set("menu_block_{$delta}_follow", $edit['follow']);
+      variable_set("menu_block_{$delta}_depth", $edit['depth']);
+      variable_set("menu_block_{$delta}_expanded", $edit['expanded']);
+      variable_set("menu_block_{$delta}_sort", $edit['sort']);
+    }
   }
 }
 
