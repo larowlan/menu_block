@@ -198,7 +198,9 @@ function menu_block_delete_submit($form, &$form_state) {
 function _menu_block_block_info() {
   $blocks = array();
   $deltas = variable_get('menu_block_ids', array());
-  $deltas += array_keys(module_invoke_all('menu_block_blocks'));
+  foreach (array_keys(module_invoke_all('menu_block_blocks')) as $delta) {
+    $deltas[] = $delta;
+  }
   foreach ($deltas AS $delta) {
     $blocks[$delta]['info'] = _menu_block_format_title(menu_block_get_config($delta));
     // Menu blocks can't be cached because each menu item can have
@@ -269,9 +271,6 @@ function _menu_block_format_title($config) {
 function _menu_block_block_configure($delta = '') {
   // Create a pseudo form state.
   $form_state = array('values' => menu_block_get_config($delta));
-  if (!empty($form_state['value']['exported_to_code'])) {
-    return array();
-  }
   return menu_block_configure_form(array(), $form_state);
 }
 
@@ -295,6 +294,14 @@ function menu_block_configure_form($form, &$form_state) {
   }
   // Merge in the default configuration.
   $config += menu_block_get_config();
+
+  // Don't display the config form if this delta is exported to code.
+  if (!empty($config['exported_to_code'])) {
+    $form['exported_message'] = array(
+      '#markup' => '<p><em>' . t('Configuration is being provided by code.') . '</em></p>',
+    );
+    return $form;
+  }
 
   // Get the list of menus.
   $menus = menu_block_get_all_menus();
