@@ -54,7 +54,6 @@ function menu_block_help($path, $arg) {
         break;
       }
     case 'admin/help#menu_block':
-    case 'admin/structure/block':
     case 'admin/structure/block/add-menu-block':
       module_load_include('inc', 'menu_block', 'menu_block.pages');
       return _menu_block_help($path, $arg);
