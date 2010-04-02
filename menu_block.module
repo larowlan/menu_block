@@ -306,10 +306,10 @@ function menu_block_get_title($render_title_as_link = TRUE) {
   elseif ($render_title_as_link) {
     if (!empty($menu_item['in_active_trail'])) {
       if (!empty($menu_item['localized_options']['attributes']['class'])) {
-        $menu_item['localized_options']['attributes']['class'] .= ' active-trail';
+        $menu_item['localized_options']['attributes']['class'][] = 'active-trail';
       }
       else {
-        $menu_item['localized_options']['attributes']['class'] = 'active-trail';
+        $menu_item['localized_options']['attributes']['class'][] = 'active-trail';
       }
     }
     $title = l($menu_item['title'], $menu_item['href'], $menu_item['localized_options']);
