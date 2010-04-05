@@ -146,6 +146,14 @@ function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
       $form['menu_block_' . $delta]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/block/delete-menu-block/' . $delta);
     }
   }
+  if (variable_get('menu_block_suppress_core')) {
+    foreach (array_keys(menu_get_menus(FALSE)) AS $delta) {
+      unset($form['menu_' . $delta]);
+    }
+    foreach (array_keys(menu_list_system_menus()) AS $delta) {
+      unset($form['system_' . $delta]);
+    }
+  }
 }
 
 /**
@@ -510,6 +518,14 @@ function _menu_block_block_save($delta = '', $edit = array()) {
  *   The settings form used by Menu block.
  */
 function menu_block_admin_settings_form($form, &$form_state) {
+  // Option to suppress core's blocks of menus.
+  $form['menu_block_suppress_core'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Suppress Drupal’s standard menu blocks'),
+    '#default_value' => variable_get('menu_block_suppress_core', 0),
+    '#description' => t('On the blocks admin page, hide Drupal’s standard blocks of menus.'),
+  );
+
   // Grab all the menus.
   $menus = menu_block_get_all_menus();
   unset($menus[MENU_TREE__CURRENT_PAGE_MENU]);
@@ -582,6 +598,13 @@ function menu_block_admin_settings_form_submit($form, &$form_state) {
     $menu_order[$menu_name] = '';
   }
   variable_set('menu_block_menu_order', $menu_order);
+  if ($form_state['values']['menu_block_suppress_core']) {
+    variable_set('menu_block_suppress_core', 1);
+  }
+  else {
+    variable_del('menu_block_suppress_core');
+  }
+  drupal_set_message('The configuration options have been saved.');
 }
 
 /**

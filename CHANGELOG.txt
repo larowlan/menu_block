@@ -2,6 +2,7 @@
 
 Menu Block 7.x-2.x-dev, xxxx-xx-xx
 ------------------------------
+- Add ability to suppress core's standard menu blocks on block admin page
 - #693302: Add simple bulk export module
 - Fixed import of exportable menu_blocks
 - Fixed bug causing missing "delete" link for menu blocks
