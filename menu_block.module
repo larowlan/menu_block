@@ -601,6 +601,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
     $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
     $element['#below'] = $data['below'] ? menu_block_tree_output($data['below'], $config) : $data['below'];
     $element['#original_link'] = $data['link'];
+    $element['#bid'] = array('module' => 'menu_block', 'delta' => $config['delta']);
     // Index using the link's unique mlid.
     $build[$data['link']['mlid']] = $element;
   }
