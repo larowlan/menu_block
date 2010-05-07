@@ -268,7 +268,9 @@ function menu_tree_build($config) {
 
   // Render the tree.
   $data = array();
-  $data['subject'] = menu_block_get_title($config['title_link'], $config);
+  $title = menu_block_get_title($config['title_link'], $config);
+  $data['subject_array'] = $title;
+  $data['subject'] = drupal_render($title);
   $data['content']['#content'] = menu_block_tree_output($tree, $config);
   if (!empty($data['content']['#content'])) {
     $data['content']['#theme'] = array(
@@ -293,14 +295,14 @@ function menu_tree_build($config) {
  *   boolean A boolean that says whether to render the title as a link or a
  *   simple string.
  * @return
- *   string The tree's title rendered as a string.
+ *   array A renderable array containing the tree's title.
  */
 function menu_block_get_title($render_title_as_link = TRUE) {
   $menu_item = menu_block_set_title();
 
   // The tree's title is a menu title, a normal string.
   if (is_string($menu_item)) {
-    $title = check_plain($menu_item);
+    $title = array('#markup' => check_plain($menu_item));
   }
   // The tree's title is a menu item with a link.
   elseif ($render_title_as_link) {
@@ -312,11 +314,16 @@ function menu_block_get_title($render_title_as_link = TRUE) {
         $menu_item['localized_options']['attributes']['class'][] = 'active-trail';
       }
     }
-    $title = l($menu_item['title'], $menu_item['href'], $menu_item['localized_options']);
+    $title = array(
+      '#type' => 'link',
+      '#title' => $menu_item['title'],
+      '#href' => $menu_item['href'],
+      '#options' => $menu_item['localized_options'],
+    );
   }
   // The tree's title is a menu item.
   else {
-    $title = check_plain($menu_item['title']);
+    $title = array('#markup' => check_plain($menu_item['title']));
   }
   return $title;
 }

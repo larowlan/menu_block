@@ -87,10 +87,11 @@ function menu_block_menu_tree_content_type_render($subtype, $conf, $args, $conte
 
   $tree = menu_tree_build($conf);
 
-  $block          = new stdClass();
-  $block->subtype = $conf['menu_name'];
-  $block->title   = $tree['subject'];
-  $block->content = $tree['content'];
+  $block              = new stdClass();
+  $block->subtype     = $conf['menu_name'];
+  $block->title       = $tree['subject'];
+  $block->title_array = $tree['subject_array'];
+  $block->content     = $tree['content'];
 
   return $block;
 }
