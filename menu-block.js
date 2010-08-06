@@ -22,6 +22,22 @@ Drupal.behaviors.menu_block = {
         .html(Drupal.settings.menu_block.parent_options[$('.menu-block-parent-menu').val()])
         .val(Drupal.settings.menu_block.parent_default);
     } );
+    if ($('.menu-block-parent-menu').size()) {
+      $('.form-item-parent>label').text(Drupal.settings.menu_block.menus_label_text);
+    }
+
+    // Toggle display of "menu parent" based on display options.
+    $('input[name=display_options]', context).change( function() {
+      if ($('input[name=display_options]:checked').val() == 'advanced') {
+        $('.menu-block-parent-wrapper').slideDown('fast');
+      }
+      else {
+        $('.menu-block-parent-wrapper').slideUp('fast');
+      }
+    } );
+    if ($('input[name=display_options]:checked', context).val() == 'basic') {
+      $('.menu-block-parent-wrapper', context).css('display', 'none');
+    }
 
     // Show the "display options" if javascript is on.
     $('.form-item-display-options.form-type-radios>label', context).addClass('element-invisible');
