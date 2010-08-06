@@ -364,7 +364,7 @@ function menu_block_configure_form($form, &$form_state) {
   // Build the standard form.
   $form['#attached']['css'][] = drupal_get_path('module', 'menu_block') . '/menu-block-admin.css';
   $form['menu-block-wrapper-start'] = array(
-    '#markup' => '<div id="menu-block-settings" class="menu-block-configure-form">',
+    '#markup' => '<div id="menu-block-settings">',
     '#weight' => -20,
   );
   $form['title_link'] = array(

@@ -116,9 +116,8 @@ function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
     $form['parent']['#type'] = 'hidden';
     $form['admin_title']['#suffix'] = '<div id="edit-parent-wrapper"><strong>' . t('Parent item:') . '</strong><br />' . t('<em>The menu selected by the page</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/settings/menu_block'))) . '</div>';
   }
-
-  // Add classes for jQuery script.
-  $form['menu-block-wrapper-start']['#value'] = '<div id="menu-block-settings" class="menu-block-menu-tree-configure-form">';
+  // Remove CSS class hooks for jQuery script on parent select.
+  unset($form['parent']['#attributes']);
 }
 
 /**
