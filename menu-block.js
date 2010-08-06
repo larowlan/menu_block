@@ -20,6 +20,14 @@ Drupal.behaviors.menu_block = {
         .html(Drupal.settings.menu_block.parent_options[$('.menu-block-parent-menu').val()])
         .val(Drupal.settings.menu_block.parent_default);
     } );
+
+    // Override the default show/hide animation for Form API states.
+    $('#menu-block-settings', context).bind('state:visible', function(e) {
+      if (e.trigger) {
+        e.stopPropagation() /* Stop the handler further up the tree. Note: test this as there could be problems */
+        $(e.target).closest('.form-item, .form-wrapper')[e.value ? 'slideDown' : 'slideUp']('fast');
+      }
+    });
   }
 };
 
