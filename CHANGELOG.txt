@@ -1,6 +1,6 @@
 // $Id$
 
-Menu Block 7.x-2.x-dev, xxxx-xx-xx
+Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
 - Updated menu_block_get_title() to return a renderable array
 - Add #bid context to menu_link theme hook
