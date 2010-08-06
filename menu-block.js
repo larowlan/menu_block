@@ -14,7 +14,9 @@ Drupal.behaviors.menu_block = {
     $('.menu-block-parent', context)
       .html(Drupal.settings.menu_block.parent_options[Drupal.settings.menu_block.menus_default])
       .val(Drupal.settings.menu_block.parent_default)
-      .before(Drupal.settings.menu_block.menus);
+      .before(Drupal.settings.menu_block.menus)
+      .wrap(Drupal.settings.menu_block.parent_wrapper)
+      .before(Drupal.settings.menu_block.parent_label);
     $('.menu-block-parent-menu', context).change( function() {
       $('.menu-block-parent')
         .html(Drupal.settings.menu_block.parent_options[$('.menu-block-parent-menu').val()])

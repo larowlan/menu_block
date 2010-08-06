@@ -351,7 +351,9 @@ function menu_block_configure_form($form, &$form_state) {
   $form['#attached']['js'][] = array(
     'data' => array(
       'menu_block' => array(
-        'menus' => $menus_select . '<label id="item-label">' . t('Item') . ':</label>',
+        'menus' => $menus_select,
+        'parent_wrapper' => '<div class="menu-block-parent-wrapper"></div>',
+        'parent_label' => '<label id="item-label">' . t('Item') . ':</label>',
         'menus_default' => $config['menu_name'],
         'parent_options' => $parent_options_js,
         'parent_default' => $config['menu_name'] . ':' . $config['parent_mlid'],
