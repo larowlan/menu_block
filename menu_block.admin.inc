@@ -368,13 +368,24 @@ function menu_block_configure_form($form, &$form_state) {
     '#weight' => -20,
   );
   $form['title_link'] = array(
-    '#prefix' => '<div class="menu-block-title-link">',
     '#type' => 'checkbox',
     '#title' => t('Block title as link'),
     '#default_value' => $config['title_link'],
     '#description' => t('Make the default block title a link to that menu item. An overridden block title will not be a link.'),
-    '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name=title]' => array('value' => ''),
+      ),
+    ),
   );
+  // We need a different state if the form is in a Panel overlay.
+  if (isset($form['override_title'])) {
+    $form['title_link']['#states'] = array(
+      'visible' => array(
+        ':input[name=override_title]' => array('checked' => FALSE),
+      ),
+    );
+  }
   $form['admin_title'] = array(
     '#type' => 'textfield',
     '#default_value' => $config['admin_title'],

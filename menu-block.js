@@ -10,36 +10,8 @@ Drupal.behaviors.menu_block = {
     }
     $('#menu-block-settings', context).addClass('menu-block-processed');
 
-    // Process the form if its in a Panel overlay.
-    if ($('.menu-block-menu-tree-configure-form', context).size()) {
-      // Toggle display of "title link" if "override title" is checked.
-      $('.menu-block-override-title', context).change( function() {
-        if ($('.menu-block-override-title:checked').length) {
-          $('.menu-block-title-link').slideUp('fast');
-        }
-        else {
-          $('.menu-block-title-link').slideDown('fast');
-        }
-      } );
-      if ($('.menu-block-override-title:checked').length) {
-        $('.menu-block-title-link').css('display', 'none');
-      }
-    }
-    // Process the form if its on a block config page.
-    else if ($('.menu-block-configure-form', context).size()) {
-      // Toggle display of "title link" if "block title" has a value.
-      $('input[name="title"]', context).change( function() {
-        if ($('input[name="title"]').val()) {
-          $('.menu-block-title-link').slideUp('fast');
-        }
-        else {
-          $('.menu-block-title-link').slideDown('fast');
-        }
-      } );
-      if ($('input[name="title"]', context).val()) {
-        $('.menu-block-title-link').css('display', 'none');
-      }
-
+    // Process the form if its on a block config page (not in a Panel overlay.)
+    if ($('.menu-block-configure-form', context).size()) {
       // Split the un-wieldly "parent item" pull-down into two hierarchal pull-downs.
       $('.menu-block-parent', context)
         .html(Drupal.settings.menu_block.parent_options[Drupal.settings.menu_block.menus_default])

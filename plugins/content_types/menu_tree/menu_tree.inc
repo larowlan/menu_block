@@ -119,12 +119,6 @@ function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
 
   // Add classes for jQuery script.
   $form['menu-block-wrapper-start']['#value'] = '<div id="menu-block-settings" class="menu-block-menu-tree-configure-form">';
-  if (empty($form['override_title']['#attributes']['class'])) {
-    $form['override_title']['#attributes']['class'] = 'menu-block-override-title';
-  }
-  else {
-    $form['override_title']['#attributes']['class'] .= ' menu-block-override-title';
-  }
 }
 
 /**
