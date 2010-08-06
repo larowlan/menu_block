@@ -20,19 +20,6 @@ Drupal.behaviors.menu_block = {
         .html(Drupal.settings.menu_block.parent_options[$('.menu-block-parent-menu').val()])
         .val(Drupal.settings.menu_block.parent_default);
     } );
-
-    // Toggle display of "follow parent" if "follow" has been checked.
-    $('.menu-block-follow', context).change( function() {
-      if ($('.menu-block-follow:checked').length) {
-        $('.menu-block-follow-parent').slideDown('fast');
-      }
-      else {
-        $('.menu-block-follow-parent').slideUp('fast');
-      }
-    } );
-    if (!$('.menu-block-follow:checked', context).length) {
-      $('.menu-block-follow-parent', context).css('display', 'none');
-    }
   }
 };
 

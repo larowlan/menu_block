@@ -433,10 +433,8 @@ function menu_block_configure_form($form, &$form_state) {
     '#default_value' => $follow,
     '#description' => t('If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed.'),
     '#element_validate' => array('menu_block_configure_form_follow_validate'),
-    '#attributes' => array('class' => array('menu-block-follow')),
   );
   $form['follow_parent'] = array(
-    '#prefix' => '<div class="menu-block-follow-parent">',
     '#type' => 'select',
     '#title' => t('Starting level will be'),
     '#default_value' => $follow_parent,
@@ -446,7 +444,11 @@ function menu_block_configure_form($form, &$form_state) {
       'child' => t('Children of active menu item'),
     ),
     '#description' => t('When following the active menu item, specify if the starting level should be the active menu item or its children.'),
-    '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name=follow]' => array('checked' => TRUE),
+      ),
+    ),
   );
   $form['depth'] = array(
     '#type' => 'select',
