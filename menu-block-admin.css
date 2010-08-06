@@ -19,3 +19,7 @@ label#item-label {
 #edit-depth-wrapper {
   margin-top: 2.5em;
 }
+
+.form-item-display-options.form-item .form-item {
+  padding: 0;
+}

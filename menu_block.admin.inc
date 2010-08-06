@@ -367,6 +367,16 @@ function menu_block_configure_form($form, &$form_state) {
     '#markup' => '<div id="menu-block-settings">',
     '#weight' => -20,
   );
+  $form['display_options'] = array(
+    '#type' => 'radios',
+    '#title' => t('Display'),
+    '#default_value' => 'basic',
+    '#options' => array(
+      'basic' => t('Basic options'),
+      'advanced' => t('Advanced options'),
+    ),
+    '#weight' => -19,
+  );
   $form['title_link'] = array(
     '#type' => 'checkbox',
     '#title' => t('Block title as link'),
@@ -480,6 +490,14 @@ function menu_block_configure_form($form, &$form_state) {
     '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
   );
   $form['menu-block-wrapper-close'] = array('#markup' => '</div>');
+
+  // Set visibility of advanced options.
+  foreach (array('title_link', 'follow', 'follow_parent', 'expanded', 'sort') as $key) {
+    $form[$key]['#states']['visible'][':input[name=display_options]'] = array('value' => 'advanced');
+  }
+  if ($config['title_link'] || $follow || $config['expanded'] || $config['sort']) {
+    $form['display_options']['#default_value'] = 'advanced';
+  }
 
   return $form;
 }
