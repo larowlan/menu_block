@@ -454,7 +454,6 @@ function menu_block_configure_form($form, &$form_state) {
     '#title' => t('Starting level will be'),
     '#default_value' => $follow_parent,
     '#options' => array(
-      'parent' => t('Parent of active menu item'),
       'active' => t('Active menu item'),
       'child' => t('Children of active menu item'),
     ),
