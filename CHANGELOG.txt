@@ -1,6 +1,6 @@
-Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
-------------------------------
--
+Menu Block 7.x-2.0-beta4, 2010-09-29
+------------------------------------
+- #891690: Never accept a fix not in patch form. And if you do, test it!
 
 Menu Block 7.x-2.0-beta3, 2010-09-29
 ------------------------------------
