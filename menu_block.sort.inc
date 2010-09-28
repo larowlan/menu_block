@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Provides optional sorting of the active trail in the menu tree.

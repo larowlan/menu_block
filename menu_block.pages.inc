@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Provides infrequently used pages for menu_block.

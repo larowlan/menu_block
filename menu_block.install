@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Provides install, upgrade and un-install functions for menu_block.
