@@ -182,8 +182,10 @@ function menu_block_get_config($delta = NULL) {
  *   - sort: (boolean) Specifies if the tree should be sorted with the active
  *     trail at the top of the tree.
  * @return
- *   array An array containing the rendered tree in the 'content' key and the
- *   rendered title in the 'subject' key.
+ *   array An associative array containing several pieces of data.
+ *   - content: The tree as a renderable array.
+ *   - subject: The title rendered as HTML.
+ *   - subject_array: The title as a renderable array.
  */
 function menu_tree_build($config) {
   // Retrieve the active menu item from the database.
