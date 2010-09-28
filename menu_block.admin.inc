@@ -410,7 +410,7 @@ function menu_block_configure_form($form, &$form_state) {
     '#title' => t('Parent item'),
     '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
     '#options' => $parent_options,
-    '#description' => t('The tree of links will only contain children of the selected menu item. Using <em>&lt;the menu selected by the page&gt;</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/settings/menu_block'))),
+    '#description' => t('The tree of links will only contain children of the selected menu item. Using <em>&lt;the menu selected by the page&gt;</em> can be customized on the <a href="!url">Menu block settings page</a>.', array('!url' => url('admin/config/user-interface/menu-block'))),
     '#attributes' => array('class' => array('menu-block-parent')),
     '#element_validate' => array('menu_block_configure_form_parent_validate'),
   );
