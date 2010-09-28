@@ -1,3 +1,7 @@
+Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
+------------------------------
+-
+
 Menu Block 7.x-2.0-beta3, 2010-09-29
 ------------------------------------
 - #891698 by Chris Gillis: Incorrect link to configuration page
