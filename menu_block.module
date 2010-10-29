@@ -274,7 +274,7 @@ function menu_tree_build($config) {
   $data['content']['#content'] = menu_block_tree_output($tree, $config);
   if (!empty($data['content']['#content'])) {
     $data['content']['#theme'] = array(
-      'menu_block_wrapper__' . $config['delta'],
+      'menu_block_wrapper__' . str_replace('-', '_', $config['delta']),
       'menu_block_wrapper__' . str_replace('-', '_', $config['menu_name']),
       'menu_block_wrapper'
     );
