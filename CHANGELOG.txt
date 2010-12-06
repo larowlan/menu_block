@@ -1,5 +1,6 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #957362 by blixxxa: Add Swedish translation
 - Fix theme hook suggestions for non-numeric block deltas
 
 Menu Block 7.x-2.0-beta4, 2010-09-29
