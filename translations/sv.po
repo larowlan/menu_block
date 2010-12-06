@@ -1,0 +1,411 @@
+# Swedish translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  menu_block.admin.inc,v 1.40.2.4 2010/03/24 19:44:00 johnalbin
+#  menu_block.pages.inc,v 1.21 2010/03/22 19:19:36 johnalbin
+#  menu_block.module,v 1.69.2.1 2010/03/24 12:13:01 johnalbin
+#  menu_block.install,v 1.18 2010/03/22 07:12:51 johnalbin
+#  menu_block.info,v 1.7 2010/03/17 07:27:33 johnalbin
+#  menu_tree.inc,v 1.1.2.3 2010/03/24 12:13:01 johnalbin
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2010-10-22 09:47+0200\n"
+"PO-Revision-Date: 2010-10-30 00:53+0100\n"
+"Last-Translator: Peter Törnstrand <peter@happiness.se>\n"
+"Language-Team: Swedish <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Poedit-Bookmarks: -1,-1,48,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: menu_block.admin.inc:43
+msgid "The block has been created."
+msgstr "Ett nytt block har lagts till."
+
+#: menu_block.admin.inc:55
+msgid "delete"
+msgstr "radera"
+
+#: menu_block.admin.inc:67
+msgid "Are you sure you want to delete the \"%name\" block?"
+msgstr "Är du säker på att du vill radera blocket \"%name\"?"
+
+#: menu_block.admin.inc:67
+msgid "Delete"
+msgstr "Radera"
+
+#: menu_block.admin.inc:67
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: menu_block.admin.inc:91
+msgid "The \"%name\" block has been removed."
+msgstr "Blocket \"%name\" raderades."
+
+#: menu_block.admin.inc:125
+msgid "Current menu"
+msgstr "Aktuell meny"
+
+#: menu_block.admin.inc:127
+msgid "Unconfigured menu block"
+msgstr "Okonfigurerat menyblock"
+
+#: menu_block.admin.inc:141
+msgid "@menu_name (active menu item)"
+msgstr "@menu_name (aktivt menyval)"
+
+#: menu_block.admin.inc:144
+msgid "@menu_name (level @level1)"
+msgstr "@menu_name (nivå @level1)"
+
+#: menu_block.admin.inc:148
+msgid "@menu_name (expanded levels @level1-@level2)"
+msgstr "@menu_name (expanderad nivå @level1-@level2)"
+
+#: menu_block.admin.inc:151
+msgid "@menu_name (levels @level1-@level2)"
+msgstr "@menu_name (nivå @level1-@level2)"
+
+#: menu_block.admin.inc:156
+msgid "@menu_name (expanded levels @level1+)"
+msgstr "@menu_name (expanderad nivå @level1+)"
+
+#: menu_block.admin.inc:159
+msgid "@menu_name (levels @level1+)"
+msgstr "@menu_name (nivå @level1+)"
+
+#: menu_block.admin.inc:206
+msgid "root of menu"
+msgstr "menyrot"
+
+#: menu_block.admin.inc:212
+msgid "root of @menu_name"
+msgstr "menyrot för @menu_name"
+
+#: menu_block.admin.inc:219;470
+msgid "Menu"
+msgstr "Meny"
+
+#: menu_block.admin.inc:233
+msgid "Item"
+msgstr "Objekt"
+
+#: menu_block.admin.inc:248
+#: menu_block.pages.inc:39
+msgid "Block title as link"
+msgstr "Blocktitel som länk"
+
+#: menu_block.admin.inc:250
+msgid "Make the default block title a link to that menu item. An overridden block title will not be a link."
+msgstr "Gör standardblocktiteln en länk till det menyvalet. En åsidosatt blocktitel kommer inte att länkas."
+
+#: menu_block.admin.inc:256
+#: menu_block.pages.inc:41
+msgid "Administrative title"
+msgstr "Administrativ titel"
+
+#: menu_block.admin.inc:257
+msgid "This title will be used administratively to identify this block. If blank, the regular title will be used."
+msgstr "Denna titel kommer att användas administrativt för att identifiera detta block. Om tom kommer den reguljära titeln användas."
+
+#: menu_block.admin.inc:261
+#: menu_block.pages.inc:43
+msgid "Parent item"
+msgstr "Ovanliggande menyval"
+
+#: menu_block.admin.inc:264
+msgid "The tree of links will only contain children of the selected parent item. Using <em>&lt;the menu selected by the page&gt;</em> can be customized on the <a href=\"!url\">Menu block settings page</a>."
+msgstr "Trädet med länkar kommer endast att innehålla undernivåer av det valda överordnade objektet. Alternativet <em>den meny som väljs av sidan</ em> kan anpassas på <a href=\"!url\">Menyblock inställningar</a>."
+
+#: menu_block.admin.inc:270
+#: menu_block.pages.inc:45
+msgid "Starting level"
+msgstr "Startnivå"
+
+#: menu_block.admin.inc:273
+msgid "1st level (primary)"
+msgstr "1:a nivån (primär)"
+
+#: menu_block.admin.inc:274
+msgid "2nd level (secondary)"
+msgstr "2:a nivån (sekundär)"
+
+#: menu_block.admin.inc:275
+msgid "3rd level (tertiary)"
+msgstr "3:e nivån (tertiär)"
+
+#: menu_block.admin.inc:276
+msgid "4th level"
+msgstr "4:e nivån"
+
+#: menu_block.admin.inc:277
+msgid "5th level"
+msgstr "5:e nivån"
+
+#: menu_block.admin.inc:278
+msgid "6th level"
+msgstr "6:e nivån"
+
+#: menu_block.admin.inc:279
+msgid "7th level"
+msgstr "7:e nivån"
+
+#: menu_block.admin.inc:280
+msgid "8th level"
+msgstr "8:e nivån"
+
+#: menu_block.admin.inc:281
+msgid "9th level"
+msgstr "9:e nivån"
+
+#: menu_block.admin.inc:283
+#: menu_block.pages.inc:46
+msgid "Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree."
+msgstr "Block som börjar med 1:a nivån kommer alltid att vara synlig. Block som börjar med nivå 2 eller djupare kommer endast att vara synlig när stigen till den aktiva menyalternativet finns i blockets trädet."
+
+#: menu_block.admin.inc:296
+msgid "Make the starting level follow the active menu item."
+msgstr "Gör att utgångsnivån följer den aktiva menyn."
+
+#: menu_block.admin.inc:298
+#: menu_block.pages.inc:48
+msgid "If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed."
+msgstr "Om det aktiva menyalternativet är djupare än den nivå som anges ovan kommer utgångsnivån följa den aktiva menyn. Annars kommer startnivån i trädet förbli fast."
+
+#: menu_block.admin.inc:305
+msgid "Starting level will be"
+msgstr "Startnivån blir"
+
+#: menu_block.admin.inc:308
+msgid "Active menu item"
+msgstr "Aktivt menyalternativ"
+
+#: menu_block.admin.inc:309
+msgid "Children of active menu item"
+msgstr "Underliggande alternativ till det aktiva menyalternativet"
+
+#: menu_block.admin.inc:311
+msgid "When following the active menu item, specify if the starting level should be the active menu item or its children."
+msgstr "När den aktiva menyn följs, ange om den inledande nivån bör vara det aktiva menyalternativet eller dess underliggande menyalternativ."
+
+#: menu_block.admin.inc:316
+#: menu_block.pages.inc:49
+msgid "Maximum depth"
+msgstr "Maximalt djup"
+
+#: menu_block.admin.inc:328
+msgid "Unlimited"
+msgstr "Obegränsad"
+
+#: menu_block.admin.inc:330
+msgid "From the starting level, specify the maximum depth of the menu tree."
+msgstr "Från utgångsnivån, ange det maximala djupet i menyträdet."
+
+#: menu_block.admin.inc:334
+msgid "<strong>Expand all children</strong> of this tree."
+msgstr "<strong>Expandera alla underliggande menyalternativ</strong> i detta träd."
+
+#: menu_block.admin.inc:339
+msgid "<strong>Sort</strong> menu tree by the active menu item’s trail."
+msgstr "<strong>Sortera</strong> menyträdet efter det aktiva menyalternativets spår."
+
+#: menu_block.admin.inc:341
+#: menu_block.pages.inc:54
+msgid "Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded."
+msgstr "Sortera varje objekt i aktiva spår till toppen av sin nivå. När detta används på en djup eller bred meny, kommer det aktiva menyalternativet vara lättare att se när sidan laddas om."
+
+#: menu_block.admin.inc:401
+msgid "If a block is configured to use <em>\"the menu selected by the page\"</em>, the block will be generated from the first \"available\" menu that contains a link to the page."
+msgstr "Om ett block är konfigurerad att använda <em>\"menyn vald av sidan\"</em>, kommer blocket att genereras från den första \"tillgängliga\" menyn som innehåller en länk till sidan."
+
+#: menu_block.admin.inc:418
+msgid "Select from the @menu_name menu"
+msgstr "Välj från menyn @menu_name"
+
+#: menu_block.admin.inc:432
+msgid "The above list will <em>not</em> affect menu blocks that are configured to use a specific menu."
+msgstr "Listan ovan kommer <em>inte</ em> att påverka menyblock som är konfigurerade för att använda en särskild meny."
+
+#: menu_block.admin.inc:437
+msgid "Save configuration"
+msgstr "Spara inställningar"
+
+#: menu_block.admin.inc:471
+msgid "Available"
+msgstr "Tillgängliga"
+
+#: menu_block.admin.inc:472
+msgid "Weight"
+msgstr "Vikt"
+
+#: menu_block.pages.inc:16
+msgid "Use the <a href=\"!url\">add menu block page</a> to create a customizable menu block. You will then be able to configure your menu block before adding it."
+msgstr "Använd <a href=\"!url\">lägg till menyblock</a> för att skapa ett anpassningsbart menyblock. Du kommer då att kunna konfigurera ditt menyblock innan det skapas."
+
+#: menu_block.pages.inc:25
+msgid "To learn more about configuring menu blocks, see <a href=\"!url\">menu block’s detailed help</a>."
+msgstr "Om du vill veta mer om hur du konfigurerar ett menyblock, se <a href=\"!url\">detaljerad hjälp för menyblock</a>."
+
+#: menu_block.pages.inc:31
+msgid "Adding menu blocks"
+msgstr "Lägg till menyblock"
+
+#: menu_block.pages.inc:32
+msgid "To add new menu blocks, use the \"<a href=\"!add-url\">Add menu block</a>\" tab (or button) on the <a href=\"!block-url\">administer blocks page</a>. You will then be able to configure your menu block before adding it."
+msgstr "För att lägga till nya menyblock, använd \"<a href=\"!add-url\">Lägg till menyblock</a> \"-fliken (eller knappen) på <a href=\"!block-url\">administrera block</ a>-sidan. Du kommer då att kunna konfigurera ditt menyblock innan det skapas."
+
+#: menu_block.pages.inc:33
+msgid "Configuring menu blocks"
+msgstr "Konfigurera menyblock"
+
+#: menu_block.pages.inc:34
+msgid "When adding or configuring a menu block, several configuration options are available:"
+msgstr "När du lägger till eller konfigurerar ett menyblock finns flera konfigurationsalternativ:"
+
+#: menu_block.pages.inc:36
+msgid "Block title"
+msgstr "Blocktitel"
+
+#: menu_block.pages.inc:37
+msgid "For menu trees that start with the 1st level, the default block title will be the menu name. For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level."
+msgstr "För meny träd som börjar med 1: a nivån kommer blocktiteln vara menynamnet. För menyträd som börjar med nivå 2 eller djupare kommer blocktiteln vara titeln för det överordnade menyalternativet för den angivna nivån."
+
+#: menu_block.pages.inc:38
+msgid "For example, if the active menu trail for the Navigation menu is: Administer › Site building › Menus › Primary links, then a menu block configured to start with the 1st level of the Navigation will display a block title of “Navigation”. And a menu block configured to start with the 3rd level of the Navigation menu will display a block title of “Site building”."
+msgstr "Till exempel, om den aktiva menynstigen för menyn Navigation är: Administrera > Uppbyggnad > Menyer > Primär länkar, kommer ett menyblock konfigurerad för start med 1: a nivån i Navigation visa blocktiteln \"Navigation\". Ett menyblock konfigurerad att starta med den 3: e nivån på navigationsmenyn kommer att visa blocktiteln \"Uppbyggnad\"."
+
+#: menu_block.pages.inc:40
+msgid "For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level. If this option is checked, the block title will be a link to that menu item."
+msgstr "För menyträd som börjar med nivå 2 eller djupare kommer blocktiteln vara titeln för den överordnade menyalternativet i den angivna nivån. Om det här alternativet är markerat, kommer blocktiteln vara en länk till den menyn."
+
+#: menu_block.pages.inc:42
+msgid "To help identify the block on the administer blocks page, you can specify a unique title to be used on that page. If blank, the regular title will be used."
+msgstr "För att identifiera block på administrera block-sidan kan du ange en unik titel som ska användas på den sidan. Om fältet lämnas tomt kommer den reguljära titeln användas."
+
+#: menu_block.pages.inc:44
+msgid "First select the menu. Then select the parent item from that menu. The tree of links will only contain children of the selected parent item."
+msgstr "Välj först meny. Välj sedan den överordnade objekt från menyn. Trädet med länkar kommer endast att innehålla underliggande menyalternativ av det valda överordnade objektet."
+
+#: menu_block.pages.inc:47
+msgid "Make the starting level follow the active menu item"
+msgstr "Gör så att utgångsnivån följer det aktiva menyalternativet"
+
+#: menu_block.pages.inc:50
+msgid "From the starting level, specify the maximum depth of the tree. Blocks with a maximum depth of 1 will just be a single un-nested list of links with none of those links’ children displayed."
+msgstr "Från utgångsnivån, ange det maximala djupet på trädet. Block med ett maximalt djup av 1 kommer att bli en enda lista med länkar och ingen av dessa länkars underliggande menyalternativ visas."
+
+#: menu_block.pages.inc:51
+msgid "Expand all children"
+msgstr "Expandera alla underliggande menyalternativ"
+
+#: menu_block.pages.inc:52
+msgid "All children of this menu will be expanded."
+msgstr "Alla underliggande menyalternativ kommer att expanderas."
+
+#: menu_block.pages.inc:53
+msgid "Sort"
+msgstr "Sortera"
+
+#: menu_block.pages.inc:56
+msgid "Styling menu blocks"
+msgstr "Stilsättning av menyblock"
+
+#: menu_block.pages.inc:57
+msgid "Themers should be aware of the myriad of classes, templates and theme functions available to them. See the <a href=\"!url\">online documentation</a> or the README.txt file for detailed information about each of them."
+msgstr "Themers bör vara medvetna om den myriad av klasser, mallar och tema funktioner tillgängliga för dem. Se <a href=\"!url\">online-dokumentationen</ a> eller README.txt för mer information om var och en."
+
+#: menu_block.pages.inc:58
+msgid "Menu block API"
+msgstr "Menyblock API"
+
+#: menu_block.pages.inc:59
+msgid "Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file."
+msgstr "Utvecklare kan använda denna moduls API för att skapa sina egna menyträd utanför gränserna för block. Alla av de allmänt tillgängliga API-funktionerna är dokumenterade i filen menu_block.module."
+
+#: menu_block.pages.inc:60
+msgid "In addition, Menu block implements HOOK_get_menus() and HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation."
+msgstr "Dessutom implementerar Menyblock HOOK_get_menus() och HOOK_menu_block_tree_alter(). Se menu_block.api.php för dokumentation."
+
+#: menu_block.module:139
+msgid "the menu selected by the page"
+msgstr "menyn vald av sidan"
+
+#: menu_block.module:19
+msgid "Add menu block"
+msgstr "Lägg till menyblock"
+
+#: menu_block.module:20
+msgid "Add a new menu block."
+msgstr "Lägg till nytt menyblock."
+
+#: menu_block.module:28
+msgid "Delete menu block"
+msgstr "Radera menyblock"
+
+#: menu_block.module:36
+msgid "Menu block"
+msgstr "Menyblock"
+
+#: menu_block.module:37
+msgid "Configure menu block."
+msgstr "Konfigurera menyblock."
+
+#: menu_block.install:36
+msgid "To use menu blocks, find the \"Add menu block\" tab (or button) on the <a href=\"@url\">administer blocks page</a>."
+msgstr "För att använda menyblock, hitta \"Lägg till menyblock\"-fliken (eller knappen) på <a href=\"@url\">administrera block </a>-sidan."
+
+#: menu_block.install:73
+msgid "A pre-release version of Menu block has been detected. All menu blocks from the pre-release version have been given a new delta and are no longer placed in any block regions; their block placement should be re-configured immediately."
+msgstr "En pre-release version av Menyblock har upptäckts. Alla menyblock från betaversionen har fått ett nytt delta och är inte längre placerade i någon region, dessa block bör konfigureras om omedelbart."
+
+#: menu_block.install:111
+msgid "A 5.x-1.x version of Menu block has been detected and an attempt was made to upgrade it. Unfortunately, you should have upgraded to Menu block 5.x-2.x before your upgrade to Drupal 6. You may need to re-configure all your menu blocks. To use menu blocks in Drupal 6, find the \"Add menu block\" tab (or button) on the <a href=\"@url\">administer blocks page</a>."
+msgstr "En 5.x-1.x version av Menyblock har upptäckts och ett försök gjordes att uppgradera den. Tyvärr bör du ha uppgraderat till Menyblock 5.x-2.x innan uppgraderingen till Drupal 6. Du kan behöva konfigurera om alla din menyblock. För att kunna använda menyblock i Drupal 6, hitta \ \"Lägg till menyblock \"-fliken (eller knappen) på <a href=\"@url\">administrera block</a>-sidan."
+
+#: menu_block.install:131
+msgid "The 5.x-2.x version of Menu block has been upgraded. To use menu blocks in Drupal 6, find the \"Add menu block\" tab (or button) on the <a href=\"@url\">administer blocks page</a>."
+msgstr "5.x-2.x versionen av Menyblock har uppgraderats. För att kunna använda menyblock i Drupal 6, hitta \ \"Lägg till menyblock\"-fliken (eller knappen) på <a href=\"@url\">administrera block</a>-sidan."
+
+#: menu_block.install:145
+msgid "The 6.x-2.0 version of Menu block has been upgraded. To use menu blocks in Drupal 6, find the \"Add menu block\" tab (or button) on the <a href=\"@url\">administer blocks page</a>."
+msgstr "6.x-2.0 versionen av Menyblock har uppgraderats. För att kunna använda menyblock i Drupal 6, hitta \ \"Lägg till menyblock\"-fliken (eller knappen) på <a href=\"@url\">administrera block</a>-sidan."
+
+#: menu_block.info:0
+msgid "Menu Block"
+msgstr "Menyblock"
+
+#: menu_block.info:0
+msgid "Provides configurable blocks of menu items."
+msgstr "Tillhandahåller konfigurerbara block av menyalternativ."
+
+#: plugins/content_types/menu_tree/menu_tree.inc:19
+msgid "Menu tree"
+msgstr "Menyträd"
+
+#: plugins/content_types/menu_tree/menu_tree.inc:27
+msgid "A configurable tree provided by Menu block."
+msgstr "Ett konfigurerbar träd tillhandahållet av Menyblock."
+
+#: plugins/content_types/menu_tree/menu_tree.inc:29
+msgid "Menus"
+msgstr "Menyer"
+
+#: plugins/content_types/menu_tree/menu_tree.inc:44
+msgid "%menu menu tree"
+msgstr "%menu menyträd"
+
+#: plugins/content_types/menu_tree/menu_tree.inc:50
+msgid "menu tree of %menu"
+msgstr "menyträd av %menu"
+
+#: plugins/content_types/menu_tree/menu_tree.inc:116
+msgid "Parent item:"
+msgstr "Överliggande alternativ:"
+
+#: plugins/content_types/menu_tree/menu_tree.inc:116
+msgid "<em>The menu selected by the page</em> can be customized on the <a href=\"!url\">Menu block settings page</a>."
+msgstr "<em>Menyn som väljs av sidan</em> kan anpassas på <a href=\"!url\">Menyblock-inställningar</a>."
+
