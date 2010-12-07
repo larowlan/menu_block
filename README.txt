@@ -114,7 +114,7 @@ called by it.
   - [theme]_menu_link__menu_block__[block id number]()
 
 For example, if you created a bartik_menu_tree__menu_block() function, it would
-override theme_menu_block() any time it was used by this module, but not when
+override theme_menu_tree() any time it was used by this module, but not when
 used by any other module. Similarly, a bartik_menu_link__menu_block__1()
 function would override theme_menu_link(), but only for the first menu block in
 your system (the menu block with an ID of 1).
