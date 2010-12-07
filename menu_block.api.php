@@ -63,7 +63,7 @@ function hook_menu_block_blocks() {
  *   An array containing the menus' machine names as keys with their menu titles
  *   as values.
  */
-function hook_get_menus() {
+function hook_menu_block_get_menus() {
   $menus = array();
   // For each menu, add the following information:
   $menus['menu_name'] = 'menu title';
