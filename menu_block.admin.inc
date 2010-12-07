@@ -559,13 +559,24 @@ function menu_block_admin_settings_form($form, &$form_state) {
     '#description' => t('On the blocks admin page, hide Drupal’s standard blocks of menus.'),
   );
 
-  // Grab all the menus.
-  $menus = menu_block_get_all_menus();
-  unset($menus[MENU_TREE__CURRENT_PAGE_MENU]);
-  $total_menus = count($menus);
+  // Retrieve core's menus.
+  $menus = menu_get_menus();
+  // Include book support.
+  if (module_exists('book')) {
+    module_load_include('inc', 'menu_block', 'menu_block.book');
+  }
+  // Retrieve all the menu names provided by hook_menu_block_get_sort_menus().
+  $menus = array_merge($menus, module_invoke_all('menu_block_get_sort_menus'));
+  asort($menus);
 
   // Load stored configuration.
   $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'secondary-menu' => ''));
+  // Remove any menus no longer in the list of all menus.
+  foreach (array_keys($menu_order) as $menu) {
+    if (!isset($menus[$menu])) {
+      unset($menu_order[$menu]);
+    }
+  }
 
   // Merge the saved configuration with any un-configured menus.
   $all_menus = $menu_order + $menus;
@@ -581,6 +592,7 @@ function menu_block_admin_settings_form($form, &$form_state) {
   );
 
   $order = 0;
+  $total_menus = count($all_menus);
   foreach (array_keys($all_menus) as $menu_name) {
     $form['menu_order'][$menu_name] = array(
       'title' => array(

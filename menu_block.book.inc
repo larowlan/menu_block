@@ -14,3 +14,13 @@ function book_get_menus() {
   }
   return $menus;
 }
+
+
+/**
+ * Implements hook_menu_block_get_sort_menus().
+ */
+function book_menu_block_get_sort_menus() {
+  return array(
+    '/^book\-toc\-.+/' => t('Book navigation'),
+  );
+}
