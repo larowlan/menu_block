@@ -198,7 +198,7 @@ function menu_tree_build($config) {
   // Retrieve the active menu item from the database.
   if ($config['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
     // Retrieve the list of available menus.
-    $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'secondary-menu' => ''));
+    $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'user-menu' => ''));
 
     // Check for regular expressions as menu keys.
     $patterns = array();

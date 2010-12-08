@@ -570,7 +570,7 @@ function menu_block_admin_settings_form($form, &$form_state) {
   asort($menus);
 
   // Load stored configuration.
-  $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'secondary-menu' => ''));
+  $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'user-menu' => ''));
   // Remove any menus no longer in the list of all menus.
   foreach (array_keys($menu_order) as $menu) {
     if (!isset($menus[$menu])) {

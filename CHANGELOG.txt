@@ -1,5 +1,6 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ------------------------------
+- #958166 by Simon Georges and JohnAlbin: secondary-menu removed from core; replace with user-menu
 - #825132: Performance problem on sites with many books
 - #945714 by pedrochristopher: theme override misidentified in README
 - #593126: hook_get_menus() causes conflicts with Menu Access, og_menu, etc
