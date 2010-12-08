@@ -127,5 +127,6 @@ Developers can use the API of this module to create their own menu trees outside
 the confines of blocks. All of the publicly available API functions are
 documented in the menu_block.module file.
 
-In addition, Menu block implements HOOK_get_menus() and
-HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation.
+In addition, Menu block implements HOOK_menu_block_get_menus(),
+HOOK_menu_block_get_sort_menus() and HOOK_menu_block_tree_alter(). See
+menu_block.api.php for documentation.
