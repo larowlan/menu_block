@@ -146,10 +146,14 @@ function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   }
   if (variable_get('menu_block_suppress_core')) {
     foreach (array_keys(menu_get_menus(FALSE)) AS $delta) {
-      unset($form['blocks']['menu_' . $delta]);
+      if (empty($form['blocks']['menu_' . $delta]['region']['#default_value'])) {
+        unset($form['blocks']['menu_' . $delta]);
+      }
     }
     foreach (array_keys(menu_list_system_menus()) AS $delta) {
-      unset($form['blocks']['system_' . $delta]);
+      if (empty($form['blocks']['system_' . $delta]['region']['#default_value'])) {
+        unset($form['blocks']['system_' . $delta]);
+      }
     }
   }
 }
