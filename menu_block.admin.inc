@@ -146,10 +146,10 @@ function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   }
   if (variable_get('menu_block_suppress_core')) {
     foreach (array_keys(menu_get_menus(FALSE)) AS $delta) {
-      unset($form['menu_' . $delta]);
+      unset($form['blocks']['menu_' . $delta]);
     }
     foreach (array_keys(menu_list_system_menus()) AS $delta) {
-      unset($form['system_' . $delta]);
+      unset($form['blocks']['system_' . $delta]);
     }
   }
 }
