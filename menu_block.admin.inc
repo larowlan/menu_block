@@ -141,7 +141,7 @@ function _menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   $blocks = module_invoke_all('menu_block_blocks');
   foreach (variable_get('menu_block_ids', array()) AS $delta) {
     if (empty($blocks[$delta])) {
-      $form['menu_block_' . $delta]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/block/delete-menu-block/' . $delta);
+      $form['blocks']['menu_block_' . $delta]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => 'admin/structure/block/delete-menu-block/' . $delta);
     }
   }
   if (variable_get('menu_block_suppress_core')) {
