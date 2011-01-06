@@ -167,3 +167,23 @@ function menu_block_update_7200() {
   }
   return t('The 6.x-2.x version of Menu block has been upgraded to use the new menu names in Drupal 7. To use menu blocks in Drupal 7, find the "Add menu block" link on the <a href="@url">administer blocks page</a>.', array('@url' => url('admin/structure/block')));
 }
+
+/**
+ * Add missing custom menus to active menus list.
+ */
+function menu_block_update_7201() {
+  // Make sure all custom menus are present in the active menus variable so that
+  // their items may appear in the active trail.
+  // @see menu_set_active_menu_names()
+  $active_menus = variable_get('menu_default_active_menus', array_keys(menu_list_system_menus()));
+  $update_variable = FALSE;
+  foreach (menu_get_names() as $menu_name) {
+    if (!in_array($menu_name, $active_menus) && (strpos($menu_name, 'menu-') === 0)) {
+      $active_menus[] = $menu_name;
+      $update_variable = TRUE;
+    }
+  }
+  if ($update_variable) {
+    variable_set('menu_default_active_menus', $active_menus);
+  }
+}

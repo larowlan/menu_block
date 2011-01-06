@@ -4,6 +4,9 @@
  * Provides configurable blocks of menu items.
  */
 
+// A core bug in Drupal 7.0 requires this fix.
+module_load_include('inc', 'menu_block', 'custom_menu_active_trail');
+
 /**
  * Denotes that the tree should use the menu picked by the curent page.
  */
