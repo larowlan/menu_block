@@ -72,6 +72,10 @@ function menu_block_block_view($delta = '') {
     if (in_array($config['menu_name'], array_keys(menu_get_menus()))) {
       $data['content']['#contextual_links']['menu_block'] = array('admin/structure/menu/manage', array($config['menu_name']));
     }
+    elseif (strpos($config['menu_name'], 'book-toc-') === 0) {
+      $node = str_replace('book-toc-', '', $config['menu_name']);
+      $data['content']['#contextual_links']['menu_block'] = array('admin/content/book', array($node));
+    }
   }
   return $data;
 }

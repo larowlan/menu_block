@@ -38,6 +38,17 @@ function _menu_block_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function menu_block_menu_alter(&$items) {
+  // Fake the necessary menu attributes necessary for a contextual link.
+  $items['admin/content/book/%node']['title'] = 'Edit book outline';
+  $items['admin/content/book/%node']['type'] = MENU_LOCAL_TASK;
+  $items['admin/content/book/%node']['context'] = (MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE);
+  $items['admin/content/book/%node']['tab_root'] = 'admin/content/book';
+}
+
+/**
  * Implements hook_theme().
  */
 function _menu_block_theme(&$existing, $type, $theme, $path) {
