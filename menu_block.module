@@ -69,7 +69,9 @@ function menu_block_block_view($delta = '') {
   $data = menu_tree_build($config);
   // Add contextual links for this block.
   if (!empty($data['content'])) {
-    $data['content']['#contextual_links']['menu_block'] = array('admin/structure/menu/manage', array($config['menu_name']));
+    if (in_array($config['menu_name'], array_keys(menu_get_menus()))) {
+      $data['content']['#contextual_links']['menu_block'] = array('admin/structure/menu/manage', array($config['menu_name']));
+    }
   }
   return $data;
 }
