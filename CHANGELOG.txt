@@ -1,3 +1,7 @@
+Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
+----------------------------------
+-
+
 Menu Block 7.x-2.0, 2010-01-11
 ------------------------------
 - #1022478: Add "Edit book outline" contextual link for book menu blocks
