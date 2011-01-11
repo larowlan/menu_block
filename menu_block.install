@@ -186,4 +186,6 @@ function menu_block_update_7201() {
   if ($update_variable) {
     variable_set('menu_default_active_menus', $active_menus);
   }
+  // Clear the menu cache.
+  cache_clear_all(NULL, 'cache_menu');
 }
