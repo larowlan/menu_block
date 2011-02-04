@@ -1,6 +1,6 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ----------------------------------
--
+- #1050040 by AgentRickard: Remove performance-killing variable_set() calls on non-admin pages
 
 Menu Block 7.x-2.0, 2010-01-11
 ------------------------------
