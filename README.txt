@@ -12,6 +12,8 @@ CONFIGURING MENU BLOCKS
 When adding or configuring a menu block, several configuration options are
 available:
 
+Basic Options:
+
 Block title
   For menu trees that start with the 1st level, the default block title will be
   the menu name. For menu trees that start with the 2nd level or deeper, the
@@ -42,15 +44,17 @@ Starting level
   with the 2nd level or deeper will only be visible when the trail to the active
   menu item is in the block's tree.
 
-Make the starting level follow the active menu item
-  If the active menu item is deeper than the level specified above, the starting
-  level will follow the active menu item. Otherwise, the starting level of the
-  tree will remain fixed.
-
 Maximum depth
   From the starting level, specify the maximum depth of the tree. Blocks with a
   maximum depth of 1 will just be a single un-nested list of links with none of
   those links' children displayed.
+
+Advanced options:
+
+Make the starting level follow the active menu item
+  If the active menu item is deeper than the level specified above, the starting
+  level will follow the active menu item. Otherwise, the starting level of the
+  tree will remain fixed.
 
 Expand
   All children of this menu will be expanded.
