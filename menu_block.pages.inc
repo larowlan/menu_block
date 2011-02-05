@@ -10,7 +10,7 @@
 function _menu_block_help($path, $arg) {
   $output = '';
   switch ($path) {
-    case 'admin/structure/block/configure':
+    case 'admin/structure/block/manage/%/%':
     case 'admin/structure/block/add-menu-block':
       if (module_exists('help')) {
         $output = '<p>' . t('To learn more about configuring menu blocks, see <a href="!url">menu block’s detailed help</a>.', array('!url' => url('admin/help/menu_block'))) . '</p>';
