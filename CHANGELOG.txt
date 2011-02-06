@@ -1,5 +1,5 @@
-Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
-----------------------------------
+Menu Block 7.x-2.1, 2011-02-06
+------------------------------
 - #1051988: Fix wrong path in menu_block_help()
 - #1050766: Improve usability of "Parent item" UI
 - #1050040 by AgentRickard: Remove performance-killing variable_set() calls on non-admin pages
