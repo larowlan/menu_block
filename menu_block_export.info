@@ -1,4 +1,3 @@
-; $Id$
 
 name = "Menu Block Export"
 description = "Provides export interface for Menu block module."
