@@ -228,11 +228,11 @@ function menu_tree_build($config) {
       else {
         // Check if the menu matches one of the available patterns.
         foreach (array_keys($patterns) as $pattern) {
-          if (preg_match($pattern, $item['menu_name'])) {
+          if (preg_match($pattern, $item->menu_name)) {
             // Mark the menu.
             $menu_order[$pattern] = MENU_TREE__CURRENT_PAGE_MENU;
             // Store the actual menu name.
-            $patterns[$pattern] = $item['menu_name'];
+            $patterns[$pattern] = $item->menu_name;
           }
         }
       }
