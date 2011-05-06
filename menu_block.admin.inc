@@ -89,7 +89,18 @@ function _menu_block_ctools_plugin_directory($module, $plugin) {
  */
 function menu_block_add_block_form($form, &$form_state) {
   module_load_include('inc', 'block', 'block.admin');
-  return block_admin_configure($form, $form_state, 'menu_block', NULL);
+  $form = block_admin_configure($form, $form_state, 'menu_block', NULL);
+
+  // Other modules should be able to use hook_form_block_add_block_form_alter()
+  // to modify this form, so add a base form ID.
+  $form_state['build_info']['base_form_id'] = 'block_add_block_form';
+
+  // Prevent block_add_block_form_validate/submit() from being automatically
+  // added because of the base form ID by providing these handlers manually.
+  $form['#validate'] = array();
+  $form['#submit'] = array('menu_block_add_block_form_submit');
+
+  return $form;
 }
 
 /**
@@ -99,6 +110,7 @@ function menu_block_add_block_form_submit($form, &$form_state) {
   // Determine the delta of the new block.
   $block_ids = variable_get('menu_block_ids', array());
   $delta = empty($block_ids) ? 1 : max($block_ids) + 1;
+  $form_state['values']['delta'] = $delta;
 
   // Save the new array of blocks IDs.
   $block_ids[] = $delta;
