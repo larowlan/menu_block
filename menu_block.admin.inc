@@ -645,7 +645,7 @@ function menu_block_admin_settings_form_submit($form, &$form_state) {
   else {
     variable_del('menu_block_suppress_core');
   }
-  drupal_set_message('The configuration options have been saved.');
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
