@@ -557,10 +557,6 @@ function menu_block_admin_settings_form($form, &$form_state) {
 
   // Retrieve core's menus.
   $menus = menu_get_menus();
-  // Include book support.
-  if (module_exists('book')) {
-    module_load_include('inc', 'menu_block', 'menu_block.book');
-  }
   // Retrieve all the menu names provided by hook_menu_block_get_sort_menus().
   $menus = array_merge($menus, module_invoke_all('menu_block_get_sort_menus'));
   asort($menus);
