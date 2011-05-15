@@ -272,8 +272,8 @@ function menu_tree_build($config) {
   drupal_alter('menu_block_tree', $tree, $config);
 
   // Localize the tree.
-  if (module_exists('i18nmenu')) {
-    i18nmenu_localize_tree($tree);
+  if (module_exists('i18n_menu')) {
+    $tree = i18n_menu_localize_tree($tree);
   }
 
   // Prune the tree along the active trail to the specified level.
