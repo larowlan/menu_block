@@ -5,57 +5,6 @@
  */
 
 /**
- * Implements hook_menu().
- */
-function _menu_block_menu() {
-  // @todo Remove this check if block module is re-added as a dependency.
-  if (module_exists('block')) {
-    $items['admin/structure/block/add-menu-block'] = array(
-      'title' => 'Add menu block',
-      'description' => 'Add a new menu block.',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('menu_block_add_block_form'),
-      'access arguments' => array('administer blocks'),
-      'type' => MENU_LOCAL_ACTION,
-      'file' => 'menu_block.admin.inc',
-    );
-    $default_theme = variable_get('theme_default', 'bartik');
-    foreach (list_themes() as $key => $theme) {
-      if ($key != $default_theme) {
-        $items['admin/structure/block/list/' . $key . '/add-menu-block'] = array(
-          'title' => 'Add menu block',
-          'description' => 'Add a new menu block.',
-          'page callback' => 'drupal_get_form',
-          'page arguments' => array('menu_block_add_block_form'),
-          'access arguments' => array('administer blocks'),
-          'type' => MENU_LOCAL_ACTION,
-          'file' => 'menu_block.admin.inc',
-        );
-      }
-    }
-    $items['admin/structure/block/delete-menu-block'] = array(
-      'title' => 'Delete menu block',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('menu_block_delete'),
-      'access arguments' => array('administer blocks'),
-      'type' => MENU_CALLBACK,
-      'file' => 'menu_block.admin.inc',
-    );
-  }
-
-  $items['admin/config/user-interface/menu-block'] = array(
-    'title' => 'Menu block',
-    'description' => 'Configure menu block.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_block_admin_settings_form'),
-    'access arguments' => array('administer blocks'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'menu_block.admin.inc',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_theme().
  */
 function _menu_block_theme(&$existing, $type, $theme, $path) {
