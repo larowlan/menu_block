@@ -30,12 +30,14 @@ function menu_block_form_block_admin_display_form_alter(&$form, $form_state) {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
   return _menu_block_form_block_admin_display_form_alter($form, $form_state);
 }
-/* -- temporarily remove until ctools is ported to D7.
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
 function menu_block_ctools_plugin_directory($module, $plugin) {
   module_load_include('inc', 'menu_block', 'menu_block.admin');
   return _menu_block_ctools_plugin_directory($module, $plugin);
 }
-*/
 
 /**
  * Implements hook_menu().

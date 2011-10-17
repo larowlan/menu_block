@@ -97,7 +97,7 @@ function menu_block_menu_tree_content_type_render($subtype, $conf, $args, $conte
 /**
  * 'Edit form' callback for the content type.
  */
-function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
+function menu_block_menu_tree_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
 
   // Load the standard config form.
@@ -116,6 +116,8 @@ function menu_block_menu_tree_content_type_edit_form(&$form, &$form_state) {
   }
   // Remove CSS class hooks for jQuery script on parent select.
   unset($form['parent']['#attributes']);
+  
+  return $form;
 }
 
 /**
