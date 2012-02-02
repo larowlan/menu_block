@@ -116,7 +116,7 @@ function menu_block_menu_tree_content_type_edit_form($form, &$form_state) {
   }
   // Remove CSS class hooks for jQuery script on parent select.
   unset($form['parent']['#attributes']);
-  
+
   return $form;
 }
 
