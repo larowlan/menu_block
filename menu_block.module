@@ -4,9 +4,6 @@
  * Provides configurable blocks of menu items.
  */
 
-// A core bug in Drupal 7.0 requires this fix.
-module_load_include('inc', 'menu_block', 'custom_menu_active_trail');
-
 /**
  * Denotes that the tree should use the menu picked by the curent page.
  */
@@ -308,9 +305,6 @@ function menu_tree_build($config) {
   $menu_names = menu_block_get_all_menus();
   menu_block_set_title(t($menu_names[$config['menu_name']]));
 
-  // @TODO: Remove work-around for core bug #942782.
-  __menu_block_set_menu_trail($config['menu_name']);
-
   if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
     $tree = menu_tree_all_data($config['menu_name']);
@@ -321,9 +315,6 @@ function menu_tree_build($config) {
     // Get the tree pruned for just the active trail.
     $tree = menu_tree_page_data($config['menu_name']);
   }
-
-  // @TODO: Remove work-around for core bug #942782.
-  __menu_block_set_menu_trail();
 
   // Allow alteration of the tree and config before we begin operations on it.
   drupal_alter('menu_block_tree', $tree, $config);
