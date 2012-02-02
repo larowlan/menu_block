@@ -6,7 +6,6 @@ dependencies[] = menu
 
 files[] = menu_block.module
 files[] = menu_block.admin.inc
-files[] = menu_block.book.inc
 files[] = menu_block.follow.inc
 files[] = menu_block.pages.inc
 files[] = menu_block.sort.inc
