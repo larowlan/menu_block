@@ -1,5 +1,5 @@
-Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
-----------------------------------
+Menu Block 7.x-2.3, 2012-02-04
+------------------------------
 - #1105372 by mikl, fabsor and JohnAlbin: Add menu tree ctools content type to D7
 - #1425342 by JohnAlbin and Dave Reid: Menu block fails with Drupal core 7.12; remove work-around for core bug #942782.
 - #1243978 by Dave Reid: Fixed menu_block_export_menu() items were not translatable since they were not located in menu_block_export.module.
