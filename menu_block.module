@@ -295,7 +295,11 @@ function menu_tree_build($config) {
 
     // If no menu link was found, don't display the block.
     if (empty($config['menu_name'])) {
-      return array();
+      return array(
+        'subject' => t('The menu selected by the page'),
+        'subject_array' => array(),
+        'content' => array(),
+      );
     }
   }
 
