@@ -423,7 +423,7 @@ function menu_block_configure_form($form, &$form_state) {
     '#default_value' => $config['sort'],
     '#description' => t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.'),
   );
-  $form['parent_mlid'] = array(
+  $form['parent'] = array(
     '#type' => 'select',
     '#title' => t('Fixed parent item'),
     '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
@@ -432,11 +432,11 @@ function menu_block_configure_form($form, &$form_state) {
     '#attributes' => array('class' => array('menu-block-parent-mlid')),
     '#element_validate' => array('menu_block_configure_form_parent_validate'),
   );
-  $form['parent_mlid']['#options'][MENU_TREE__CURRENT_PAGE_MENU . ':0'] = '<' . t('the menu selected by the page') . '>';
+  $form['parent']['#options'][MENU_TREE__CURRENT_PAGE_MENU . ':0'] = '<' . t('the menu selected by the page') . '>';
   $form['menu-block-wrapper-close'] = array('#markup' => '</div>');
 
   // Set visibility of advanced options.
-  foreach (array('title_link', 'follow', 'follow_parent', 'expanded', 'sort', 'parent_mlid') as $key) {
+  foreach (array('title_link', 'follow', 'follow_parent', 'expanded', 'sort', 'parent') as $key) {
     $form[$key]['#states']['visible'][':input[name=display_options]'] = array('value' => 'advanced');
   }
   if ($config['title_link'] || $follow || $config['expanded'] || $config['sort'] || $config['parent_mlid']) {
@@ -451,18 +451,13 @@ function menu_block_configure_form($form, &$form_state) {
  */
 function menu_block_configure_form_parent_validate($element, &$form_state) {
   // Determine the fixed parent item's menu and mlid.
-  list($menu_name, $parent_mlid) = explode(':', $form_state['values']['parent_mlid']);
+  list($menu_name, $parent_mlid) = explode(':', $form_state['values']['parent']);
+  $form_state['values']['parent_mlid'] = (int) $parent_mlid;
+
   if ($parent_mlid) {
     // If mlid is set, its menu overrides the menu_name option.
     $form_state['values']['menu_name'] = $menu_name;
   }
-  else {
-    // Otherwise the menu_name overrides the parent item option.
-    $form_state['values']['parent_mlid'] = $menu_name . ':0';
-  }
-  // The value of "parent" stored in the database/config array is the menu name
-  // combined with the optional parent menu item's mlid.
-  $form_state['values']['parent'] = $form_state['values']['parent_mlid'];
 }
 
 /**

@@ -192,6 +192,7 @@ function menu_block_get_config($delta = NULL) {
     'delta'       => $delta,
     'menu_name'   => 'main-menu',
     'parent_mlid' => 0,
+    'parent'      => '',
     'title_link'  => 0,
     'admin_title' => '',
     'level'       => 1,
@@ -223,7 +224,8 @@ function menu_block_get_config($delta = NULL) {
     $config['depth']       = variable_get("menu_block_{$delta}_depth",       $config['depth']);
     $config['expanded']    = variable_get("menu_block_{$delta}_expanded",    $config['expanded']);
     $config['sort']        = variable_get("menu_block_{$delta}_sort",        $config['sort']);
-    list($config['menu_name'], $config['parent_mlid']) = explode(':', variable_get("menu_block_{$delta}_parent", $config['menu_name'] . ':' . $config['parent_mlid']));
+    $config['parent']      = variable_get("menu_block_{$delta}_parent",      $config['menu_name'] . ':' . $config['parent_mlid']);
+    list($config['menu_name'], $config['parent_mlid']) = explode(':', $config['parent']);
   }
 
   return $config;
