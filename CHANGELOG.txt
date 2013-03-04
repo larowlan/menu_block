@@ -1,5 +1,8 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ----------------------------------
+- #1203646 by jweowu: Pane generates illegal choice error when editing
+- #1909366 by lund.mikkel: Menu block names get translated twice
+- #1910420 by simongeorges: Remove useless files[] directive from .info files
 - #1204064 by MrHaroldA, pjcdawkins and BartK: Fix undefined index notices in menu_tree_add_active_path()
 - #810362: Make Menu Block require 'administer menus' permission
 - #1524674 by Crell: Use of $_GET['q'] ignores menu_position module
