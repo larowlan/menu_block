@@ -1,5 +1,6 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ----------------------------------
+- #1204064 by MrHaroldA and pjcdawkins: Fix undefined index notices in menu_tree_add_active_path()
 - #810362: Make Menu Block require 'administer menus' permission
 - #1524674 by Crell: Use of $_GET['q'] ignores menu_position module
 - #1688168 by tim.plunkett: Undefined index errors when using CTools content type and '_active' menu
