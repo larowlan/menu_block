@@ -46,7 +46,7 @@ function menu_block_menu() {
       'description' => 'Add a new menu block.',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('menu_block_add_block_form'),
-      'access arguments' => array('administer blocks'),
+      'access callback' => 'menu_block_access',
       'type' => MENU_LOCAL_ACTION,
       'file' => 'menu_block.admin.inc',
     );
@@ -58,7 +58,7 @@ function menu_block_menu() {
           'description' => 'Add a new menu block.',
           'page callback' => 'drupal_get_form',
           'page arguments' => array('menu_block_add_block_form'),
-          'access arguments' => array('administer blocks'),
+          'access callback' => 'menu_block_access',
           'type' => MENU_LOCAL_ACTION,
           'file' => 'menu_block.admin.inc',
         );
@@ -68,7 +68,7 @@ function menu_block_menu() {
       'title' => 'Delete menu block',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('menu_block_delete'),
-      'access arguments' => array('administer blocks'),
+      'access callback' => 'menu_block_access',
       'type' => MENU_CALLBACK,
       'file' => 'menu_block.admin.inc',
     );
@@ -79,11 +79,18 @@ function menu_block_menu() {
     'description' => 'Configure menu block.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_block_admin_settings_form'),
-    'access arguments' => array('administer blocks'),
+    'access callback' => 'menu_block_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'menu_block.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Determine whether the user has permission to use menu_block module.
+ */
+function menu_block_access($account = NULL) {
+  return user_access('administer blocks', $account) && user_access('administer menus', $account);
 }
 
 /**
