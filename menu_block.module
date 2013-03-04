@@ -321,7 +321,7 @@ function menu_tree_build($config) {
 
   // Get the default block name.
   $menu_names = menu_block_get_all_menus();
-  menu_block_set_title(t($menu_names[$config['menu_name']]));
+  menu_block_set_title($menu_names[$config['menu_name']]);
 
   if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
