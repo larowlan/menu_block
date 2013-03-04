@@ -299,7 +299,7 @@ function menu_block_configure_form($form, &$form_state) {
 
   $form['menu-block-wrapper-start'] = array(
     '#markup' => '<div id="menu-block-settings">',
-    '#weight' => -20,
+    '#weight' => -30,
   );
   $form['display_options'] = array(
     '#type' => 'radios',
@@ -310,7 +310,7 @@ function menu_block_configure_form($form, &$form_state) {
       'advanced' => t('Advanced options'),
     ),
     '#attributes' => array('class' => array('clearfix')),
-    '#weight' => -19,
+    '#weight' => -29,
   );
   $form['title_link'] = array(
     '#type' => 'checkbox',
