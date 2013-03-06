@@ -638,7 +638,7 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
 }
 
 /**
- * Returns a rendered menu tree.
+ * Returns a renderable menu tree.
  *
  * This is a copy of menu_tree_output() with additional classes added to the
  * output.
@@ -662,14 +662,15 @@ function menu_block_tree_output(&$tree, $config = array()) {
   $hook_delta = str_replace('-', '_', $config['delta']);
   $hook_menu_name = str_replace('-', '_', $config['menu_name']);
 
-  // Pull out just the menu items we are going to render so that we
+  // Pull out just the menu links we are going to render so that we
   // get an accurate count for the first/last classes.
   foreach ($tree as $key => &$value) {
-    if (!$tree[$key]['link']['hidden']) {
+    if ($tree[$key]['link']['access'] && !$tree[$key]['link']['hidden']) {
       $items[] = $tree[$key];
     }
   }
 
+  $router_item = menu_get_item();
   $num_items = count($items);
   foreach ($items as $i => &$data) {
     $class = array();
@@ -679,8 +680,10 @@ function menu_block_tree_output(&$tree, $config = array()) {
     if ($i == $num_items - 1) {
       $class[] = 'last';
     }
-    // Set a class if the link has children.
-    if ($data['below']) {
+    // Set a class for the <li>-tag. Since $data['below'] may contain local
+    // tasks, only set 'expanded' class if the link also has children within
+    // the current menu.
+    if ($data['link']['has_children'] && $data['below']) {
       $class[] = 'expanded';
     }
     elseif ($data['link']['has_children']) {
@@ -702,6 +705,13 @@ function menu_block_tree_output(&$tree, $config = array()) {
     }
     // Set a menu link ID class.
     $class[] = 'menu-mlid-' . $data['link']['mlid'];
+    // Normally, l() compares the href of every link with $_GET['q'] and sets
+    // the active class accordingly. But local tasks do not appear in menu
+    // trees, so if the current path is a local task, and this link is its
+    // tab root, then we have to set the class manually.
+    if ($data['link']['href'] == $router_item['tab_root_href'] && $data['link']['href'] != $_GET['q']) {
+      $data['link']['localized_options']['attributes']['class'][] = 'active';
+    }
 
     // Allow menu-specific theme overrides.
     $element['#theme'] = array(
