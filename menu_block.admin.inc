@@ -361,7 +361,7 @@ function menu_block_configure_form($form, &$form_state) {
       '8'  => t('8th level'),
       '9'  => t('9th level'),
     ),
-    '#description' => t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.'),
+    '#description' => t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item passes though the block’s starting level.'),
   );
   // The value of "follow" in the database/config array is either FALSE or the
   // value of the "follow_parent" form element.
