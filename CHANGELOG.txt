@@ -1,5 +1,6 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ----------------------------------
+- #1812824 by gabriel.achille: Incompatibility with modules like menu_position
 - #1203646 by jweowu: Pane generates illegal choice error when editing
 - #1909366 by lund.mikkel: Menu block names get translated twice
 - #1910420 by simongeorges: Remove useless files[] directive from .info files
