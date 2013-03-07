@@ -232,99 +232,12 @@ function menu_block_get_config($delta = NULL) {
 }
 
 /**
- * Build a menu tree based on the provided configuration.
+ * Gets the data structure representing a menu tree for the given configuration.
  *
  * @param $config
- *   array An array of configuration options that specifies how to build the
- *   menu tree and its title.
- *   - delta: (string) The menu_block's block delta.
- *   - menu_name: (string) The machine name of the requested menu. Can also be
- *     set to MENU_TREE__CURRENT_PAGE_MENU to use the menu selected by the page.
- *   - parent_mlid: (int) The mlid of the item that should root the tree. Use 0
- *     to use the menu's root.
- *   - title_link: (boolean) Specifies if the title should be rendered as a link
- *     or a simple string.
- *   - admin_title: (string) An optional title to uniquely identify the block on
- *     the administer blocks page.
- *   - level: (int) The starting level of the tree.
- *   - follow: (string) Specifies if the starting level should follow the
- *     active menu item. Should be set to 0, 'active' or 'child'.
- *   - depth: (int) The maximum depth the tree should contain, relative to the
- *     starting level.
- *   - expanded: (boolean) Specifies if the entire tree be expanded or not.
- *   - sort: (boolean) Specifies if the tree should be sorted with the active
- *     trail at the top of the tree.
- * @return
- *   array An associative array containing several pieces of data.
- *   - content: The tree as a renderable array.
- *   - subject: The title rendered as HTML.
- *   - subject_array: The title as a renderable array.
+ *   See the $config param of menu_tree_build().
  */
-function menu_tree_build(&$config) {
-  // Retrieve the active menu item from the database.
-  if ($config['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
-    // Retrieve the list of available menus.
-    $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'user-menu' => ''));
-
-    // Check for regular expressions as menu keys.
-    $patterns = array();
-    foreach (array_keys($menu_order) as $pattern) {
-      if ($pattern[0] == '/') {
-        $patterns[$pattern] = NULL;
-      }
-    }
-
-    // Extract the "current" path from the request, or from the active menu
-    // trail if applicable.
-    $link_path = $_GET['q'] ? $_GET['q'] : '<front>';
-    $trail = menu_get_active_trail();
-    $last_item = end($trail);
-    if (!empty($last_item['link_path'])) {
-      $link_path = $last_item['link_path'];
-    }
-
-    // Retrieve all the menus containing a link to the current page.
-    $result = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => $link_path));
-    foreach ($result as $item) {
-      // Check if the menu is in the list of available menus.
-      if (isset($menu_order[$item->menu_name])) {
-        // Mark the menu.
-        $menu_order[$item->menu_name] = MENU_TREE__CURRENT_PAGE_MENU;
-      }
-      else {
-        // Check if the menu matches one of the available patterns.
-        foreach (array_keys($patterns) as $pattern) {
-          if (preg_match($pattern, $item->menu_name)) {
-            // Mark the menu.
-            $menu_order[$pattern] = MENU_TREE__CURRENT_PAGE_MENU;
-            // Store the actual menu name.
-            $patterns[$pattern] = $item->menu_name;
-          }
-        }
-      }
-    }
-    // Find the first marked menu.
-    $config['menu_name'] = array_search(MENU_TREE__CURRENT_PAGE_MENU, $menu_order);
-    // If a pattern was matched, use the actual menu name instead of the pattern.
-    if (!empty($patterns[$config['menu_name']])) {
-      $config['menu_name'] = $patterns[$config['menu_name']];
-    }
-    $config['parent_mlid'] = 0;
-
-    // If no menu link was found, don't display the block.
-    if (empty($config['menu_name'])) {
-      return array(
-        'subject' => t('The menu selected by the page'),
-        'subject_array' => array(),
-        'content' => array(),
-      );
-    }
-  }
-
-  // Get the default block name.
-  $menu_names = menu_block_get_all_menus();
-  menu_block_set_title($menu_names[$config['menu_name']]);
-
+function menu_tree_block_data(&$config) {
   if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
     $tree = menu_tree_all_data($config['menu_name']);
@@ -375,9 +288,118 @@ function menu_tree_build(&$config) {
     menu_tree_sort_active_path($tree);
   }
 
-  // Render the tree.
-  $data = array();
+  return $tree;
+}
+
+/**
+ * Returns the current page's menu.
+ */
+function menu_block_get_current_page_menu() {
+  // Retrieve the list of available menus.
+  $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'user-menu' => ''));
+
+  // Check for regular expressions as menu keys.
+  $patterns = array();
+  foreach (array_keys($menu_order) as $pattern) {
+    if ($pattern[0] == '/') {
+      $patterns[$pattern] = NULL;
+    }
+  }
+
+  // Extract the "current" path from the request, or from the active menu
+  // trail if applicable.
+  $link_path = $_GET['q'] ? $_GET['q'] : '<front>';
+  $trail = menu_get_active_trail();
+  $last_item = end($trail);
+  if (!empty($last_item['link_path'])) {
+    $link_path = $last_item['link_path'];
+  }
+
+  // Retrieve all the menus containing a link to the current page.
+  $result = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => $link_path));
+  foreach ($result as $item) {
+    // Check if the menu is in the list of available menus.
+    if (isset($menu_order[$item->menu_name])) {
+      // Mark the menu.
+      $menu_order[$item->menu_name] = MENU_TREE__CURRENT_PAGE_MENU;
+    }
+    else {
+      // Check if the menu matches one of the available patterns.
+      foreach (array_keys($patterns) as $pattern) {
+        if (preg_match($pattern, $item->menu_name)) {
+          // Mark the menu.
+          $menu_order[$pattern] = MENU_TREE__CURRENT_PAGE_MENU;
+          // Store the actual menu name.
+          $patterns[$pattern] = $item->menu_name;
+        }
+      }
+    }
+  }
+  // Find the first marked menu.
+  $menu_name = array_search(MENU_TREE__CURRENT_PAGE_MENU, $menu_order);
+  // If a pattern was matched, use the actual menu name instead of the pattern.
+  if (!empty($patterns[$menu_name])) {
+    $menu_name = $patterns[$menu_name];
+  }
+
+  return $menu_name;
+}
+
+/**
+ * Build a menu tree based on the provided configuration.
+ *
+ * @param $config
+ *   array An array of configuration options that specifies how to build the
+ *   menu tree and its title.
+ *   - delta: (string) The menu_block's block delta.
+ *   - menu_name: (string) The machine name of the requested menu. Can also be
+ *     set to MENU_TREE__CURRENT_PAGE_MENU to use the menu selected by the page.
+ *   - parent_mlid: (int) The mlid of the item that should root the tree. Use 0
+ *     to use the menu's root.
+ *   - title_link: (boolean) Specifies if the title should be rendered as a link
+ *     or a simple string.
+ *   - admin_title: (string) An optional title to uniquely identify the block on
+ *     the administer blocks page.
+ *   - level: (int) The starting level of the tree.
+ *   - follow: (string) Specifies if the starting level should follow the
+ *     active menu item. Should be set to 0, 'active' or 'child'.
+ *   - depth: (int) The maximum depth the tree should contain, relative to the
+ *     starting level.
+ *   - expanded: (boolean) Specifies if the entire tree be expanded or not.
+ *   - sort: (boolean) Specifies if the tree should be sorted with the active
+ *     trail at the top of the tree.
+ * @return
+ *   array An associative array containing several pieces of data.
+ *   - content: The tree as a renderable array.
+ *   - subject: The title rendered as HTML.
+ *   - subject_array: The title as a renderable array.
+ */
+function menu_tree_build(&$config) {
+  // Retrieve the active menu item from the database.
+  if ($config['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
+    $config['menu_name'] = menu_block_get_current_page_menu();
+    $config['parent_mlid'] = 0;
+
+    // If no menu link was found, don't display the block.
+    if (empty($config['menu_name'])) {
+      return array(
+        'subject' => t('The menu selected by the page'),
+        'subject_array' => array(),
+        'content' => array(),
+      );
+    }
+  }
+
+  // Get the default block name.
+  $menu_names = menu_block_get_all_menus();
+  menu_block_set_title($menu_names[$config['menu_name']]);
+
+  // Get the raw menu tree data.
+  $tree = menu_tree_block_data($config);
   $title = menu_block_get_title($config['title_link'], $config);
+
+  // Create a renderable tree.
+  $data = array();
   $data['subject_array'] = $title;
   $data['subject'] = drupal_render($title);
   $data['content']['#content'] = menu_block_tree_output($tree, $config);
