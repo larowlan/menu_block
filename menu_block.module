@@ -260,7 +260,7 @@ function menu_block_get_config($delta = NULL) {
  *   - subject: The title rendered as HTML.
  *   - subject_array: The title as a renderable array.
  */
-function menu_tree_build($config) {
+function menu_tree_build(&$config) {
   // Retrieve the active menu item from the database.
   if ($config['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
     // Retrieve the list of available menus.
