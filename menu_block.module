@@ -565,12 +565,14 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
     }
   }
 
+  $is_front_page = drupal_is_front_page();
   // Trim the upper levels down to the one desired.
   for ($i = 1; $i < $level; $i++) {
     $found_active_trail = FALSE;
     // Examine each element at this level for the active trail.
     foreach ($tree AS $key => &$value) {
-      if ($tree[$key]['link']['in_active_trail']) {
+      // Also include the children of the front page.
+      if ($tree[$key]['link']['in_active_trail'] || ($tree[$key]['link']['link_path'] == '<front>' && $is_front_page)) {
         // Get the title for the pruned tree.
         menu_block_set_title($tree[$key]['link']);
         // Prune the tree to the children of the item in the active trail.
