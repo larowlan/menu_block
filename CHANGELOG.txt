@@ -1,5 +1,6 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ----------------------------------
+- #907292: Add API to obtain raw menu data (not the render element)
 - #1327472 by tim.plunkett, pjcdawkins and giginos: Child menu items don't appear when current page is front page
 - #1698992: hook_uninstall assumes block module dependency
 - #1594684 by pfournier: Menu block export ids may be too long, plus unquoted string
