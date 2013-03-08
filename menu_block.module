@@ -238,15 +238,23 @@ function menu_block_get_config($delta = NULL) {
  *   See the $config param of menu_tree_build().
  */
 function menu_tree_block_data(&$config) {
+  // Determine the max depth based on level and depth setting.
+  $max_depth = $config['level'] + $config['depth'] - 1;
+
   if ($config['expanded'] || $config['parent_mlid']) {
     // Get the full, un-pruned tree.
-    $tree = menu_tree_all_data($config['menu_name']);
+    if ($config['parent_mlid']) {
+      $tree = menu_tree_all_data($config['menu_name']);
+    }
+    else {
+      $tree = menu_tree_all_data($config['menu_name'], NULL, $max_depth);
+    }
     // And add the active trail data back to the full tree.
     menu_tree_add_active_path($tree);
   }
   else {
     // Get the tree pruned for just the active trail.
-    $tree = menu_tree_page_data($config['menu_name']);
+    $tree = menu_tree_page_data($config['menu_name'], $max_depth);
   }
 
   // Allow alteration of the tree and config before we begin operations on it.
