@@ -36,6 +36,16 @@ function menu_block_ctools_plugin_directory($module, $plugin) {
 }
 
 /**
+ * Implements hook_ctools_block_info().
+ *
+ * @see ctools_block_content_type_content_types().
+ */
+function menu_block_ctools_block_info($module, $delta, &$info) {
+  $info['icon'] = 'icon_contrib_menu.png';
+  $info['category'] = t('Menus');
+}
+
+/**
  * Implements hook_menu().
  */
 function menu_block_menu() {
