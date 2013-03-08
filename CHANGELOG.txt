@@ -1,5 +1,7 @@
 Menu Block 7.x-2.x-dev, xxxx-xx-xx (development release)
 ----------------------------------
+- #1420180 by jweowu: Assign the panel panes for menu block blocks to the "Menus" category
+- #1937038: Use $max_depth parameter of menu_tree_all_data() and menu_tree_page_data()
 - #907292: Add API to obtain raw menu data (not the render element)
 - #1327472 by tim.plunkett, pjcdawkins and giginos: Child menu items don't appear when current page is front page
 - #1698992: hook_uninstall assumes block module dependency
