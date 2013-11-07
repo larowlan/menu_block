@@ -100,7 +100,7 @@ function menu_block_menu() {
  * Determine whether the user has permission to use menu_block module.
  */
 function menu_block_access($account = NULL) {
-  return user_access('administer blocks', $account) && user_access('administer menus', $account);
+  return user_access('administer blocks', $account) && user_access('administer menu', $account);
 }
 
 /**
