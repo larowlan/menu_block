@@ -96,10 +96,12 @@ function template_preprocess_menu_block_wrapper(&$variables) {
  *   array A list of menu names and titles.
  */
 function menu_block_get_all_menus() {
+  // @todo move this to a repository service.
   $all_menus = &drupal_static(__FUNCTION__);
 
   if (!$all_menus) {
-    if ($cached = cache_get('menu_block_menus', 'cache_menu')) {
+    // @todo use cache service in repo
+    if (FALSE && $cached = cache_get('menu_block_menus', 'cache_menu')) {
       $all_menus = $cached->data;
     }
     else {
@@ -189,6 +191,7 @@ function menu_tree_block_data(&$config) {
 
 /**
  * Returns the current page's menu.
+ * @todo move to repo service.
  */
 function menu_block_get_current_page_menu() {
   // Retrieve the list of available menus.
@@ -269,6 +272,8 @@ function menu_block_get_current_page_menu() {
  *   - content: The tree as a renderable array.
  *   - subject: The title rendered as HTML.
  *   - subject_array: The title as a renderable array.
+ *
+ * @todo move to builder service
  */
 function menu_tree_build(&$config) {
   // Retrieve the active menu item from the database.
@@ -323,6 +328,8 @@ function menu_tree_build(&$config) {
  *   simple string.
  * @return
  *   array A renderable array containing the tree's title.
+ *
+ * @todo move to builder service.
  */
 function menu_block_get_title($render_title_as_link = TRUE) {
   $menu_item = menu_block_set_title();
@@ -384,6 +391,8 @@ function menu_block_set_title($item = NULL) {
  *   array The menu tree.
  * @return
  *   void
+ *
+ * @todo add to repo service
  */
 function menu_tree_add_active_path(&$tree) {
   // Grab any menu item to find the menu_name for this tree.
@@ -418,6 +427,8 @@ function menu_tree_add_active_path(&$tree) {
  *   array The menu tree to trim.
  * @return
  *   void
+ *
+ * @todo add to repo or builder service
  */
 function menu_tree_trim_active_path(&$tree) {
   foreach ($tree AS $key => &$value) {
@@ -439,6 +450,8 @@ function menu_tree_trim_active_path(&$tree) {
  *   array The menu tree to sort.
  * @return
  *   void
+ *
+ * @todo add to repo or builder service
  */
 function menu_tree_sort_active_path(&$tree) {
   module_load_include('inc', 'menu_block', 'menu_block.sort');
@@ -458,6 +471,8 @@ function menu_tree_sort_active_path(&$tree) {
  *   array The menu item that should be used as the root of the tree.
  * @return
  *   void
+ *
+ * @todo add to builder service
  */
 function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
   if (!empty($parent_item)) {
@@ -516,6 +531,8 @@ function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
  *   string The level which the tree will be pruned to: 'active' or 'child'.
  * @return
  *   void
+ *
+ * @todo move to builder service
  */
 function menu_tree_prune_active_tree(&$tree, $level) {
   module_load_include('inc', 'menu_block', 'menu_block.follow');
@@ -531,6 +548,8 @@ function menu_tree_prune_active_tree(&$tree, $level) {
  *   int The maximum depth of the returned tree; must be a positive integer.
  * @return
  *   void
+ *
+ * @todo move to builder service.
  */
 function menu_tree_depth_trim(&$tree, $depth_limit) {
   // Prevent invalid input from returning a trimmed tree.
@@ -567,6 +586,8 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
  *   array A data structure representing the tree as returned from menu_tree_data.
  * @return
  *   string The rendered HTML of that data structure.
+ *
+ * @todo move to builder service
  */
 function menu_block_tree_output(&$tree, $config = array()) {
   $build = array();
@@ -670,6 +691,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
 
 /**
  * Implements hook_menu_block_get_menus() on behalf of book.module.
+ * @todo move these to a plugin?
  */
 function book_menu_block_get_menus() {
   $menus = array();
@@ -681,6 +703,7 @@ function book_menu_block_get_menus() {
 
 /**
  * Implements hook_menu_block_get_sort_menus() on behalf of book.module.
+ * @todo move these to a plugin?
  */
 function book_menu_block_get_sort_menus() {
   return array(

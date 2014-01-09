@@ -14,6 +14,7 @@
  * @return
  *   void
  */
+// @todo Move to method on repository service.
 function _menu_tree_prune_active_tree(&$tree, $level) {
   do {
     $found_active_trail = FALSE;
