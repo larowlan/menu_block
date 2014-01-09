@@ -172,7 +172,7 @@ class MenuBlock extends BlockBase {
       '#type' => 'select',
       '#title' => t('Fixed parent item'),
       '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
-      '#options' => menu_parent_options($menus, array('mlid' => 0)),
+      '#options' => menu_parent_options($menus),
       '#description' => t('Alter the “starting level” and “maximum depth” options to be relative to the fixed parent item. The tree of links will only contain children of the selected menu item.'),
       '#attributes' => array('class' => array('menu-block-parent-mlid')),
       '#element_validate' => array('\Drupal\menu_block\Plugin\Block\MenuBlock::parentValidate'),
