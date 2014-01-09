@@ -81,8 +81,8 @@ class MenuBlock extends BlockBase {
       '#title' => t('Administrative title'),
       '#description' => t('This title will be used administratively to identify this block. If blank, the regular title will be used.'),
     );
-    // @todo inject the MenuBlock repository once it exists.
-    $menus = menu_block_get_all_menus();
+    // @todo inject the MenuBlock repository.
+    $menus = \Drupal::service('menu_block.repository')->getMenus();
     $form['menu_name'] = array(
       '#type' => 'select',
       '#title' => t('Menu'),

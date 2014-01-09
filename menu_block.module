@@ -90,36 +90,6 @@ function template_preprocess_menu_block_wrapper(&$variables) {
 }
 
 /**
- * Returns a list of menu names implemented by all modules.
- *
- * @return
- *   array A list of menu names and titles.
- */
-function menu_block_get_all_menus() {
-  // @todo move this to a repository service.
-  $all_menus = &drupal_static(__FUNCTION__);
-
-  if (!$all_menus) {
-    // @todo use cache service in repo
-    if (FALSE && $cached = cache_get('menu_block_menus', 'cache_menu')) {
-      $all_menus = $cached->data;
-    }
-    else {
-      // Retrieve core's menus.
-      $all_menus = menu_get_menus();
-      // Retrieve all the menu names provided by hook_menu_block_get_menus().
-      $all_menus = array_merge($all_menus, module_invoke_all('menu_block_get_menus'));
-      // Add an option to use the menu for the active menu item.
-      $all_menus[MENU_TREE__CURRENT_PAGE_MENU] = '<' . t('the menu selected by the page') . '>';
-      asort($all_menus);
-      // @todo use cache service.
-      // cache_set('menu_block_menus', $all_menus, 'cache_menu');
-    }
-  }
-  return $all_menus;
-}
-
-/**
  * Gets the data structure representing a menu tree for the given configuration.
  *
  * @param $config
@@ -292,7 +262,7 @@ function menu_tree_build(&$config) {
   }
 
   // Get the default block name.
-  $menu_names = menu_block_get_all_menus();
+  $menu_names = \Drupal::service('menu_block.repository')->getMenus();
   menu_block_set_title($menu_names[$config['menu_name']]);
 
   // Get the raw menu tree data.

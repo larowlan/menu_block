@@ -35,7 +35,7 @@ function menu_block_menu_tree_content_type_content_types() {
   );
   unset($common_plugin['defaults']['delta']);
 
-  $menus = menu_block_get_all_menus();
+  $menus = \Drupal::service('menu_block.repository')->getMenus();
   $items = array();
   foreach ($menus as $menu_name => $title) {
     $items[$menu_name] = $common_plugin;
@@ -110,7 +110,7 @@ function menu_block_menu_tree_content_type_edit_form($form, &$form_state) {
   $form['menu_name']['#type'] = 'hidden';
 
   // Set the options to a simple list of menu links for the configured menu.
-  $menus = menu_block_get_all_menus();
+  $menus = \Drupal::service('menu_block.repository')->getMenus();
   $form['parent']['#options'] = menu_parent_options(array($conf['menu_name'] => $menus[$conf['menu_name']]), array('mlid' => 0));
   // Hide the Parent item option for the special "active" menu.
   if ($conf['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
