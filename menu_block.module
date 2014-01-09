@@ -83,10 +83,9 @@ function menu_block_help($path, $arg) {
  * @see menu-block-wrapper.html.twig
  */
 function template_preprocess_menu_block_wrapper(&$variables) {
-  $variables['classes_array'][] = 'menu-block-' . $variables['delta'];
-  $variables['classes_array'][] = 'menu-name-' . $variables['config']['menu_name'];
-  $variables['classes_array'][] = 'parent-mlid-' . $variables['config']['parent_mlid'];
-  $variables['classes_array'][] = 'menu-level-' . $variables['config']['level'];
+  $variables['attributes']['class'][] = 'menu-name-' . $variables['config']['menu_name'];
+  $variables['attributes']['class'][] = 'parent-mlid-' . $variables['config']['parent_mlid'];
+  $variables['attributes']['class'][] = 'menu-level-' . $variables['config']['level'];
 }
 
 /**
@@ -254,7 +253,7 @@ function menu_tree_build(&$config) {
     // If no menu link was found, don't display the block.
     if (empty($config['menu_name'])) {
       return array(
-        'subject' => t('The menu selected by the page'),
+        'subject' => array('#markup' => t('The menu selected by the page')),
         'subject_array' => array(),
         'content' => array(),
       );
@@ -272,16 +271,14 @@ function menu_tree_build(&$config) {
   // Create a renderable tree.
   $data = array();
   $data['subject_array'] = $title;
-  $data['subject'] = drupal_render($title);
+  $data['subject'] = array('#markup' => drupal_render($title));
   $data['content']['#content'] = menu_block_tree_output($tree, $config);
   if (!empty($data['content']['#content'])) {
     $data['content']['#theme'] = array(
-      'menu_block_wrapper__' . str_replace('-', '_', $config['delta']),
       'menu_block_wrapper__' . str_replace('-', '_', $config['menu_name']),
       'menu_block_wrapper'
     );
     $data['content']['#config'] = $config;
-    $data['content']['#delta'] = $config['delta'];
   }
   else {
     $data['content'] = '';
@@ -565,12 +562,10 @@ function menu_block_tree_output(&$tree, $config = array()) {
 
   // Create context if no config was provided.
   if (empty($config)) {
-    $config['delta'] = 0;
     // Grab any menu item to find the menu_name for this tree.
     $menu_item = current($tree);
     $config['menu_name'] = $menu_item['link']['menu_name'];
   }
-  $hook_delta = str_replace('-', '_', $config['delta']);
   $hook_menu_name = str_replace('-', '_', $config['menu_name']);
 
   // Pull out just the menu links we are going to render so that we
@@ -611,7 +606,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
       $class[] = 'active-trail';
       $data['link']['localized_options']['attributes']['class'][] = 'active-trail';
     }
-    if ($data['link']['href'] == $_GET['q'] || ($data['link']['href'] == '<front>' && drupal_is_front_page())) {
+    if ($data['link']['href'] == \Drupal::request()->query->get('q') || ($data['link']['href'] == '<front>' && drupal_is_front_page())) {
       $class[] = 'active';
     }
     // Set a menu link ID class.
@@ -626,7 +621,6 @@ function menu_block_tree_output(&$tree, $config = array()) {
 
     // Allow menu-specific theme overrides.
     $element['#theme'] = array(
-      'menu_link__menu_block__' . $hook_delta,
       'menu_link__menu_block__' . $hook_menu_name,
       'menu_link__menu_block',
       'menu_link__' . $hook_menu_name,
@@ -638,7 +632,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
     $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
     $element['#below'] = $data['below'] ? menu_block_tree_output($data['below'], $config) : $data['below'];
     $element['#original_link'] = $data['link'];
-    $element['#bid'] = array('module' => 'menu_block', 'delta' => $config['delta']);
+    $element['#bid'] = array('module' => 'menu_block');
     // Index using the link's unique mlid.
     $build[$data['link']['mlid']] = $element;
   }
@@ -648,7 +642,6 @@ function menu_block_tree_output(&$tree, $config = array()) {
     // Add the theme wrapper for outer markup.
     // Allow menu-specific theme overrides.
     $build['#theme_wrappers'][] = array(
-      'menu_tree__menu_block__' . $hook_delta,
       'menu_tree__menu_block__' . $hook_menu_name,
       'menu_tree__menu_block',
       'menu_tree__' . $hook_menu_name,
