@@ -8,32 +8,9 @@
  * Implements hook_uninstall().
  */
 function menu_block_uninstall() {
-  // Delete menu block variables.
-  foreach (variable_get('menu_block_ids', array()) AS $delta) {
-    variable_del("menu_block_{$delta}_title_link");
-    variable_del("menu_block_{$delta}_admin_title");
-    variable_del("menu_block_{$delta}_parent");
-    variable_del("menu_block_{$delta}_level");
-    variable_del("menu_block_{$delta}_follow");
-    variable_del("menu_block_{$delta}_depth");
-    variable_del("menu_block_{$delta}_expanded");
-    variable_del("menu_block_{$delta}_sort");
-  }
-  variable_del('menu_block_ids');
-  variable_del('menu_block_suppress_core');
-  variable_del('menu_block_menu_order');
-
-  // Remove block configurations.
-  if (module_exists('block')) {
-    db_delete('block')
-      ->condition('module', 'menu_block')
-      ->execute();
-    db_delete('block_role')
-      ->condition('module', 'menu_block')
-      ->execute();
-  }
-
-  cache_clear_all();
+  foreach (entity_load_multiple_by_properties('block', array('plugin' => 'menu_block')) as $block) {
+    $block->delete();
+  };
 }
 
 /**
