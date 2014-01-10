@@ -1,0 +1,4 @@
+menu_block_suppress_core: false
+menu_block_menu_order:
+ user-menu: true
+ main-menu: true
