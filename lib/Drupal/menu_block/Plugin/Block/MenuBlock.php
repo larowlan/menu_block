@@ -9,6 +9,7 @@ namespace Drupal\menu_block\Plugin\Block;
 
 use Drupal\block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\menu_block\MenuBlockRepositoryInterface;
 
 /**
  * Defines a menu block block type.
@@ -178,7 +179,7 @@ class MenuBlock extends BlockBase {
       '#element_validate' => array('\Drupal\menu_block\Plugin\Block\MenuBlock::parentValidate'),
     );
     // @todo move the constant to the menu block repository.
-    $form['parent']['#options'][MENU_TREE__CURRENT_PAGE_MENU . ':0'] = '<' . t('the menu selected by the page') . '>';
+    $form['parent']['#options'][MenuBlockRepositoryInterface::CURRENT_PAGE_MENU . ':0'] = '<' . t('the menu selected by the page') . '>';
     $form['menu-block-wrapper-close'] = array('#markup' => '</div>');
 
     // Set visibility of advanced options.

@@ -14,7 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides a repository service for loading menu blocks.
  */
-class MenuBlockRepository {
+class MenuBlockRepository implements MenuBlockRepositoryInterface {
 
   /**
    * The current database connection.
@@ -88,7 +88,7 @@ class MenuBlockRepository {
         // Retrieve all the menu names provided by hook_menu_block_get_menus().
         $this->menus = array_merge($this->menus, $this->moduleHandler->invokeAll('menu_block_get_menus'));
         // Add an option to use the menu for the active menu item.
-        $this->menus[MENU_TREE__CURRENT_PAGE_MENU] = '<' . t('the menu selected by the page') . '>';
+        $this->menus[MenuBlockRepositoryInterface::CURRENT_PAGE_MENU] = '<' . t('the menu selected by the page') . '>';
         asort($this->menus);
         $this->cache->set('menu_block_menus', $this->menus);
       }
