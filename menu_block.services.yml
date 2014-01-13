@@ -1,7 +1,7 @@
 services:
   menu_block.repository:
     class: Drupal\menu_block\MenuBlockRepository
-    arguments: ['@database', '@entity.manager', '@cache.menu', '@module_handler']
+    arguments: ['@database', '@entity.manager', '@cache.menu', '@module_handler', @config.factory, @request]
 
   menu_block.builder:
     class: Drupal\menu_block\MenuBlockBuilder

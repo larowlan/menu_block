@@ -21,6 +21,7 @@ class MenuBlockConfigForm extends ConfigFormBase {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
   /**
    * Constructs a SiteInformationForm object.
    *

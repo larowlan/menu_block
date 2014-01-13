@@ -108,123 +108,22 @@ function template_preprocess_menu_block_wrapper(&$variables) {
  * @param $config
  *   See the $config param of menu_tree_build().
  *
- * @todo move this to repo service.
+ * @deprecated as of Drupal 8.x-2.0. Use
+ *   Drupal::service('menu_block.repository')->blockData() directly instead.
  */
 function menu_tree_block_data(&$config) {
-  // Determine the max depth based on level and depth setting.
-  $max_depth = ($config['depth'] == 0) ? NULL : min($config['level'] + $config['depth'] - 1, MENU_MAX_DEPTH);
-
-  if ($config['expanded'] || $config['parent_mlid']) {
-    // Get the full, un-pruned tree.
-    if ($config['parent_mlid']) {
-      $tree = menu_tree_all_data($config['menu_name']);
-    }
-    else {
-      $tree = menu_tree_all_data($config['menu_name'], NULL, $max_depth);
-    }
-    // And add the active trail data back to the full tree.
-    menu_tree_add_active_path($tree);
-  }
-  else {
-    // Get the tree pruned for just the active trail.
-    $tree = menu_tree_page_data($config['menu_name'], $max_depth);
-  }
-
-  // Allow alteration of the tree and config before we begin operations on it.
-  drupal_alter('menu_block_tree', $tree, $config);
-
-  // Localize the tree.
-  if (module_exists('i18n_menu')) {
-    $tree = i18n_menu_localize_tree($tree);
-  }
-
-  // Prune the tree along the active trail to the specified level.
-  if ($config['level'] > 1 || $config['parent_mlid']) {
-    if ($config['parent_mlid']) {
-      $parent_item = menu_link_load($config['parent_mlid']);
-      menu_tree_prune_tree($tree, $config['level'], $parent_item);
-    }
-    else {
-      menu_tree_prune_tree($tree, $config['level']);
-    }
-  }
-
-  // Prune the tree to the active menu item.
-  if ($config['follow']) {
-    menu_tree_prune_active_tree($tree, $config['follow']);
-  }
-
-  // If the menu-item-based tree is not "expanded", trim the tree to the active path.
-  if ($config['parent_mlid'] && !$config['expanded']) {
-    menu_tree_trim_active_path($tree);
-  }
-
-  // Trim the branches that extend beyond the specified depth.
-  if ($config['depth'] > 0) {
-    menu_tree_depth_trim($tree, $config['depth']);
-  }
-
-  // Sort the active path to the top of the tree.
-  if ($config['sort']) {
-    menu_tree_sort_active_path($tree);
-  }
-
-  return $tree;
+  return \Drupal::service('menu_block.repository')->blockData($config);
 }
 
 /**
  * Returns the current page's menu.
- * @todo move to repo service.
+ *
+ * @deprecated as of Drupal 8.x-2.0. Use
+ *   Drupal::service('menu_block.repository')->getCurrentPageMenu() directly
+ *   instead.
  */
 function menu_block_get_current_page_menu() {
-  // Retrieve the list of available menus.
-  $menu_order = variable_get('menu_block_menu_order', array('main-menu' => '', 'user-menu' => ''));
-
-  // Check for regular expressions as menu keys.
-  $patterns = array();
-  foreach (array_keys($menu_order) as $pattern) {
-    if ($pattern[0] == '/') {
-      $patterns[$pattern] = NULL;
-    }
-  }
-
-  // Extract the "current" path from the request, or from the active menu
-  // trail if applicable.
-  $link_path = $_GET['q'] ? $_GET['q'] : '<front>';
-  $trail = menu_get_active_trail();
-  $last_item = end($trail);
-  if (!empty($last_item['link_path'])) {
-    $link_path = $last_item['link_path'];
-  }
-
-  // Retrieve all the menus containing a link to the current page.
-  $result = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => $link_path));
-  foreach ($result as $item) {
-    // Check if the menu is in the list of available menus.
-    if (isset($menu_order[$item->menu_name])) {
-      // Mark the menu.
-      $menu_order[$item->menu_name] = MENU_TREE__CURRENT_PAGE_MENU;
-    }
-    else {
-      // Check if the menu matches one of the available patterns.
-      foreach (array_keys($patterns) as $pattern) {
-        if (preg_match($pattern, $item->menu_name)) {
-          // Mark the menu.
-          $menu_order[$pattern] = MENU_TREE__CURRENT_PAGE_MENU;
-          // Store the actual menu name.
-          $patterns[$pattern] = $item->menu_name;
-        }
-      }
-    }
-  }
-  // Find the first marked menu.
-  $menu_name = array_search(MENU_TREE__CURRENT_PAGE_MENU, $menu_order);
-  // If a pattern was matched, use the actual menu name instead of the pattern.
-  if (!empty($patterns[$menu_name])) {
-    $menu_name = $patterns[$menu_name];
-  }
-
-  return $menu_name;
+  return \Drupal::service('menu_block.repository')->getCurrentPageMenu();
 }
 
 /**
@@ -371,32 +270,11 @@ function menu_block_set_title($item = NULL) {
  * @return
  *   void
  *
- * @todo add to repo service
+ * @deprecated as of Drupal 8.x-2.0. Use
+ *   Drupal::service('menu_block.repository')->addActivePath() directly instead.
  */
 function menu_tree_add_active_path(&$tree) {
-  // Grab any menu item to find the menu_name for this tree.
-  $menu_item = current($tree);
-  $tree_with_trail = menu_tree_page_data($menu_item['link']['menu_name']);
-
-  // To traverse the original tree down the active trail, we use a pointer.
-  $subtree_pointer =& $tree;
-
-  // Find each key in the active trail.
-  while ($tree_with_trail) {
-    foreach ($tree_with_trail AS $key => &$value) {
-      if ($tree_with_trail[$key]['link']['in_active_trail'] && isset($subtree_pointer[$key])) {
-        // Set the active trail info in the original tree.
-        $subtree_pointer[$key]['link']['in_active_trail'] = TRUE;
-        // Continue in the subtree, if it exists.
-        $tree_with_trail =& $tree_with_trail[$key]['below'];
-        $subtree_pointer =& $subtree_pointer[$key]['below'];
-        break;
-      }
-      else {
-        unset($tree_with_trail[$key]);
-      }
-    }
-  }
+  \Drupal::service('menu_block.repository')->addActivePath($tree);
 }
 
 /**
@@ -407,19 +285,12 @@ function menu_tree_add_active_path(&$tree) {
  * @return
  *   void
  *
- * @todo add to repo or builder service
+ * @deprecated as of Drupal 8.x-2.0. Use
+ *   Drupal::service('menu_block.repository')->trimActivePath() directly
+ *   instead.
  */
 function menu_tree_trim_active_path(&$tree) {
-  foreach ($tree AS $key => &$value) {
-    if (($tree[$key]['link']['in_active_trail'] || $tree[$key]['link']['expanded']) && $tree[$key]['below']) {
-      // Continue in the subtree, if it exists.
-      menu_tree_trim_active_path($tree[$key]['below']);
-    }
-    else {
-      // Trim anything not expanded or along the active trail.
-      $tree[$key]['below'] = FALSE;
-    }
-  }
+  \Drupal::service('menu_block.repository')->trimActivePath($tree);
 }
 
 /**
@@ -430,11 +301,12 @@ function menu_tree_trim_active_path(&$tree) {
  * @return
  *   void
  *
- * @todo add to repo or builder service
+ * @deprecated as of Drupal 8.x-2.0. Use
+ *   Drupal::service('menu_block.repository')->sortActivePath() directly
+ *   instead.
  */
 function menu_tree_sort_active_path(&$tree) {
-  module_load_include('inc', 'menu_block', 'menu_block.sort');
-  _menu_tree_sort_active_path($tree);
+  \Drupal::service('menu_block.repository')->sortActivePath($tree);
 }
 
 /**
@@ -670,7 +542,7 @@ function menu_block_tree_output(&$tree, $config = array()) {
  */
 function book_menu_block_get_menus() {
   $menus = array();
-  foreach (book_get_books() AS $book) {
+  foreach (\Drupal::service('book.manager')->getAllBooks() AS $book) {
     $menus[$book['menu_name']] = $book['title'];
   }
   return $menus;
