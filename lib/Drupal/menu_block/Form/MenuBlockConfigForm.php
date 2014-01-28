@@ -56,7 +56,9 @@ class MenuBlockConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
+
     $config = $this->configFactory->get('menu_block.settings');
+
     // Option to suppress core's blocks of menus.
     $form['menu_block_suppress_core'] = array(
       '#type' => 'checkbox',
@@ -73,7 +75,8 @@ class MenuBlockConfigForm extends ConfigFormBase {
     asort($menus);
 
     // Load stored configuration.
-    $menu_order = $this->configFactory->get('menu_block_menu_order');
+    $menu_order = $this->config('menu_block.settings')->get('menu_block_menu_order');
+
     // Remove any menus no longer in the list of all menus.
     foreach (array_keys($menu_order) as $menu) {
       if (!isset($menus[$menu])) {
@@ -88,14 +91,25 @@ class MenuBlockConfigForm extends ConfigFormBase {
       '#markup' => '<p>' . $this->t('If a block is configured to use <em>"the menu selected by the page"</em>, the block will be generated from the first "available" menu that contains a link to the page.') . '</p>',
     );
 
+
     // Orderable list of menu selections.
     $form['menu_order'] = array(
-      '#tree' => TRUE,
-      '#theme' => 'menu_block_menu_order',
+      '#type' => 'table',
+      '#header' => array(
+        t('Menu'),
+        t('Available'),
+        t('Weight'),
+      ),
+      '#attributes' => array('id' => 'menu-block-menus'),
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'menu-weight',
+        ),
+      ),
     );
 
-    $order = 0;
-    $total_menus = count($all_menus);
     foreach (array_keys($all_menus) as $menu_name) {
       $form['menu_order'][$menu_name] = array(
         'title' => array(
@@ -107,32 +121,22 @@ class MenuBlockConfigForm extends ConfigFormBase {
           '#default_value' => isset($menu_order[$menu_name]),
         ),
         'weight' => array(
-          '#type' => 'weight',
-          '#default_value' => $order - $total_menus,
-          '#delta' => $total_menus,
-          '#id' => 'edit-menu-block-menus-' . $menu_name,
+          '#type' => 'textfield',
+          '#title' => t('Weight for @title', array('@title' => $menu_name)),
+          '#title_display' => 'invisible',
+          '#default_value' => $menu_order[$menu_name],
+          '#attributes' => array('class' => array('menu-weight')),
         ),
+        '#attributes' => array('class' => array('draggable')),
       );
-      $order++;
     }
 
     $form['footer_note'] = array(
       '#markup' => '<p>' . $this->t('The above list will <em>not</em> affect menu blocks that are configured to use a specific menu.') . '</p>',
     );
 
-    $form['submit'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Save configuration'),
-    );
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
-    parent::validateForm($form, $form_state);
   }
 
   /**
@@ -156,7 +160,6 @@ class MenuBlockConfigForm extends ConfigFormBase {
     $config->set('menu_block_menu_order', $menu_order)
       ->set('menu_block_supress_core', $form_state['values']['menu_block_suppress_core'])
       ->save();
-    drupal_set_message(t('The configuration options have been saved.'));
     parent::submitForm($form, $form_state);
   }
 

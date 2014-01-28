@@ -6,7 +6,7 @@
 
 /**
  * Implements hook_theme().
- */
+ * /
 function menu_block_theme(&$existing, $type, $theme, $path) {
   // Add theme hook suggestion patterns for the core theme functions used in
   // this module. We can't add them during hook_theme_registry_alter() because
@@ -50,16 +50,12 @@ function menu_block_ctools_block_info($module, $delta, &$info) {
 /**
  * Implements hook_menu().
  * @todo move to routing.
- * /
+ */
 function menu_block_menu() {
   $items['admin/config/user-interface/menu-block'] = array(
     'title' => 'Menu block',
     'description' => 'Configure menu block.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_block_admin_settings_form'),
-    'access callback' => 'menu_block_access',
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'menu_block.admin.inc',
+    'route_name' => 'menu_block.configure',
   );
   return $items;
 }
@@ -67,13 +63,14 @@ function menu_block_menu() {
 /**
  * Implements hook_menu_alter().
  */
-function menu_block_menu_alter(&$items) {
-  // Fake the necessary menu attributes necessary for a contextual link.
-  $items['admin/content/book/%node']['title'] = 'Edit book outline';
-  $items['admin/content/book/%node']['type'] = MENU_LOCAL_TASK;
-  $items['admin/content/book/%node']['context'] = (MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE);
-  $items['admin/content/book/%node']['tab_root'] = 'admin/content/book';
-}
+// @todo Move this to contextual links yml.
+//function menu_block_menu_alter(&$items) {
+//  // Fake the necessary menu attributes necessary for a contextual link.
+//  $items['admin/content/book/%node']['title'] = 'Edit book outline';
+//  $items['admin/content/book/%node']['type'] = MENU_LOCAL_TASK;
+//  $items['admin/content/book/%node']['context'] = (MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE);
+//  $items['admin/content/book/%node']['tab_root'] = 'admin/content/book';
+//}
 
 /**
  * Implements hook_help().
@@ -90,7 +87,6 @@ function menu_block_help($path, $arg) {
       return _menu_block_help($path, $arg);
   }
 }
-
 /**
  * Process variables for menu-block-wrapper.html.twig
  *

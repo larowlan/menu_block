@@ -1,0 +1,7 @@
+menu_block.configure:
+  path: '/admin/config/user-interface/menu-block'
+  defaults:
+    _form: '\Drupal\menu_block\Form\MenuBlockConfigForm'
+    _title: 'Menu block'
+  requirements:
+    _permission: 'administer news feeds'

@@ -4,6 +4,8 @@
  * Provides infrequently used functions and hooks for menu_block.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Return the title of the block.
  *
@@ -64,7 +66,7 @@ function _menu_block_format_title($config) {
  */
 function theme_menu_block_menu_order($variables) {
   $element = $variables['element'];
-  drupal_add_tabledrag('menu-block-menus', 'order', 'sibling', 'menu-weight');
+//  drupal_add_tabledrag('menu-block-menus', 'order', 'sibling', 'menu-weight');
 
   $variables = array(
     'header' => array(
@@ -77,7 +79,7 @@ function theme_menu_block_menu_order($variables) {
   );
 
   // Generate table of draggable menu names.
-  foreach (element_children($element) as $menu_name) {
+  foreach (Element::children($element) as $menu_name) {
     $element[$menu_name]['weight']['#attributes']['class'] = array('menu-weight');
     $variables['rows'][] = array(
       'data' => array(
