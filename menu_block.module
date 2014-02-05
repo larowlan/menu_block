@@ -1,4 +1,6 @@
 <?php
+use Drupal\menu_block\Util\MenuTree;
+
 /**
  * @file
  * Provides configurable blocks of menu items.
@@ -49,7 +51,6 @@ function menu_block_ctools_block_info($module, $delta, &$info) {
 
 /**
  * Implements hook_menu().
- * @todo move to routing.
  */
 function menu_block_menu() {
   $items['admin/config/user-interface/menu-block'] = array(
@@ -151,47 +152,10 @@ function menu_block_get_current_page_menu() {
  *   - subject: The title rendered as HTML.
  *   - subject_array: The title as a renderable array.
  *
- * @todo move to builder service
+ * @deprecated
  */
 function menu_tree_build(&$config) {
-  // Retrieve the active menu item from the database.
-  if ($config['menu_name'] == MENU_TREE__CURRENT_PAGE_MENU) {
-    $config['menu_name'] = menu_block_get_current_page_menu();
-    $config['parent_mlid'] = 0;
-
-    // If no menu link was found, don't display the block.
-    if (empty($config['menu_name'])) {
-      return array(
-        'subject_array' => array(),
-        'content' => array(),
-      );
-    }
-  }
-
-  // Get the default block name.
-  $menu_names = \Drupal::service('menu_block.repository')->getMenus();
-  menu_block_set_title($menu_names[$config['menu_name']]);
-
-  // Get the raw menu tree data.
-  $tree = menu_tree_block_data($config);
-  $title = menu_block_get_title($config['title_link'], $config);
-
-  // Create a renderable tree.
-  $data = array();
-  $data['subject'] = $title;
-  $data['content']['#content'] = menu_block_tree_output($tree, $config);
-  if (!empty($data['content']['#content'])) {
-    $data['content']['#theme'] = array(
-      'menu_block_wrapper__' . str_replace('-', '_', $config['menu_name']),
-      'menu_block_wrapper'
-    );
-    $data['content']['#config'] = $config;
-  }
-  else {
-    $data['content'] = '';
-  }
-
-  return $data;
+  \Drupal::service('menu_block.render')->build($config);
 }
 
 /**
@@ -203,224 +167,10 @@ function menu_tree_build(&$config) {
  * @return
  *   array A renderable array containing the tree's title.
  *
- * @todo move to builder service.
+ * @deprecated
  */
 function menu_block_get_title($render_title_as_link = TRUE) {
-  $menu_item = menu_block_set_title();
-
-  // The tree's title is a menu title, a normal string.
-  if (is_string($menu_item)) {
-    $title = array('#markup' => check_plain($menu_item));
-  }
-  // The tree's title is a menu item with a link.
-  elseif ($render_title_as_link) {
-    if (!empty($menu_item['in_active_trail'])) {
-      if (!empty($menu_item['localized_options']['attributes']['class'])) {
-        $menu_item['localized_options']['attributes']['class'][] = 'active-trail';
-      }
-      else {
-        $menu_item['localized_options']['attributes']['class'][] = 'active-trail';
-      }
-    }
-    $title = array(
-      '#type' => 'link',
-      '#title' => $menu_item['title'],
-      '#href' => $menu_item['href'],
-      '#options' => $menu_item['localized_options'],
-    );
-  }
-  // The tree's title is a menu item.
-  else {
-    $title = array('#markup' => check_plain($menu_item['title']));
-  }
-  return $title;
-}
-
-/**
- * Sets the menu item to use for the tree's title.
- *
- * @param $item
- *   array The menu item (an array) or the menu item's title as a string.
- */
-function menu_block_set_title($item = NULL) {
-  $menu_item = &drupal_static(__FUNCTION__);
-
-  // Save the menu item.
-  if (!is_null($item)) {
-    $menu_item = $item;
-  }
-
-  return $menu_item;
-}
-
-/**
- * Add the active trail indicators into the tree.
- *
- * The data returned by menu_tree_page_data() has link['in_active_trail'] set to
- * TRUE for each menu item in the active trail. The data returned from
- * menu_tree_all_data() does not contain the active trail indicators. This is a
- * helper function that adds it back in.
- *
- * @param $tree
- *   array The menu tree.
- * @return
- *   void
- *
- * @deprecated as of Drupal 8.x-2.0. Use
- *   Drupal::service('menu_block.repository')->addActivePath() directly instead.
- */
-function menu_tree_add_active_path(&$tree) {
-  \Drupal::service('menu_block.repository')->addActivePath($tree);
-}
-
-/**
- * Trim everything but the active trail in the tree.
- *
- * @param $tree
- *   array The menu tree to trim.
- * @return
- *   void
- *
- * @deprecated as of Drupal 8.x-2.0. Use
- *   Drupal::service('menu_block.repository')->trimActivePath() directly
- *   instead.
- */
-function menu_tree_trim_active_path(&$tree) {
-  \Drupal::service('menu_block.repository')->trimActivePath($tree);
-}
-
-/**
- * Sort the active trail to the top of the tree.
- *
- * @param $tree
- *   array The menu tree to sort.
- * @return
- *   void
- *
- * @deprecated as of Drupal 8.x-2.0. Use
- *   Drupal::service('menu_block.repository')->sortActivePath() directly
- *   instead.
- */
-function menu_tree_sort_active_path(&$tree) {
-  \Drupal::service('menu_block.repository')->sortActivePath($tree);
-}
-
-/**
- * Prune a tree so that it begins at the specified level.
- *
- * This function will follow the active menu trail to the specified level.
- *
- * @param $tree
- *   array The menu tree to prune.
- * @param $level
- *   int The level of the original tree that will start the pruned tree.
- * @param $parent_item
- *   array The menu item that should be used as the root of the tree.
- * @return
- *   void
- *
- * @todo add to builder service
- */
-function menu_tree_prune_tree(&$tree, $level, $parent_item = FALSE) {
-  if (!empty($parent_item)) {
-    // Prune the tree along the path to the menu item.
-    for ($i = 1; $i <= MENU_MAX_DEPTH && $parent_item["p$i"] != '0'; $i++) {
-      $plid = $parent_item["p$i"];
-      $found_active_trail = FALSE;
-      // Examine each element at this level for the ancestor.
-      foreach ($tree AS $key => &$value) {
-        if ($tree[$key]['link']['mlid'] == $plid) {
-          menu_block_set_title($tree[$key]['link']);
-          // Prune the tree to the children of this ancestor.
-          $tree = $tree[$key]['below'] ? $tree[$key]['below'] : array();
-          $found_active_trail = TRUE;
-          break;
-        }
-      }
-      // If we don't find the ancestor, bail out.
-      if (!$found_active_trail) {
-        $tree = array();
-        break;
-      }
-    }
-  }
-
-  $is_front_page = drupal_is_front_page();
-  // Trim the upper levels down to the one desired.
-  for ($i = 1; $i < $level; $i++) {
-    $found_active_trail = FALSE;
-    // Examine each element at this level for the active trail.
-    foreach ($tree AS $key => &$value) {
-      // Also include the children of the front page.
-      if ($tree[$key]['link']['in_active_trail'] || ($tree[$key]['link']['link_path'] == '<front>' && $is_front_page)) {
-        // Get the title for the pruned tree.
-        menu_block_set_title($tree[$key]['link']);
-        // Prune the tree to the children of the item in the active trail.
-        $tree = $tree[$key]['below'] ? $tree[$key]['below'] : array();
-        $found_active_trail = TRUE;
-        break;
-      }
-    }
-    // If we don't find the active trail, the active item isn't in the tree we want.
-    if (!$found_active_trail) {
-      $tree = array();
-      break;
-    }
-  }
-}
-
-/**
- * Prune a tree so that it begins at the active menu item.
- *
- * @param $tree
- *   array The menu tree to prune.
- * @param $level
- *   string The level which the tree will be pruned to: 'active' or 'child'.
- * @return
- *   void
- *
- * @todo move to builder service
- */
-function menu_tree_prune_active_tree(&$tree, $level) {
-  module_load_include('inc', 'menu_block', 'menu_block.follow');
-  _menu_tree_prune_active_tree($tree, $level);
-}
-
-/**
- * Prune a tree so it does not extend beyond the specified depth limit.
- *
- * @param $tree
- *   array The menu tree to prune.
- * @param $depth_limit
- *   int The maximum depth of the returned tree; must be a positive integer.
- * @return
- *   void
- *
- * @todo move to builder service.
- */
-function menu_tree_depth_trim(&$tree, $depth_limit) {
-  // Prevent invalid input from returning a trimmed tree.
-  if ($depth_limit < 1) {
-    return;
-  }
-
-  // Examine each element at this level to find any possible children.
-  foreach ($tree AS $key => &$value) {
-    if ($tree[$key]['below']) {
-      if ($depth_limit > 1) {
-        menu_tree_depth_trim($tree[$key]['below'], $depth_limit-1);
-      }
-      else {
-        // Remove the children items.
-        $tree[$key]['below'] = FALSE;
-      }
-    }
-    if ($depth_limit == 1 && $tree[$key]['link']['has_children']) {
-      // Turn off the menu styling that shows there were children.
-      $tree[$key]['link']['has_children'] = FALSE;
-      $tree[$key]['link']['leaf_has_children'] = TRUE;
-    }
-  }
+  return \Drupal::service('menu_block.render')->getTitle();
 }
 
 /**
@@ -434,102 +184,10 @@ function menu_tree_depth_trim(&$tree, $depth_limit) {
  * @return
  *   string The rendered HTML of that data structure.
  *
- * @todo move to builder service
+ * @deprecated
  */
 function menu_block_tree_output(&$tree, $config = array()) {
-  $build = array();
-  $items = array();
-
-  // Create context if no config was provided.
-  if (empty($config)) {
-    // Grab any menu item to find the menu_name for this tree.
-    $menu_item = current($tree);
-    $config['menu_name'] = $menu_item['link']['menu_name'];
-  }
-  $hook_menu_name = str_replace('-', '_', $config['menu_name']);
-
-  // Pull out just the menu links we are going to render so that we
-  // get an accurate count for the first/last classes.
-  foreach ($tree as $key => &$value) {
-    if ($tree[$key]['link']['access'] && !$tree[$key]['link']['hidden']) {
-      $items[] = $tree[$key];
-    }
-  }
-
-  $router_item = menu_get_item();
-  $num_items = count($items);
-  foreach ($items as $i => &$data) {
-    $class = array();
-    if ($i == 0) {
-      $class[] = 'first';
-    }
-    if ($i == $num_items - 1) {
-      $class[] = 'last';
-    }
-    // Set a class for the <li>-tag. Since $data['below'] may contain local
-    // tasks, only set 'expanded' class if the link also has children within
-    // the current menu.
-    if ($data['link']['has_children'] && $data['below']) {
-      $class[] = 'expanded';
-    }
-    elseif ($data['link']['has_children']) {
-      $class[] = 'collapsed';
-    }
-    else {
-      $class[] = 'leaf';
-    }
-    if (!empty($data['link']['leaf_has_children'])) {
-      $class[] = 'has-children';
-    }
-    // Set a class if the link is in the active trail.
-    if ($data['link']['in_active_trail']) {
-      $class[] = 'active-trail';
-      $data['link']['localized_options']['attributes']['class'][] = 'active-trail';
-    }
-    if ($data['link']['href'] == \Drupal::request()->query->get('q') || ($data['link']['href'] == '<front>' && drupal_is_front_page())) {
-      $class[] = 'active';
-    }
-    // Set a menu link ID class.
-    $class[] = 'menu-mlid-' . $data['link']['mlid'];
-    // Normally, l() compares the href of every link with $_GET['q'] and sets
-    // the active class accordingly. But local tasks do not appear in menu
-    // trees, so if the current path is a local task, and this link is its
-    // tab root, then we have to set the class manually.
-    if ($data['link']['href'] == $router_item['tab_root_href'] && $data['link']['href'] != $_GET['q']) {
-      $data['link']['localized_options']['attributes']['class'][] = 'active';
-    }
-
-    // Allow menu-specific theme overrides.
-    $element['#theme'] = array(
-      'menu_link__menu_block__' . $hook_menu_name,
-      'menu_link__menu_block',
-      'menu_link__' . $hook_menu_name,
-      'menu_link',
-    );
-    $element['#attributes']['class'] = $class;
-    $element['#title'] = $data['link']['title'];
-    $element['#href'] = $data['link']['href'];
-    $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
-    $element['#below'] = $data['below'] ? menu_block_tree_output($data['below'], $config) : $data['below'];
-    $element['#original_link'] = $data['link'];
-    $element['#bid'] = array('module' => 'menu_block');
-    // Index using the link's unique mlid.
-    $build[$data['link']['mlid']] = $element;
-  }
-  if ($build) {
-    // Make sure drupal_render() does not re-order the links.
-    $build['#sorted'] = TRUE;
-    // Add the theme wrapper for outer markup.
-    // Allow menu-specific theme overrides.
-    $build['#theme_wrappers'][] = array(
-      'menu_tree__menu_block__' . $hook_menu_name,
-      'menu_tree__menu_block',
-      'menu_tree__' . $hook_menu_name,
-      'menu_tree',
-    );
-  }
-
-  return $build;
+  return \Drupal::service('menu_block.render')->treeOutput();
 }
 
 /**
