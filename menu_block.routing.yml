@@ -4,6 +4,4 @@ menu_block.configure:
     _form: '\Drupal\menu_block\Form\MenuBlockConfigForm'
     _title: 'Menu block'
   requirements:
-# Add access checker because _permission: 'administer blocks + administer menu'
-# is not allowed.
-    _permission: 'administer blocks'
+    _menu_block_access: 'TRUE'
