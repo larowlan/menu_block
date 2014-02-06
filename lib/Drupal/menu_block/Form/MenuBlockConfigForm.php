@@ -124,7 +124,7 @@ class MenuBlockConfigForm extends ConfigFormBase {
           '#type' => 'textfield',
           '#title' => t('Weight for @title', array('@title' => $menu_name)),
           '#title_display' => 'invisible',
-          '#default_value' => $menu_order[$menu_name],
+          '#default_value' => isset($menu_order[$menu_name]) ? $menu_order[$menu_name] : 0,
           '#attributes' => array('class' => array('menu-weight')),
         ),
         '#attributes' => array('class' => array('draggable')),
@@ -158,7 +158,7 @@ class MenuBlockConfigForm extends ConfigFormBase {
       $menu_order[$menu_name] = '';
     }
     $config->set('menu_block_menu_order', $menu_order)
-      ->set('menu_block_supress_core', $form_state['values']['menu_block_suppress_core'])
+      ->set('menu_block_suppress_core', $form_state['values']['menu_block_suppress_core'])
       ->save();
     parent::submitForm($form, $form_state);
   }
