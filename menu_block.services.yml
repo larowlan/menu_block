@@ -9,4 +9,4 @@ services:
 
   menu_block.render:
     class: Drupal\menu_block\MenuBlockViewBuilder
-    arguments: ['@menu_block.builder', '@request', '@menu_block.repository]
+    arguments: ['@menu_block.builder', '@request', '@menu_block.repository']
