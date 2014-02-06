@@ -10,3 +10,8 @@ services:
   menu_block.render:
     class: Drupal\menu_block\MenuBlockViewBuilder
     arguments: ['@menu_block.builder', '@request', '@menu_block.repository']
+
+  access_check.menu_block:
+    class: Drupal\menu_block\Access\MenuBlockAccessCheck
+    tags:
+      - { name: access_check, applies_to: _menu_block_access }
