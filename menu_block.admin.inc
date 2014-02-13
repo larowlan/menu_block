@@ -60,36 +60,3 @@ function _menu_block_format_title($config) {
   }
   return $title;
 }
-
-/**
- * Theme a drag-to-reorder table of menu selection checkboxes.
- */
-function theme_menu_block_menu_order($variables) {
-  $element = $variables['element'];
-//  drupal_add_tabledrag('menu-block-menus', 'order', 'sibling', 'menu-weight');
-
-  $variables = array(
-    'header' => array(
-      t('Menu'),
-      t('Available'),
-      t('Weight'),
-    ),
-    'rows' => array(),
-    'attributes' => array('id' => 'menu-block-menus'),
-  );
-
-  // Generate table of draggable menu names.
-  foreach (Element::children($element) as $menu_name) {
-    $element[$menu_name]['weight']['#attributes']['class'] = array('menu-weight');
-    $variables['rows'][] = array(
-      'data' => array(
-        drupal_render($element[$menu_name]['title']),
-        drupal_render($element[$menu_name]['available']),
-        drupal_render($element[$menu_name]['weight']),
-      ),
-      'class' => array('draggable'),
-    );
-  }
-
-  return theme('table', $variables);
-}
