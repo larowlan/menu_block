@@ -32,33 +32,15 @@ function menu_block_theme(&$existing, $type, $theme, $path) {
 }
 
 /**
- * Not yet needed.
- * /
-function menu_block_ctools_plugin_directory($module, $plugin) {
-  module_load_include('inc', 'menu_block', 'menu_block.admin');
-  return _menu_block_ctools_plugin_directory($module, $plugin);
-}
-
-/**
- * Implements hook_ctools_block_info().
- *
- * @see ctools_block_content_type_content_types().
- * /
-function menu_block_ctools_block_info($module, $delta, &$info) {
-  $info['icon'] = 'icon_contrib_menu.png';
-  $info['category'] = t('Menus');
-}
-
-/**
- * Implements hook_menu().
+ * Implements hook_menu_link_defaults().
  */
-function menu_block_menu() {
-  $items['admin/config/user-interface/menu-block'] = array(
-    'title' => 'Menu block',
+function menu_block_menu_link_defaults() {
+  $links['menu_block.configure'] = array(
+    'link_title' => 'Menu Block',
     'description' => 'Configure menu block.',
     'route_name' => 'menu_block.configure',
   );
-  return $items;
+  return $links;
 }
 
 /**
