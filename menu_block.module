@@ -44,18 +44,6 @@ function menu_block_menu_link_defaults() {
 }
 
 /**
- * Implements hook_menu_alter().
- */
-// @todo Move this to contextual links yml.
-//function menu_block_menu_alter(&$items) {
-//  // Fake the necessary menu attributes necessary for a contextual link.
-//  $items['admin/content/book/%node']['title'] = 'Edit book outline';
-//  $items['admin/content/book/%node']['type'] = MENU_LOCAL_TASK;
-//  $items['admin/content/book/%node']['context'] = (MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE);
-//  $items['admin/content/book/%node']['tab_root'] = 'admin/content/book';
-//}
-
-/**
  * Implements hook_help().
  */
 function menu_block_help($path, $arg) {
@@ -70,6 +58,7 @@ function menu_block_help($path, $arg) {
       return _menu_block_help($path, $arg);
   }
 }
+
 /**
  * Process variables for menu-block-wrapper.html.twig
  *
