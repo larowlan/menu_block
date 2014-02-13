@@ -35,10 +35,12 @@ function menu_block_theme(&$existing, $type, $theme, $path) {
  * Implements hook_menu_link_defaults().
  */
 function menu_block_menu_link_defaults() {
+  $links = array();
   $links['menu_block.configure'] = array(
     'link_title' => 'Menu Block',
     'description' => 'Configure menu block.',
     'route_name' => 'menu_block.configure',
+    'parent' => 'system.admin.config.user-interface',
   );
   return $links;
 }
