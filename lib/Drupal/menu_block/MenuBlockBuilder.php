@@ -99,7 +99,7 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
     $this->entityManager = $entity_manager;
     $this->cache = $cache;
     $this->moduleHandler = $module_handler;
-    $this->config = $config_factory->get('menu_block');
+    $this->config = $config_factory->get('menu_block.settings');
     $this->request = $request;
     $this->repository = $repository;
   }

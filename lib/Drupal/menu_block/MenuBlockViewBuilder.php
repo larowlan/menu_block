@@ -160,13 +160,6 @@ class MenuBlockViewBuilder {
       }
       // Set a menu link ID class.
       $class[] = 'menu-mlid-' . $data['link']['mlid'];
-      // Normally, l() compares the href of every link with $_GET['q'] and sets
-      // the active class accordingly. But local tasks do not appear in menu
-      // trees, so if the current path is a local task, and this link is its
-      // tab root, then we have to set the class manually.
-      if ($data['link']['href'] == $router_item['tab_root_href'] && $data['link']['href'] != $this->request->query->get('q')) {
-        $data['link']['localized_options']['attributes']['class'][] = 'active';
-      }
 
       // Allow menu-specific theme overrides.
       $element['#theme'] = array(
