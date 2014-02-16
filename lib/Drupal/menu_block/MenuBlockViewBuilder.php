@@ -249,16 +249,11 @@ class MenuBlockViewBuilder {
     // Create a renderable tree.
     $data = array();
     $data['subject'] = $title;
-    $data['content']['#content'] = $this->treeOutput($tree, $config);
-    if (!empty($data['content']['#content'])) {
-      $data['content']['#theme'] = array(
-        'menu_block_wrapper__' . str_replace('-', '_', $config['menu_name']),
-        'menu_block_wrapper'
-      );
-      $data['content']['#config'] = $config;
-    }
-    else {
-      $data['content'] = '';
+    $data['content'] = $this->treeOutput($tree, $config);
+
+    if (!empty($data['content'])) {
+      $data['#theme'] = 'menu_block_wrapper';
+      $data['#config'] = $config;
     }
 
     return $data;
