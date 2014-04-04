@@ -1,0 +1,5 @@
+menu_block.configure:
+  title: 'Menu block'
+  description: 'Configuration options for the menu block module.'
+  route_name: menu_block.configure
+  parent: system.admin_config_ui
