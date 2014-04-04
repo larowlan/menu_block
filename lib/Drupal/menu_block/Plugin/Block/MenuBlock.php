@@ -37,9 +37,9 @@ class MenuBlock extends BlockBase {
 
     // Build the standard form.
     // @todo Move this to hook_library_info with dependencies on jquery.
-    $form['#attached']['js'][] = drupal_get_path('module', 'menu_block') . '/menu-block.js';
-    $form['#attached']['css'][] = drupal_get_path('module', 'menu_block') . '/menu-block.admin.css';
-    $form['#attached']['library'][] = 'system/ui.button';
+    $form['#attached']['library'][] = 'core/jquery.ui.button';
+    $form['#attached']['js'][] = drupal_get_path('module', 'menu_block') . '/js/menu-block.js';
+    $form['#attached']['css'][] = drupal_get_path('module', 'menu_block') . '/css/menu-block.admin.css';
     // $form['#attached']['library'][] = array('menu_block', 'menu_block.admin');
 
     $form['menu-block-wrapper-start'] = array(
