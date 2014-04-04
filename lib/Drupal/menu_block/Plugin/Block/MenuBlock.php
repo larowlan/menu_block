@@ -54,7 +54,7 @@ class MenuBlock extends BlockBase {
         'basic' => t('Basic options'),
         'advanced' => t('Advanced options'),
       ),
-      '#attributes' => array('class' => array('clearfix')),
+      '#attributes' => array('class' => array('clearfix', 'display-options')),
       '#weight' => -29,
     );
     $form['title_link'] = array(
