@@ -29,14 +29,14 @@ class MenuBlockRepository implements MenuBlockRepositoryInterface {
    *
    * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
-  protected $linkStorageController;
+  protected $linkStorage;
 
   /**
    * The menu storage controller.
    *
    * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
-  protected $menuStorageController;
+  protected $menuStorage;
 
   /**
    * The cache.menu bin
@@ -73,8 +73,8 @@ class MenuBlockRepository implements MenuBlockRepositoryInterface {
    */
   public function __construct(Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler) {
     $this->database = $database;
-    $this->linkStorageController = $entity_manager->getStorageController('menu_link');
-    $this->menuStorageController = $entity_manager->getStorageController('menu');
+    $this->linkStorage = $entity_manager->getStorage('menu_link');
+    $this->menuStorage = $entity_manager->getStorage('menu');
     $this->cache = $cache;
     $this->moduleHandler = $module_handler;
   }
@@ -105,7 +105,7 @@ class MenuBlockRepository implements MenuBlockRepositoryInterface {
    * Fetch core menus.
    */
   protected function coreMenus() {
-    if ($custom_menus = $this->menuStorageController->loadMultiple()) {
+    if ($custom_menus = $this->menuStorage->loadMultiple()) {
       foreach ($custom_menus as $menu_name => $menu) {
         $custom_menus[$menu_name] = $menu->label();
       }
@@ -118,7 +118,7 @@ class MenuBlockRepository implements MenuBlockRepositoryInterface {
    * {@inheritdoc}
    */
   public function loadLink($mlid) {
-    $this->linkStorageController->load($mlid);
+    $this->linkStorage->load($mlid);
   }
 
 }
