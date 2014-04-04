@@ -44,14 +44,14 @@ label#item-label {
   background-repeat: no-repeat;
   float: left;
 }
-.display-options .ui-buttonset label.ui-state-active {
+.display-options.ui-buttonset label.ui-state-active {
   color: #fff;
   background-position: left -50px;
 }
-.display-options .ui-buttonset label.ui-button.ui-corner-right {
+.display-options.ui-buttonset label.ui-button.ui-corner-right {
   border-left: none;
 }
-.display-options .ui-button .ui-button-text {
+.display-options.ui-button .ui-button-text {
   display: inline;
   padding: 0;
 }
