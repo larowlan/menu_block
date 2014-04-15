@@ -37,9 +37,9 @@ class MenuBlock extends BlockBase {
 
     // Build the standard form.
     // @todo Move this to hook_library_info with dependencies on jquery.
-    $form['#attached']['js'][] = drupal_get_path('module', 'menu_block') . '/menu-block.js';
-    $form['#attached']['css'][] = drupal_get_path('module', 'menu_block') . '/menu-block.admin.css';
-    $form['#attached']['library'][] = array('system', 'ui.button');
+    $form['#attached']['library'][] = 'core/jquery.ui.button';
+    $form['#attached']['js'][] = drupal_get_path('module', 'menu_block') . '/js/menu-block.js';
+    $form['#attached']['css'][] = drupal_get_path('module', 'menu_block') . '/css/menu-block.admin.css';
     // $form['#attached']['library'][] = array('menu_block', 'menu_block.admin');
 
     $form['menu-block-wrapper-start'] = array(
@@ -54,7 +54,7 @@ class MenuBlock extends BlockBase {
         'basic' => t('Basic options'),
         'advanced' => t('Advanced options'),
       ),
-      '#attributes' => array('class' => array('clearfix')),
+      '#attributes' => array('class' => array('clearfix', 'display-options')),
       '#weight' => -29,
     );
     $form['title_link'] = array(
@@ -136,7 +136,7 @@ class MenuBlock extends BlockBase {
       '#description' => t('When following the active menu item, specify if the starting level should be the active menu item or its children.'),
       '#states' => array(
         'visible' => array(
-          ':input[name=follow]' => array('checked' => TRUE),
+          ':input[name="follow"]' => array('checked' => TRUE),
         ),
       ),
     );
@@ -245,31 +245,28 @@ class MenuBlock extends BlockBase {
     $this->setConfiguration($form_state['values']);
   }
 
-
   /**
    * Validates the parent element of the block configuration form.
-   * @todo fix warnings or move to validate method.
    */
   public static function parentValidate($element, &$form_state) {
     // Determine the fixed parent item's menu and mlid.
-    list($menu_name, $parent_mlid) = explode(':', $form_state['values']['parent']);
-    $form_state['values']['parent_mlid'] = (int) $parent_mlid;
+    list($menu_name, $parent_mlid) = explode(':', $form_state['values']['settings']['parent']);
+    $form_state['values']['settings']['parent_mlid'] = (int) $parent_mlid;
 
     if ($parent_mlid) {
       // If mlid is set, its menu overrides the menu_name option.
-      $form_state['values']['menu_name'] = $menu_name;
+      $form_state['values']['settings']['menu_name'] = $menu_name;
     }
   }
 
   /**
    * Validates the follow element of the block configuration form.
-   * @todo fix warnings or move to validate method.
    */
   public static function followValidate($element, &$form_state) {
     // The value of "follow" stored in the database/config array is either FALSE
     // or the value of the "follow_parent" form element.
-    if ($form_state['values']['follow'] && !empty($form_state['values']['follow_parent'])) {
-      $form_state['values']['follow'] = $form_state['values']['follow_parent'];
+    if ($form_state['values']['settings']['follow'] && !empty($form_state['values']['settings']['follow_parent'])) {
+      $form_state['values']['settings']['follow'] = $form_state['values']['settings']['follow_parent'];
     }
   }
 
