@@ -1,102 +1,77 @@
 <?php
-use Drupal\menu_block\Util\MenuTree;
 
 /**
  * @file
  * Provides configurable blocks of menu items.
  */
 
-/**
- * Implements hook_theme().
- * /
-function menu_block_theme(&$existing, $type, $theme, $path) {
-  // Add theme hook suggestion patterns for the core theme functions used in
-  // this module. We can't add them during hook_theme_registry_alter() because
-  // we will already have missed the opportunity for the theme engine's
-  // theme_hook() to process the pattern. And we can't run the pattern ourselves
-  // because we aren't given the type, theme and path in that hook.
-  $existing['menu_tree']['pattern'] = 'menu_tree__';
-  $existing['menu_link']['pattern'] = 'menu_link__';
-
-  return array(
-    'menu_block_wrapper' => array(
-      'template' => 'menu-block-wrapper',
-      'variables' => array('content' => array(), 'config' => array(), 'delta' => NULL),
-      'pattern' => 'menu_block_wrapper__',
-    ),
-    'menu_block_menu_order' => array(
-      'render element' => 'element',
-      'file' => 'menu_block.admin.inc',
-    ),
-  );
-}
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
- * Not yet needed.
- * /
-function menu_block_ctools_plugin_directory($module, $plugin) {
-  module_load_include('inc', 'menu_block', 'menu_block.admin');
-  return _menu_block_ctools_plugin_directory($module, $plugin);
-}
-
-/**
- * Implements hook_ctools_block_info().
- *
- * @see ctools_block_content_type_content_types().
- * /
-function menu_block_ctools_block_info($module, $delta, &$info) {
-  $info['icon'] = 'icon_contrib_menu.png';
-  $info['category'] = t('Menus');
-}
-
-/**
- * Implements hook_menu().
+ * Implements hook_menu_link_defaults().
  */
-function menu_block_menu() {
-  $items['admin/config/user-interface/menu-block'] = array(
-    'title' => 'Menu block',
+function menu_block_menu_link_defaults() {
+  $links = array();
+  $links['menu_block.configure'] = array(
+    'link_title' => 'Menu Block',
     'description' => 'Configure menu block.',
     'route_name' => 'menu_block.configure',
+    'parent' => 'system.admin.config.user-interface',
   );
-  return $items;
+  return $links;
 }
-
-/**
- * Implements hook_menu_alter().
- */
-// @todo Move this to contextual links yml.
-//function menu_block_menu_alter(&$items) {
-//  // Fake the necessary menu attributes necessary for a contextual link.
-//  $items['admin/content/book/%node']['title'] = 'Edit book outline';
-//  $items['admin/content/book/%node']['type'] = MENU_LOCAL_TASK;
-//  $items['admin/content/book/%node']['context'] = (MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE);
-//  $items['admin/content/book/%node']['tab_root'] = 'admin/content/book';
-//}
 
 /**
  * Implements hook_help().
  */
 function menu_block_help($path, $arg) {
-  switch ($path) {
-    case 'admin/structure/block/manage/%/%':
-      if ($arg[4] != 'menu_block') {
-        break;
-      }
-    case 'admin/help#menu_block':
-    case 'admin/structure/block/add-menu-block':
-      module_load_include('inc', 'menu_block', 'menu_block.pages');
-      return _menu_block_help($path, $arg);
+  $request = \Drupal::request();
+  $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+
+
+  if ($route_name == 'help.main' || ($route_name == 'block.admin_add' && $request->attributes->get('plugin_id') == 'menu_block')) {
+    return '<p>' . t('To learn more about configuring menu blocks, see <a href="!url">menu block’s detailed help</a>.', array('!url' => url('admin/help/menu_block'))) . '</p>';
   }
-}
-/**
- * Process variables for menu-block-wrapper.html.twig
- *
- * @see menu-block-wrapper.html.twig
- */
-function template_preprocess_menu_block_wrapper(&$variables) {
-  $variables['attributes']['class'][] = 'menu-name-' . $variables['config']['menu_name'];
-  $variables['attributes']['class'][] = 'parent-mlid-' . $variables['config']['parent_mlid'];
-  $variables['attributes']['class'][] = 'menu-level-' . $variables['config']['level'];
+  elseif ($route_name == 'help.page' && $request->attributes->get('name') == 'menu_block') {
+    $output =
+      '<h3>' . t('Adding menu blocks') . '</h3>'
+      . '<p>' . t('To add new menu blocks, use the "<a href="!add-url">Add menu block</a>" link on the <a href="!block-url">administer blocks page</a>. You will then be able to configure your menu block before adding it.', array('!add-url' => url('admin/structure/block/add-menu-block'), '!block-url' => url('admin/structure/block'))) . '</p>'
+      . '<h3>' . t('Configuring menu blocks') . '</h3>'
+      . '<p>' . t('When adding or configuring a menu block, several configuration options are available:') . '</p>'
+      . '<h4>' . t('Basic options') . '</h4>'
+      . '<dl>'
+      . '<dt><strong>' . t('Block title') . '</strong></dt>'
+      . '<dd>' . t('For menu trees that start with the 1st level, the default block title will be the menu name. For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level.')
+      . '<p>' . t('For example, if the active menu trail for the Mangement menu is: Administer › Structure › Menus › Main menu, then a menu block configured to start with the 1st level of the Management menu will display a block title of “Management”. And a menu block configured to start with the 3rd level of the Management menu will display a block title of “Structure”.') . '</p></dd>'
+      . '<dt><strong>' . t('Block title as link') . '</strong></dt>'
+      . '<dd>' . t('For menu trees that start with the 2nd level or deeper, the default block title will be the title for the parent menu item of the specified level. If this option is checked, the block title will be a link to that menu item.') . '</dd>'
+      . '<dt><strong>' . t('Administrative title') . '</strong></dt>'
+      . '<dd>' . t('To help identify the block on the administer blocks page, you can specify a unique title to be used on that page. If blank, the regular title will be used.') . '</dd>'
+      . '<dt><strong>' . t('Menu name') . '</strong></dt>'
+      . '<dd>' . t('Select the menu to use for the tree of links.') . '</dd>'
+      . '<dt><strong>' . t('Starting level') . '</strong></dt>'
+      . '<dd>' . t('Blocks that start with the 1st level will always be visible. Blocks that start with the 2nd level or deeper will only be visible when the trail to the active menu item is in the block’s tree.') . '</dd>'
+      . '<dt><strong>' . t('Maximum depth') . '</strong></dt>'
+      . '<dd>' . t('From the starting level, specify the maximum depth of the tree. Blocks with a maximum depth of 1 will just be a single un-nested list of links with none of those links’ children displayed.') . '</dd>'
+      . '</dl>'
+      . '<h4>' . t('Advanced options') . '</h4>'
+      . '<dl>'
+      . '<dt><strong>' . t('Make the starting level follow the active menu item') . '</strong></dt>'
+      . '<dd>' . t('If the active menu item is deeper than the level specified above, the starting level will follow the active menu item. Otherwise, the starting level of the tree will remain fixed.') . '</dd>'
+      . '<dt><strong>' . t('Expand all children') . '</strong></dt>'
+      . '<dd>' . t('All children of this menu will be expanded.') . '</dd>'
+      . '<dt><strong>' . t('Sort') . '</strong></dt>'
+      . '<dd>' . t('Sort each item in the active trail to the top of its level. When used on a deep or wide menu tree, the active menu item’s children will be easier to see when the page is reloaded.') . '</dd>'
+      . '<dt><strong>' . t('Fixed parent item') . '</strong></dt>'
+      . '<dd>' . t('If you select a specific menu item, you alter the “starting level” and “maximum depth” options to be relative to the fixed parent item. The tree of links will only contain children of the selected parent item.') . '</dd>'
+      . '</dl>'
+      . '<h3>' . t('Styling menu blocks') . '</h3>'
+      . '<p>' . t('Themers should be aware of the myriad of classes, templates and theme functions available to them. See the <a href="!url">online documentation</a> or the README.txt file for detailed information about each of them.', array('!url' => url('http://drupal.org/node/748022'))) . '</p>'
+      . '<h3>' . t('Menu block API') . '</h3>'
+      . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>'
+      . '<p>' . t('In addition, Menu block implements HOOK_get_menus() and HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation.') . '</p>';
+    return $output;
+  }
 }
 
 /**
@@ -155,7 +130,7 @@ function menu_block_get_current_page_menu() {
  * @deprecated
  */
 function menu_tree_build(&$config) {
-  \Drupal::service('menu_block.render')->build($config);
+  return \Drupal::service('menu_block.render')->build($config);
 }
 
 /**
