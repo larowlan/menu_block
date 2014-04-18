@@ -2,6 +2,6 @@ name: Menu Block
 description: Provides configurable blocks of menu items.
 core: 8.x
 dependencies:
- - menu
+ - menu_ui
 configure: menu_block.configure
 type: module
