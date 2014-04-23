@@ -13,6 +13,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\menu_block\Util\MenuTree;
+use Drupal\menu_link\MenuTreeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -77,6 +78,13 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
   protected $repository;
 
   /**
+   * The menu tree service.
+   *
+   * @var \Drupal\menu_link\MenuTreeInterface;
+   */
+  protected $menuTree;
+
+  /**
    * Constructs the menu block repository service.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -93,8 +101,10 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
    *   The request object.
    * @param \Drupal\menu_block\MenuBlockRepositoryInterface $repository
    *   The menu block repository.
+   * @param \Drupal\menu_link\MenuTreeInterface $menu_tree
+   *   The menu tree service.
    */
-  public function __construct(Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, Request $request, MenuBlockRepositoryInterface $repository) {
+  public function __construct(Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, Request $request, MenuBlockRepositoryInterface $repository, MenuTreeInterface $menu_tree) {
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->cache = $cache;
@@ -102,6 +112,7 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
     $this->config = $config_factory->get('menu_block.settings');
     $this->request = $request;
     $this->repository = $repository;
+    $this->menuTree = $menu_tree;
   }
 
   /**
@@ -114,17 +125,17 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
     if ($config['expanded'] || $config['parent_mlid']) {
       // Get the full, un-pruned tree.
       if ($config['parent_mlid']) {
-        $tree = $this->menuTreeAllData($config['menu_name']);
+        $tree = $this->menuTree->buildAllData($config['menu_name']);
       }
       else {
-        $tree = $this->menuTreeAllData($config['menu_name'], NULL, $max_depth);
+        $tree = $this->menuTree->buildAllData($config['menu_name'], NULL, $max_depth);
       }
       // And add the active trail data back to the full tree.
       $this->addActivePath($tree);
     }
     else {
       // Get the tree pruned for just the active trail.
-      $tree = $this->menuTreePageData($config['menu_name'], $max_depth);
+      $tree = $this->menuTree->buildPageData($config['menu_name'], $max_depth);
     }
 
     // Allow alteration of the tree and config before we begin operations on it.
@@ -168,6 +179,9 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
    * {@inheritdoc}
    */
   public function getCurrentPageMenu() {
+
+    $menu_name = $this->getCurrentPageMenu();
+
     // Retrieve the list of available menus.
     $menu_order = $this->config->get('menu_block_menu_order');
 
@@ -182,7 +196,7 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
     // Extract the "current" path from the request, or from the active menu
     // trail if applicable.
     $link_path = $this->request->query->has('q') ? $this->request->query->get('q') : '<front>';
-    $trail = $this->menuGetActiveTrail();
+    $trail = $this->menuTree->getActiveTrailIds($menu_name);
     $last_item = end($trail);
     if (!empty($last_item['link_path'])) {
       $link_path = $last_item['link_path'];
@@ -225,7 +239,7 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
   public function addActivePath(&$tree) {
     // Grab any menu item to find the menu_name for this tree.
     $menu_item = current($tree);
-    $tree_with_trail = $this->menuTreePageData($menu_item['link']['menu_name']);
+    $tree_with_trail = $this->menuTree->buildPageData($menu_item['link']['menu_name']);
 
     // To traverse the original tree down the active trail, we use a pointer.
     $subtree_pointer =& $tree;
@@ -306,27 +320,6 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
         $current_level =& $current_level[$next_level]['below'];
       }
     } while ($next_level);
-  }
-
-  /**
-   * Wraps menu_tree_all_data().
-   */
-  protected function menuTreeAllData($menu_name, $link = NULL, $max_depth = NULL) {
-    return menu_tree_all_data($menu_name, $link, $max_depth);
-  }
-
-  /**
-   * Wraps menu_tree_page_data().
-   */
-  protected function menuTreePageData($menu_name, $max_depth = NULL, $only_active_trail = FALSE) {
-    return menu_tree_page_data($menu_name, $max_depth, $only_active_trail);
-  }
-
-  /**
-   * Wraps menu_get_active_trail().
-   */
-  protected function menuGetActiveTrail() {
-    return menu_get_active_trail();
   }
 
   /**

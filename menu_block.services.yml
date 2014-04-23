@@ -5,7 +5,7 @@ services:
 
   menu_block.builder:
     class: Drupal\menu_block\MenuBlockBuilder
-    arguments: ['@database', '@entity.manager', '@cache.data', '@module_handler', '@config.factory', '@request', '@menu_block.repository']
+    arguments: ['@database', '@entity.manager', '@cache.data', '@module_handler', '@config.factory', '@request', '@menu_block.repository', '@menu_link.tree']
 
   menu_block.render:
     class: Drupal\menu_block\MenuBlockViewBuilder
