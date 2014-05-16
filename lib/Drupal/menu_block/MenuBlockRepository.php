@@ -27,14 +27,14 @@ class MenuBlockRepository implements MenuBlockRepositoryInterface {
   /**
    * The menu link storage controller.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $linkStorage;
 
   /**
    * The menu storage controller.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $menuStorage;
 

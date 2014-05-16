@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\menu_block\Util\MenuTree;
 use Drupal\menu_link\MenuTreeInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a service for building menu block output.
@@ -66,9 +67,9 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
   /**
    * The request object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The menu block repository.
@@ -97,20 +98,21 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
    *   The module handler service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request object.
    * @param \Drupal\menu_block\MenuBlockRepositoryInterface $repository
    *   The menu block repository.
    * @param \Drupal\menu_link\MenuTreeInterface $menu_tree
    *   The menu tree service.
    */
-  public function __construct(Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, Request $request, MenuBlockRepositoryInterface $repository, MenuTreeInterface $menu_tree) {
+  public function __construct(Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, RequestStack $requestStack, MenuBlockRepositoryInterface $repository, MenuTreeInterface $menu_tree) {
+
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->cache = $cache;
     $this->moduleHandler = $module_handler;
     $this->config = $config_factory->get('menu_block.settings');
-    $this->request = $request;
+    $this->requestStack = $requestStack;
     $this->repository = $repository;
     $this->menuTree = $menu_tree;
   }
@@ -180,7 +182,10 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
    */
   public function getCurrentPageMenu() {
 
-    $menu_name = $this->getCurrentPageMenu();
+    $request = $this->requestStack->getCurrentRequest();
+
+    // Default menu name.
+    $menu_name = 'main';
 
     // Retrieve the list of available menus.
     $menu_order = $this->config->get('menu_block_menu_order');
@@ -195,7 +200,7 @@ class MenuBlockBuilder implements MenuBlockBuilderInterface {
 
     // Extract the "current" path from the request, or from the active menu
     // trail if applicable.
-    $link_path = $this->request->query->has('q') ? $this->request->query->get('q') : '<front>';
+    $link_path = $request->query->has('q') ? $request->query->get('q') : '<front>';
     $trail = $this->menuTree->getActiveTrailIds($menu_name);
     $last_item = end($trail);
     if (!empty($last_item['link_path'])) {

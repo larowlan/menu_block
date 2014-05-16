@@ -28,9 +28,8 @@ function menu_block_help($path, $arg) {
   $request = \Drupal::request();
   $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
 
-
   if ($route_name == 'help.main' || ($route_name == 'block.admin_add' && $request->attributes->get('plugin_id') == 'menu_block')) {
-    return '<p>' . t('To learn more about configuring menu blocks, see <a href="!url">menu block’s detailed help</a>.', array('!url' => url('admin/help/menu_block'))) . '</p>';
+    $output = '<p>' . t('To learn more about configuring menu blocks, see <a href="!url">menu block’s detailed help</a>.', array('!url' => url('admin/help/menu_block'))) . '</p>';
   }
   elseif ($route_name == 'help.page' && $request->attributes->get('name') == 'menu_block') {
     $output =
@@ -70,8 +69,8 @@ function menu_block_help($path, $arg) {
       . '<h3>' . t('Menu block API') . '</h3>'
       . '<p>' . t('Developers can use the API of this module to create their own menu trees outside the confines of blocks. All of the publicly available API functions are documented in the menu_block.module file.') . '</p>'
       . '<p>' . t('In addition, Menu block implements HOOK_get_menus() and HOOK_menu_block_tree_alter(). See menu_block.api.php for documentation.') . '</p>';
-    return $output;
   }
+  return $output;
 }
 
 /**

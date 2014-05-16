@@ -23,7 +23,7 @@ function hook_menu_block_tree_alter(&$tree, &$config) {
 /**
  * Return a list of menus to use with the menu_block module.
  *
- * @return
+ * @return array
  *   An array containing the menus' machine names as keys with their menu titles
  *   as values.
  */
@@ -41,7 +41,7 @@ function hook_menu_block_get_menus() {
  * Menu block's settings page sorts menus for use with its "the menu selected by
  * the page" option.
  *
- * @return
+ * @return array
  *   An array containing the menus' machine names as keys with their menu titles
  *   as values. The key may optionally be a regular expression to match several
  *   menus at a time; see book_menu_block_get_sort_menus() for an example.

@@ -173,7 +173,7 @@ class MenuBlock extends BlockBase {
       '#type' => 'select',
       '#title' => t('Fixed parent item'),
       '#default_value' => $config['menu_name'] . ':' . $config['parent_mlid'],
-      '#options' => menu_parent_options($menus),
+      '#options' => menu_ui_parent_options($menus),
       '#description' => t('Alter the “starting level” and “maximum depth” options to be relative to the fixed parent item. The tree of links will only contain children of the selected menu item.'),
       '#attributes' => array('class' => array('menu-block-parent-mlid')),
       '#element_validate' => array('\Drupal\menu_block\Plugin\Block\MenuBlock::parentValidate'),
@@ -203,11 +203,11 @@ class MenuBlock extends BlockBase {
    */
   public function build() {
     $config = $this->configuration;
-    $data = menu_tree_build($config);
+    $data = \Drupal::service('menu_block.render')->build($config);
     // Add contextual links for this block.
     if (!empty($data['content'])) {
       // @todo use the repo service.
-      if (in_array($config['menu_name'], array_keys(menu_get_menus()))) {
+      if (in_array($config['menu_name'], array_keys(menu_ui_get_menus()))) {
         // @todo move these to plugins.
         $data['content']['#contextual_links']['menu_block'] = array('admin/structure/menu/manage', array($config['menu_name']));
       }

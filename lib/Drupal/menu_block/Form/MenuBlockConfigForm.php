@@ -57,7 +57,7 @@ class MenuBlockConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, array &$form_state) {
 
-    $config = $this->configFactory->get('menu_block.settings');
+    $config = $this->configFactory()->get('menu_block.settings');
 
     // Option to suppress core's blocks of menus.
     $form['menu_block_suppress_core'] = array(
@@ -69,7 +69,7 @@ class MenuBlockConfigForm extends ConfigFormBase {
     );
 
     // Retrieve core's menus.
-    $menus = menu_get_menus();
+    $menus = menu_ui_get_menus();
     // Retrieve all the menu names provided by hook_menu_block_get_sort_menus().
     $menus = array_merge($menus, $this->moduleHandler->invokeAll('menu_block_get_sort_menus'));
     asort($menus);
@@ -143,7 +143,7 @@ class MenuBlockConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('menu_block.settings');
+    $config = $this->configFactory()->get('menu_block.settings');
     $menu_order = array();
     foreach ($form_state['values']['menu_order'] as $menu_name => $row) {
       if ($row['available']) {
