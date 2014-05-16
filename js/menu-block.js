@@ -17,7 +17,7 @@ Drupal.behaviors.menu_block = {
     // Override the default show/hide animation for Form API states.
     $('#menu-block-settings', context).bind('state:visible', function(e) {
       if (e.trigger) {
-        e.stopPropagation() /* Stop the handler further up the tree. */
+        e.stopPropagation(); /* Stop the handler further up the tree. */
         $(e.target).closest('.form-item, .form-wrapper')[e.value ? 'slideDown' : 'slideUp']('fast');
       }
     });
